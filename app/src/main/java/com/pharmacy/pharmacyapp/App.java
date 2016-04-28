@@ -3,6 +3,7 @@ package com.pharmacy.pharmacyapp;
 import android.app.Application;
 import android.content.Context;
 
+import com.crashlytics.android.Crashlytics;
 import com.digits.sdk.android.Digits;
 import com.firebase.client.Firebase;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
@@ -37,6 +38,7 @@ public class App extends Application {
 
         TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
         Fabric.with(this, new TwitterCore(authConfig), new Digits());
+        Fabric.with(this, new Crashlytics());
 
 
     }

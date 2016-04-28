@@ -38,6 +38,10 @@ android {
             it.resValue "string", "twitter_secret", TWITTER_SECRET
         }
 
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -54,6 +58,10 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp:2.7.3'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.7.3'
     compile('com.digits.sdk.android:digits:1.10.2@aar') {
+        transitive = true;
+    }
+
+    compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
         transitive = true;
     }
 }
