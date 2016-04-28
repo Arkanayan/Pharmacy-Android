@@ -1,4 +1,19 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+
 
 android {
     compileSdkVersion 23
@@ -12,9 +27,17 @@ android {
         versionName "1.0"
 
 
-        resValue "string", "firebase_url", FIREBASE_URL
     }
     buildTypes {
+
+        buildTypes.each {
+            it.resValue "string", "firebase_url", FIREBASE_URL
+            it.resValue "string", "server_url", SERVER_URL
+
+            it.resValue "string", "twitter_key", TWITTER_KEY
+            it.resValue "string", "twitter_secret", TWITTER_SECRET
+        }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -30,4 +53,7 @@ dependencies {
 
     compile 'com.squareup.okhttp:okhttp:2.7.3'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.7.3'
+    compile('com.digits.sdk.android:digits:1.10.2@aar') {
+        transitive = true;
+    }
 }
