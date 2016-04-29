@@ -1,4 +1,4 @@
-package com.pharmacy.pharmacyapp;
+package bankura.pharmacy.pharmacyapp;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

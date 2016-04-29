@@ -1,4 +1,4 @@
-package com.pharmacy.pharmacyapp;
+package bankura.pharmacy.pharmacyapp;
 
 import org.junit.Test;
 

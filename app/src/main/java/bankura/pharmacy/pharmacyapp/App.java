@@ -1,9 +1,10 @@
-package com.pharmacy.pharmacyapp;
+package bankura.pharmacy.pharmacyapp;
 
 import android.app.Application;
 import android.content.Context;
 
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.digits.sdk.android.Digits;
 import com.firebase.client.Firebase;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
@@ -25,6 +26,10 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
+        final String TWITTER_KEY = getString(R.string.twitter_key);
+        final String TWITTER_SECRET = getString(R.string.twitter_secret);
+
+        final TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
         // Initialize Firebase
         Firebase.setAndroidContext(this);
         // Firebase.getDefaultConfig().setPersistenceEnabled(true);
@@ -33,12 +38,12 @@ public class App extends Application {
         mContext = this;
 
         // Fabric initialization
-        final String TWITTER_KEY = getString(R.string.twitter_key);
-        final String TWITTER_SECRET = getString(R.string.twitter_secret);
+        Crashlytics crashlyticsKit = new Crashlytics.Builder()
+                .core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
+                .build();
 
-        TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
-        Fabric.with(this, new TwitterCore(authConfig), new Digits());
-        Fabric.with(this, new Crashlytics());
+        Fabric.with(this, new TwitterCore(authConfig), new Digits(), crashlyticsKit);
+
 
 
     }
