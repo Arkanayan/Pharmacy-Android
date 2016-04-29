@@ -26,4 +26,20 @@
         android:layout_below="@+id/button_auth"
         android:layout_centerHorizontal="true" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Launch edit"
+        android:id="@+id/button_edit_user"
+        android:layout_below="@+id/button_logout"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edit Address"
+        android:id="@+id/button_edit_address"
+        android:layout_below="@+id/button_edit_user"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

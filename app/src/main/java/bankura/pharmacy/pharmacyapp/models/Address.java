@@ -31,13 +31,17 @@ public class Address {
     @JsonProperty("landmark")
     private String landmark;
     @JsonProperty("district")
-    private String district;
+    private String district = "Bankura";
     @JsonProperty("state")
-    private String state;
+    private String state = "West Bengal";
     @JsonProperty("country")
-    private String country;
+    private String country = "India";
     @JsonProperty("pin")
     private Integer pin;
+    @JsonProperty("name")
+    private String name;
+
+
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -183,6 +187,26 @@ public class Address {
     @JsonProperty("pin")
     public void setPin(Integer pin) {
         this.pin = pin;
+    }
+
+    /**
+     *
+     * @return
+     * The name
+     */
+    @JsonProperty("name")
+    public String getName() {
+        return name;
+    }
+
+    /**
+     *
+     * @param name
+     * The address identifier name
+     */
+    @JsonProperty("name")
+    public void setName(String name) {
+        this.name = name;
     }
 
     @JsonAnyGetter

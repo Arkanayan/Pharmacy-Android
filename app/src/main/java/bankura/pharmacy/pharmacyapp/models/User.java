@@ -11,7 +11,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.firebase.client.ServerValue;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
@@ -25,7 +24,7 @@ import com.firebase.client.ServerValue;
 public class User {
 
     @JsonProperty("uid")
-    private Integer uid;
+    private long uid;
     @JsonProperty("first_name")
     private String firstName;
     @JsonProperty("last_name")
@@ -35,7 +34,7 @@ public class User {
     @JsonProperty("created_at")
     private long createdAt;
     @JsonProperty("is_admin")
-    private boolean isAdmin;
+    private boolean isAdmin = false;
 
 
     @JsonIgnore
@@ -50,7 +49,7 @@ public class User {
      * The uid
      */
     @JsonProperty("uid")
-    public Integer getUid() {
+    public long getUid() {
         return uid;
     }
 
@@ -60,7 +59,7 @@ public class User {
      * The uid
      */
     @JsonProperty("uid")
-    public void setUid(Integer uid) {
+    public void setUid(long uid) {
         this.uid = uid;
     }
 

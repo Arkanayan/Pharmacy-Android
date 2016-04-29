@@ -32,7 +32,7 @@ public class App extends Application {
         final TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
         // Initialize Firebase
         Firebase.setAndroidContext(this);
-        // Firebase.getDefaultConfig().setPersistenceEnabled(true);
+        //Firebase.getDefaultConfig().setPersistenceEnabled(true);
         mFirebase = new Firebase(getString(R.string.firebase_url));
 
         mContext = this;

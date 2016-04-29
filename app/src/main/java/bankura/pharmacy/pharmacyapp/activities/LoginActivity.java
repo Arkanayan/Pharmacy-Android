@@ -36,6 +36,11 @@ import java.util.Map;
 
 import bankura.pharmacy.pharmacyapp.App;
 import bankura.pharmacy.pharmacyapp.R;
+import bankura.pharmacy.pharmacyapp.controllers.UserManager;
+import bankura.pharmacy.pharmacyapp.models.Address;
+import bankura.pharmacy.pharmacyapp.models.User;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class LoginActivity extends AppCompatActivity {
@@ -48,11 +53,14 @@ public class LoginActivity extends AppCompatActivity {
    // @BindView(R.id.button_logout)
     Button logoutButton;
 
+    @BindView(R.id.button_edit_user)
+    Button lauchEditUserButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-       // ButterKnife.bind(this);
+        ButterKnife.bind(this);
 
 /*
         logoutButton = (Button) findViewById(R.id.button_logout);
@@ -70,6 +78,7 @@ public class LoginActivity extends AppCompatActivity {
 
         final DigitsAuthButton authButton = (DigitsAuthButton) findViewById(R.id.button_auth);
         authButton.setText("Login");
+
 
         authButton.setCallback(new AuthCallback() {
             @Override
@@ -161,13 +170,30 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(EditUserActivity.getInstance(LoginActivity.this));
                     // finish();
                 } else {
-                    final Map<String, String> map = new HashMap<>();
+/*                    final Map<String, String> map = new HashMap<>();
                     map.put("uid", authData.getUid());
                     map.put("phone_number", authData.getAuth().get("phone_number").toString());
-                    map.put("created_at", Long.toString(System.currentTimeMillis() / 1000L));
+                    map.put("created_at", Long.toString(timestamp));
+                    */
+                    // store created_at as unix timestamp
+                    long timestamp = System.currentTimeMillis() / 1000L;
+                    User user = new User();
+                    user.setUid(Long.parseLong(authData.getUid()));
+                    user.setCreatedAt(timestamp);
+                    user.setPhoneNumber((String) authData.getAuth().get("phone_number"));
                     Firebase userRef = ref.child("users").child(authData.getUid());
-                    userRef.setValue(map);
-                    long unixTime = System.currentTimeMillis() / 1000L;
+                    userRef.setValue(user);
+
+                    // address test start
+                    Firebase addressRef = App.getFirebase().child("addresses");
+                    Address address = new Address();
+                    address.setAddressLine1("address line 1");
+                    address.setAddressLine2("address line 2");
+                    address.setLandmark("landmark");
+                    addressRef.child(authData.getUid()).push().setValue(address);
+                    //address test finish
+
+
                     Log.d(TAG, "New firebase user id: " + authData.getUid());
                     Toast.makeText(LoginActivity.this, "Welcome", Toast.LENGTH_SHORT).show();
                     //todo start activity where user can enter his info
@@ -190,12 +216,30 @@ public class LoginActivity extends AppCompatActivity {
             Digits.getSessionManager().clearActiveSession();
             Log.d(TAG, "Logged out ");
         }
+        App.getFirebase().unauth();
     }
 
+    // for testing
+    @OnClick(R.id.button_edit_user)
+    public void lauchEdit(View view) {
+        Log.d(TAG, "lauchEdit: clicked");
+        startActivity(EditUserActivity.getInstance(this));
+    }
 
+    @OnClick(R.id.button_edit_address)
+    public void editAddress(View view) {
+        Log.d(TAG, "editAddress");
+        Address address = new Address();
+        address.setAddressLine1("another new line 1");
+        address.setAddressLine2("anther new line 2");
+        address.setLandmark("This is a landmark");
 
+        UserManager.updateAddress(address);
+
+    }
 
     public static Intent getInstance(Context context) {
+
         return new Intent(context, LoginActivity.class);
     }
 
