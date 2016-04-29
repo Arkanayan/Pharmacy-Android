@@ -1,10 +1,11 @@
-package bankura.pharmacy.pharmacyapp;
+package bankura.pharmacy.pharmacyapp.activities;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -33,10 +34,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import bankura.pharmacy.pharmacyapp.App;
+import bankura.pharmacy.pharmacyapp.R;
 import butterknife.OnClick;
-import io.fabric.sdk.android.Fabric;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -45,15 +45,28 @@ public class LoginActivity extends AppCompatActivity {
    // @BindView(R.id.button_auth)
     DigitsAuthButton authButton;
 
-    @BindView(R.id.button_logout)
+   // @BindView(R.id.button_logout)
     Button logoutButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-      //  ButterKnife.bind(this);
+       // ButterKnife.bind(this);
 
+/*
+        logoutButton = (Button) findViewById(R.id.button_logout);
+        logoutButton.setOnClickListener(new android.view.View.OnClickListener() {
+            @Override
+            public void onClick(android.view.View v) {
+                Log.d(TAG, "Logout clicked");
+                if (Digits.getSessionManager() != null) {
+                    Digits.getSessionManager().clearActiveSession();
+                    Log.d(TAG, "Logged out ");
+                }
+            }
+        });
+*/
 
         final DigitsAuthButton authButton = (DigitsAuthButton) findViewById(R.id.button_auth);
         authButton.setText("Login");
@@ -144,13 +157,21 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, "Firebase no: " + dataSnapshot.child("phone_number").getValue(),
                             Toast.LENGTH_SHORT).show();
                     //todo start activity user edit or order details
+                    startActivity(EditUserActivity.getInstance(LoginActivity.this));
+                    // finish();
                 } else {
                     final Map<String, String> map = new HashMap<>();
+                    map.put("uid", authData.getUid());
                     map.put("phone_number", authData.getAuth().get("phone_number").toString());
-                    ref.child("users").child(authData.getUid()).setValue(map);
+                    map.put("created_at", Long.toString(System.currentTimeMillis() / 1000L));
+                    Firebase userRef = ref.child("users").child(authData.getUid());
+                    userRef.setValue(map);
+                    long unixTime = System.currentTimeMillis() / 1000L;
                     Log.d(TAG, "New firebase user id: " + authData.getUid());
                     Toast.makeText(LoginActivity.this, "Welcome", Toast.LENGTH_SHORT).show();
                     //todo start activity where user can enter his info
+                    startActivity(EditUserActivity.getInstance(LoginActivity.this));
+                    //finish
                 }
             }
 
@@ -162,9 +183,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.button_logout)
-    void logout() {
-        if (Digits.getSessionManager() != null)
+    public void logout(View view) {
+        Log.d(TAG, "Logout clicked");
+        if (Digits.getSessionManager() != null) {
             Digits.getSessionManager().clearActiveSession();
+            Log.d(TAG, "Logged out ");
+        }
     }
 
 
