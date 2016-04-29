@@ -1,0 +1,6 @@
+// Rename this file to "gradle.properties" and enter proper values
+
+FIREBASE_URL=<Firebase Base Url>
+SERVER_URL=<App server base url>
+TWITTER_KEY=<Twitter key (used for digits)>
+TWITTER_SECRET=<Twitter secret (used for digits)>
