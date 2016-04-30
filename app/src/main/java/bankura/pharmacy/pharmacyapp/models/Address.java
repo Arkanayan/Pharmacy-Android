@@ -3,6 +3,19 @@ package bankura.pharmacy.pharmacyapp.models;
 /**
  * Created by arka on 4/29/16.
  */
+/**Schema
+ {
+ "address_line_1" : "dfdfd",
+ "address_line_2" : "dfdfd",
+ "landmark": "dfdfd",
+ "district": "dfdfd",
+ "state": "dfdfd",
+ "country": "dfdfd",
+ "pin": 343434,
+ "name": "dfdfdf"
+ }
+ */
+
 import java.util.HashMap;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
@@ -20,7 +33,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
         "district",
         "state",
         "country",
-        "pin"
+        "pin",
+        "name"
 })
 public class Address {
 

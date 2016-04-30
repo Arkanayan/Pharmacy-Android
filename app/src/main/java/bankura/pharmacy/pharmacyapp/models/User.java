@@ -3,6 +3,20 @@ package bankura.pharmacy.pharmacyapp.models;
 /**
  * Created by arka on 4/29/16.
  */
+
+/**Schema
+ *
+ *
+ {
+ "uid": 34343434,
+ "first_name": "fname",
+ "last_name": "last",
+ "phone_number": "343434",
+ "created_at": 34343434,
+ "is_admin": false
+ }
+ */
+
 import java.util.HashMap;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
