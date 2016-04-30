@@ -2,29 +2,29 @@ package bankura.pharmacy.pharmacyapp.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputEditText;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.firebase.client.AuthData;
-import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
-import com.firebase.client.realtime.util.StringListReader;
+import com.mobsandgeeks.saripaar.ValidationError;
+import com.mobsandgeeks.saripaar.Validator;
+import com.mobsandgeeks.saripaar.annotation.NotEmpty;
+import com.mobsandgeeks.saripaar.annotation.Optional;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import bankura.pharmacy.pharmacyapp.App;
 import bankura.pharmacy.pharmacyapp.R;
+import bankura.pharmacy.pharmacyapp.Utils.Constants;
 import bankura.pharmacy.pharmacyapp.Utils.Utils;
 import bankura.pharmacy.pharmacyapp.controllers.UserManager;
 import bankura.pharmacy.pharmacyapp.models.Address;
@@ -33,51 +33,67 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rx.Observable;
-import rx.Subscription;
 
-public class EditUserActivity extends AppCompatActivity {
+public class EditUserActivity extends AppCompatActivity implements Validator.ValidationListener {
 
     public final String TAG = this.getClass().getSimpleName();
 
     Firebase mRef = App.getFirebase();
 
+    @NotEmpty
     @BindView(R.id.input_first_name)
     TextInputEditText firstNameEditText;
 
+    @NotEmpty
     @BindView(R.id.input_last_name) TextInputEditText lastNameEditText;
 
+    @NotEmpty
     @BindView(R.id.input_phone_number)
     TextInputEditText phoneNumberEditText;
 
+    @Optional
+    @BindView(R.id.input_email)
+    TextInputEditText emailEditText;
+
+    @NotEmpty
     @BindView(R.id.input_address_line_1)
     TextInputEditText addressLine1EditText;
 
+    @NotEmpty
     @BindView(R.id.input_address_line_2)
     TextInputEditText addressLine2EditText;
 
+    @NotEmpty
     @BindView(R.id.input_address_landmark)
     TextInputEditText addressLandmarkEditText;
 
+    @NotEmpty
     @BindView(R.id.input_address_pin)
     TextInputEditText addressPinEditText;
 
     @BindView(R.id.fab_button_save)
     FloatingActionButton fabSaveButton;
 
+
+    Validator validator;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_user);
-        ButterKnife.bind(this);
-        ButterKnife.setDebug(true);
 
+        // Check if user logged in else go back to login activity
         if (mRef.getAuth() == null) {
             startActivity(LoginActivity.getInstance(EditUserActivity.this));
             finish();
             return;
         }
 
-        phoneNumberEditText = (TextInputEditText) findViewById(R.id.input_phone_number);
+        setContentView(R.layout.activity_edit_user);
+        ButterKnife.setDebug(true);
+
+        ButterKnife.bind(this);
+        validator = new Validator(this);
+        validator.setValidationListener(this);
 
         AuthData authData = mRef.getAuth();
 
@@ -123,6 +139,7 @@ public class EditUserActivity extends AppCompatActivity {
         firstNameEditText.setText(Utils.getStringOrEmpty(user.getFirstName()));
         lastNameEditText.setText(Utils.getStringOrEmpty(user.getLastName()));
         phoneNumberEditText.setText(user.getPhoneNumber());
+        emailEditText.setText(Utils.getStringOrEmpty(user.getEmailAddress()));
     }
 
     // populate address related views
@@ -136,11 +153,58 @@ public class EditUserActivity extends AppCompatActivity {
 
     @OnClick(R.id.fab_button_save)
     void onFabClick() {
-        Snackbar.make(fabSaveButton, "Save", Snackbar.LENGTH_SHORT).show();
+        //Snackbar.make(fabSaveButton, "Save", Snackbar.LENGTH_SHORT).show();
+        validator.setViewValidatedAction(action);
+        validator.validate();
 
     }
 
+    Validator.ViewValidatedAction action = new Validator.ViewValidatedAction() {
+        @Override
+        public void onAllRulesPassed(View view) {
+            if (view instanceof TextInputEditText) {
+                ((TextInputLayout) view.getParent()).setErrorEnabled(false);
+            }
+        }
+    };
+
     public static Intent getInstance(Context context) {
         return new Intent(context, EditUserActivity.class);
+    }
+
+    @Override
+    public void onValidationSucceeded() {
+        Map<String, Object> userMap = new HashMap<String, Object>();
+
+        userMap.put(Constants.User.FIRST_NAME, firstNameEditText.getText().toString().trim());
+        userMap.put(Constants.User.LAST_NAME, lastNameEditText.getText().toString().trim());
+        userMap.put(Constants.User.EMAIL_ADDRESS, emailEditText.getText().toString().trim());
+
+        UserManager.updateUser(userMap);
+
+        Address address = new Address();
+        address.setAddressLine1(addressLine1EditText.getText().toString().trim());
+        address.setAddressLine2(addressLine2EditText.getText().toString().trim());
+        address.setLandmark(addressLandmarkEditText.getText().toString().trim());
+        address.setPin(Integer.valueOf(addressPinEditText.getText().toString().trim()));
+
+        UserManager.updateAddress(address);
+
+        Log.d(TAG, "onValidationSucceeded: ");
+    }
+
+    @Override
+    public void onValidationFailed(List<ValidationError> errors) {
+        for (ValidationError error : errors) {
+            View view = error.getView();
+            String message = error.getCollatedErrorMessage(this);
+
+            // Display error messages ;)
+            if (view instanceof TextInputEditText) {
+                ((TextInputLayout) view.getParent()).setError(message);
+            } else {
+                Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }

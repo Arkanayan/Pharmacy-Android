@@ -84,4 +84,7 @@ dependencies {
 
     compile 'com.android.support:design:23.3.0'
 
+    compile 'com.mobsandgeeks:android-saripaar:2.0.3'
+
+
 }

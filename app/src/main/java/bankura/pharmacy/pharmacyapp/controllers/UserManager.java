@@ -1,16 +1,13 @@
 package bankura.pharmacy.pharmacyapp.controllers;
 
-import android.provider.Telephony;
 import android.util.Log;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-import com.firebase.client.GenericTypeIndicator;
 import com.firebase.client.ValueEventListener;
-import com.firebase.client.core.operation.ListenComplete;
 
-import java.util.List;
+import java.util.Map;
 
 import bankura.pharmacy.pharmacyapp.App;
 import bankura.pharmacy.pharmacyapp.models.Address;
@@ -102,6 +99,16 @@ public class UserManager {
 
             }
         });
+    }
+
+    public static void updateUser(Map<String, Object> userMap) {
+
+        String uid = App.getFirebase().getAuth().getUid();
+
+        Firebase userRef = App.getFirebase().child("users").child(uid);
+
+        userRef.updateChildren(userMap);
+
     }
 
 
