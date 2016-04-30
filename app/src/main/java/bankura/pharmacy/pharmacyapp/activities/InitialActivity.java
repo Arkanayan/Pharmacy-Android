@@ -3,6 +3,8 @@ package bankura.pharmacy.pharmacyapp.activities;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import bankura.pharmacy.pharmacyapp.App;
+
 public class InitialActivity extends AppCompatActivity {
 
     @Override
@@ -10,10 +12,13 @@ public class InitialActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         // throw new RuntimeException("This is a new runtime exception");
 
-       // if (App.getFirebase().getAuth() == null) {
+        if (App.getFirebase().getAuth() == null) {
 
             startActivity(LoginActivity.getInstance(this));
             finish();
-      //  }
+        } else {
+            startActivity(OrderListActivity.getInstance(this));
+            finish();
+        }
     }
 }

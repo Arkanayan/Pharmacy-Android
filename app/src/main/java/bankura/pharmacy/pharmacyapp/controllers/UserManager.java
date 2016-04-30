@@ -111,6 +111,11 @@ public class UserManager {
 
     }
 
+    public static Firebase getUserRef() {
+        String uid = App.getFirebase().getAuth().getUid();
+        return App.getFirebase().child("users").child(uid);
+    }
+
 
 
 }
