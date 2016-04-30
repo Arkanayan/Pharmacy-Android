@@ -13,6 +13,7 @@ public class InitialActivity extends AppCompatActivity {
        // if (App.getFirebase().getAuth() == null) {
 
             startActivity(LoginActivity.getInstance(this));
+            finish();
       //  }
     }
 }

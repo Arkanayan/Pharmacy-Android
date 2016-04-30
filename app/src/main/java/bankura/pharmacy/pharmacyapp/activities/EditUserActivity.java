@@ -2,6 +2,8 @@ package bankura.pharmacy.pharmacyapp.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,6 +31,7 @@ import bankura.pharmacy.pharmacyapp.models.Address;
 import bankura.pharmacy.pharmacyapp.models.User;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import rx.Observable;
 import rx.Subscription;
 
@@ -46,6 +49,21 @@ public class EditUserActivity extends AppCompatActivity {
     @BindView(R.id.input_phone_number)
     TextInputEditText phoneNumberEditText;
 
+    @BindView(R.id.input_address_line_1)
+    TextInputEditText addressLine1EditText;
+
+    @BindView(R.id.input_address_line_2)
+    TextInputEditText addressLine2EditText;
+
+    @BindView(R.id.input_address_landmark)
+    TextInputEditText addressLandmarkEditText;
+
+    @BindView(R.id.input_address_pin)
+    TextInputEditText addressPinEditText;
+
+    @BindView(R.id.fab_button_save)
+    FloatingActionButton fabSaveButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,26 +78,6 @@ public class EditUserActivity extends AppCompatActivity {
         }
 
         phoneNumberEditText = (TextInputEditText) findViewById(R.id.input_phone_number);
-
-/*        mRef.child("users").child(mRef.getAuth().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
-                Log.d(TAG, "User name: " + user.getFirstName());
-                Log.d(TAG, "User phone: " + user.getPhoneNumber());
-                Log.d(TAG, "User time: " + user.getCreatedAt());
-                phoneNumberEditText.setText(user.getPhoneNumber());
-                firstNameEditText.setText((user.getFirstName() == null ? "" : user.getFirstName()));
-                lastNameEditText.setText((user.getLastName() == null ? "" : user.getLastName()));
-
-
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });*/
 
         AuthData authData = mRef.getAuth();
 
@@ -105,6 +103,7 @@ public class EditUserActivity extends AppCompatActivity {
             Address address = (Address) userAddressMap.get("address");
 
             populateUserFields(user);
+            populateAddressFields(address);
             Log.d(TAG, "User name: " + user.getFirstName());
             Log.d(TAG, "User phone: " + user.getPhoneNumber());
             Log.d(TAG, "User time: " + user.getCreatedAt());
@@ -126,7 +125,20 @@ public class EditUserActivity extends AppCompatActivity {
         phoneNumberEditText.setText(user.getPhoneNumber());
     }
 
+    // populate address related views
+    private void populateAddressFields(Address address) {
 
+        addressLine1EditText.setText(address.getAddressLine1());
+        addressLine2EditText.setText(address.getAddressLine2());
+        addressLandmarkEditText.setText(address.getLandmark());
+        addressPinEditText.setText(String.valueOf(address.getPin() == null ? "" : address.getPin()));
+    }
+
+    @OnClick(R.id.fab_button_save)
+    void onFabClick() {
+        Snackbar.make(fabSaveButton, "Save", Snackbar.LENGTH_SHORT).show();
+
+    }
 
     public static Intent getInstance(Context context) {
         return new Intent(context, EditUserActivity.class);
