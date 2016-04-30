@@ -17,14 +17,15 @@ package bankura.pharmacy.pharmacyapp.models;
  }
  */
 
-import java.util.HashMap;
-import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
@@ -39,7 +40,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public class User {
 
     @JsonProperty("uid")
-    private long uid;
+    private String uid;
     @JsonProperty("first_name")
     private String firstName;
     @JsonProperty("last_name")
@@ -66,7 +67,7 @@ public class User {
      * The uid
      */
     @JsonProperty("uid")
-    public long getUid() {
+    public String getUid() {
         return uid;
     }
 
@@ -76,7 +77,7 @@ public class User {
      * The uid
      */
     @JsonProperty("uid")
-    public void setUid(long uid) {
+    public void setUid(String uid) {
         this.uid = uid;
     }
 

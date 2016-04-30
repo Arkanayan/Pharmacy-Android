@@ -31,7 +31,6 @@ import com.twitter.sdk.android.core.TwitterAuthToken;
 import com.twitter.sdk.android.core.TwitterCore;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 import bankura.pharmacy.pharmacyapp.App;
@@ -178,7 +177,7 @@ public class LoginActivity extends AppCompatActivity {
                     // store created_at as unix timestamp
                     long timestamp = System.currentTimeMillis() / 1000L;
                     User user = new User();
-                    user.setUid(Long.parseLong(authData.getUid()));
+                    user.setUid(authData.getUid());
                     user.setCreatedAt(timestamp);
                     user.setPhoneNumber((String) authData.getAuth().get("phone_number"));
                     Firebase userRef = ref.child("users").child(authData.getUid());

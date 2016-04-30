@@ -2,6 +2,8 @@ package bankura.pharmacy.pharmacyapp.controllers;
 
 import com.firebase.client.Firebase;
 
+import java.util.UUID;
+
 import bankura.pharmacy.pharmacyapp.App;
 import bankura.pharmacy.pharmacyapp.models.Order;
 
@@ -12,13 +14,22 @@ public class OrderManager {
 
     public static String createOrder(Order order) {
         Firebase ref = App.getFirebase();
+        String uid = ref.getAuth().getUid();
 
         Firebase newOrderRef =  ref.child("orders").push();
-        newOrderRef.setValue(order);
+
         String newOrderKey = newOrderRef.getKey();
 
-        ref.child("order_stats").child("open").child(newOrderKey).setValue(true);
+        String orderId;
 
+        orderId = "OD" + UUID.randomUUID().toString().substring(0,8).toUpperCase();
+
+        order.setOrderId(orderId);
+        newOrderRef.setValue(order);
+        newOrderRef.setPriority(0 - order.getCreatedAt());
+
+
+        ref.child("order_stats").child("open").child(newOrderKey).setValue(true);
         UserManager.getUserRef().child("orders").child(newOrderKey).setValue(true);
 
         return newOrderKey;

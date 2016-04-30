@@ -35,29 +35,35 @@ import java.util.Map;
         "shipping_charge",
         "created_at",
         "is_completed",
-        "is_canceled"
+        "is_canceled",
+        "status"
 })
 public class Order {
 
     @JsonProperty("uid")
-    private long uid;
+    private String uid;
     @JsonProperty("address")
     private String address;
     @JsonProperty("prescription_url")
     private String prescriptionUrl;
     @JsonProperty("price")
-    private Double price;
+    private Double price = 0.0;
     @JsonProperty("shipping_charge")
-    private Double shippingCharge;
+    private Double shippingCharge = 0.0;
     @JsonProperty("created_at")
     private Long createdAt;
     @JsonProperty("is_completed")
     private boolean isCompleted = false;
     @JsonProperty("is_canceled")
     private boolean isCanceled = false;
+    @JsonProperty("order_id")
+    private String orderId;
+    @JsonProperty("status")
+    private Status status = Status.OPEN;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
+    public enum Status { OPEN, CLOSED, CANCELED }
 
     public Order() {
     }
@@ -68,7 +74,7 @@ public class Order {
      * The uid
      */
     @JsonProperty("uid")
-    public long getUid() {
+    public String getUid() {
         return uid;
     }
 
@@ -78,7 +84,7 @@ public class Order {
      * The uid
      */
     @JsonProperty("uid")
-    public void setUid(long uid) {
+    public void setUid(String uid) {
         this.uid = uid;
     }
 
@@ -182,23 +188,45 @@ public class Order {
         this.createdAt = createdAt;
     }
 
+    @JsonProperty("is_completed")
     public boolean isCompleted() {
+
         return isCompleted;
     }
-
+    @JsonProperty("is_completed")
     public void setCompleted(boolean completed) {
         isCompleted = completed;
     }
 
-
+    @JsonProperty("is_canceled")
     public boolean isCanceled() {
         return isCanceled;
     }
 
+    @JsonProperty("is_canceled")
     public void setCanceled(boolean canceled) {
         isCanceled = canceled;
     }
 
+    @JsonProperty("order_id")
+    public String getOrderId() {
+        return orderId;
+    }
+
+    @JsonProperty("order_id")
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
+    @JsonProperty("status")
+    public Status getStatus() {
+        return status;
+    }
+
+    @JsonProperty("status")
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 
     @JsonAnyGetter
     public Map<String, Object> getAdditionalProperties() {
@@ -210,4 +238,8 @@ public class Order {
         this.additionalProperties.put(name, value);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        return (o instanceof Order) && this.getOrderId().equals(((Order) o).getOrderId());
+    }
 }
