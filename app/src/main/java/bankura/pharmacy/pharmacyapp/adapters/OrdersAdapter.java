@@ -44,16 +44,23 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
                 Order order = dataSnapshot.getValue(Order.class);
                 mOrderList.add(0, order);
                 notifyItemInserted(mOrderList.indexOf(order));
-              //  mRecyclerView.smoothScrollToPosition(0);
+              // mRecyclerView.smoothScrollToPosition(0);
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 Log.d(TAG, "onChildchanged: key: " + dataSnapshot.getKey());
                 Order order = dataSnapshot.getValue(Order.class);
-                int position = mOrderList.indexOf(order);
-                Log.d(TAG, "onChildchanged: position: " + position);
-                notifyItemChanged(position);
+                if (order != null) {
+
+                    int position = mOrderList.indexOf(order);
+                    Log.d(TAG, "onChildchanged: position: " + position);
+                    Log.d(TAG, "onChildChanged: new shipping charge: " + order.getShippingCharge());
+                    notifyItemChanged(position, order);
+
+
+                    // notifyItemRangeChanged(position, 1, order);
+                }
 
             }
 
@@ -77,7 +84,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
             @Override
             public void onCancelled(FirebaseError firebaseError) {
                 Log.e(TAG, "onCancelled: Error: " + firebaseError.getMessage() );
-                Snackbar.make(mRecyclerView, "There is a problem retriving errors", Snackbar.LENGTH_SHORT);
+                Snackbar.make(mRecyclerView, "There is a problem retriving orders", Snackbar.LENGTH_SHORT);
             }
         });
 

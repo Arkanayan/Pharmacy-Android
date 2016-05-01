@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.OvershootInterpolator;
 
 import bankura.pharmacy.pharmacyapp.App;
 import bankura.pharmacy.pharmacyapp.R;
@@ -18,6 +19,8 @@ import bankura.pharmacy.pharmacyapp.controllers.OrderManager;
 import bankura.pharmacy.pharmacyapp.models.Order;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import it.gmariotti.recyclerview.itemanimator.SlideInOutRightItemAnimator;
+import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
 
 /**
  * An activity representing a list of Orders. This activity
@@ -60,7 +63,17 @@ public class OrderListActivity extends AppCompatActivity {
        // setupRecyclerView((RecyclerView) recyclerView);
         OrdersAdapter adapter = new OrdersAdapter(recyclerView);
 
-        recyclerView.setItemAnimator(null);
+
+        // Set animator
+        SlideInRightAnimator slideAnimator = new SlideInRightAnimator(new OvershootInterpolator(0.5f));
+        slideAnimator.setAddDuration(400);
+        slideAnimator.setSupportsChangeAnimations(false);
+
+       // recyclerView.setItemAnimator(slideAnimator);
+        SlideInOutRightItemAnimator animator = new SlideInOutRightItemAnimator(recyclerView);
+        animator.setAddDuration(400);
+        animator.setChangeDuration(400);
+        recyclerView.setItemAnimator(animator);
         recyclerView.setAdapter(adapter);
 
         if (findViewById(R.id.order_detail_container) != null) {

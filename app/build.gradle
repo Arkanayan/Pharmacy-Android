@@ -2,6 +2,7 @@ buildscript {
     repositories {
         mavenCentral()
         maven { url 'https://maven.fabric.io/public' }
+
     }
 
     dependencies {
@@ -21,6 +22,8 @@ apply plugin: 'com.neenbedankt.android-apt'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+
 }
 
 
@@ -89,5 +92,11 @@ dependencies {
     compile 'com.mobsandgeeks:android-saripaar:2.0.3'
     compile 'com.android.support:support-v4:23.3.0'
     compile 'com.android.support:recyclerview-v7:23.3.0'
+
+    compile 'jp.wasabeef:recyclerview-animators:2.2.1'
+
+    compile 'com.github.gabrielemariotti.recyclerview:recyclerview-animators:0.3.0-SNAPSHOT@aar'
+
+
 
 }
