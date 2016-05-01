@@ -44,11 +44,16 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
                 Order order = dataSnapshot.getValue(Order.class);
                 mOrderList.add(0, order);
                 notifyItemInserted(mOrderList.indexOf(order));
+              //  mRecyclerView.smoothScrollToPosition(0);
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 Log.d(TAG, "onChildchanged: key: " + dataSnapshot.getKey());
+                Order order = dataSnapshot.getValue(Order.class);
+                int position = mOrderList.indexOf(order);
+                Log.d(TAG, "onChildchanged: position: " + position);
+                notifyItemChanged(position);
 
             }
 
@@ -88,10 +93,12 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String content = "Content " + position;
+
+        String status = mOrderList.get(position).getStatus().name();
+        String content = mOrderList.get(position).getOrderId() + " " + status;
      //    holder.mContentView.setText(String.valueOf(mOrderList.get(position).getPrice()));
         //test
-        holder.mContentView.setText(mOrderList.get(position).getOrderId());
+        holder.mContentView.setText(content);
         holder.mIdView.setText(String.valueOf(mOrderList.get(position).getShippingCharge()));
 
     }

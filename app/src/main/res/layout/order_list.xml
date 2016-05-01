@@ -9,5 +9,6 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
+    android:scrollbars="vertical"
     tools:context="bankura.pharmacy.pharmacyapp.activities.OrderListActivity"
     tools:listitem="@layout/order_list_content" />

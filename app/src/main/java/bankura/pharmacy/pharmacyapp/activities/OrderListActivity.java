@@ -60,7 +60,8 @@ public class OrderListActivity extends AppCompatActivity {
        // setupRecyclerView((RecyclerView) recyclerView);
         OrdersAdapter adapter = new OrdersAdapter(recyclerView);
 
-        ((RecyclerView) recyclerView).setAdapter(adapter);
+        recyclerView.setItemAnimator(null);
+        recyclerView.setAdapter(adapter);
 
         if (findViewById(R.id.order_detail_container) != null) {
             // The detail container view will be present only in the
@@ -159,6 +160,7 @@ public class OrderListActivity extends AppCompatActivity {
         order.setPrice(3434.34);
         order.setShippingCharge(34.23);
         order.setCompleted(false);
+        order.setStatus(Order.Status.CANCELED);
 
         String key = OrderManager.createOrder(order);
 

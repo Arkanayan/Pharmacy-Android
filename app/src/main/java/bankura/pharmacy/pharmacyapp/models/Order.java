@@ -18,10 +18,12 @@ package bankura.pharmacy.pharmacyapp.models;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -63,7 +65,28 @@ public class Order {
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    public enum Status { OPEN, CLOSED, CANCELED }
+    public enum Status { OPEN, CLOSED, CANCELED;
+
+
+        // used for serializing Status to int , instead of "OPEN" or "CLOSED"
+        @JsonValue
+        public int getValue() {
+            return this.ordinal();
+        }
+
+
+        // used for reading data back from json (int) to Status type
+        @JsonCreator
+        public static Status fromValue(int typeCode) {
+            for (Status c : Status.values()) {
+                if (c.ordinal() == typeCode) {
+                    return c;
+                }
+            }
+            throw new IllegalArgumentException("Invalid Status type code: " + typeCode);
+        }
+
+    }
 
     public Order() {
     }
