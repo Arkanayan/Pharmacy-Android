@@ -19,7 +19,6 @@ import bankura.pharmacy.pharmacyapp.controllers.OrderManager;
 import bankura.pharmacy.pharmacyapp.models.Order;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import it.gmariotti.recyclerview.itemanimator.SlideInOutRightItemAnimator;
 import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
 
 /**
@@ -70,10 +69,10 @@ public class OrderListActivity extends AppCompatActivity {
         slideAnimator.setSupportsChangeAnimations(false);
 
        // recyclerView.setItemAnimator(slideAnimator);
-        SlideInOutRightItemAnimator animator = new SlideInOutRightItemAnimator(recyclerView);
-        animator.setAddDuration(400);
-        animator.setChangeDuration(400);
-        recyclerView.setItemAnimator(animator);
+//        SlideInOutRightItemAnimator animator = new SlideInOutRightItemAnimator(recyclerView);
+//        animator.setAddDuration(400);
+//        animator.setChangeDuration(400);
+        recyclerView.setItemAnimator(slideAnimator);
         recyclerView.setAdapter(adapter);
 
         if (findViewById(R.id.order_detail_container) != null) {

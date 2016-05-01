@@ -95,8 +95,6 @@ dependencies {
 
     compile 'jp.wasabeef:recyclerview-animators:2.2.1'
 
-    compile 'com.github.gabrielemariotti.recyclerview:recyclerview-animators:0.3.0-SNAPSHOT@aar'
-
 
 
 }
