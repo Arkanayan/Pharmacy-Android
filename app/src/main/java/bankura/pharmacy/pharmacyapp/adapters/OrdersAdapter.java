@@ -1,5 +1,7 @@
 package bankura.pharmacy.pharmacyapp.adapters;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,6 +20,8 @@ import java.util.List;
 
 import bankura.pharmacy.pharmacyapp.App;
 import bankura.pharmacy.pharmacyapp.R;
+import bankura.pharmacy.pharmacyapp.activities.OrderDetailActivity;
+import bankura.pharmacy.pharmacyapp.activities.OrderDetailFragment;
 import bankura.pharmacy.pharmacyapp.models.Order;
 
 /**
@@ -54,6 +58,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
                 if (order != null) {
 
                     int position = mOrderList.indexOf(order);
+                    mOrderList.set(position, order);
                     Log.d(TAG, "onChildchanged: position: " + position);
                     Log.d(TAG, "onChildChanged: new shipping charge: " + order.getShippingCharge());
                     notifyItemChanged(position, order);
@@ -70,6 +75,8 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
                 if (order != null) {
                     Log.d(TAG, "onChildRemoved: ID: " + order.getOrderId());
                     Log.d(TAG, "onChildRemoved: position: " + mOrderList.indexOf(order));
+                    // the order of the next two lines are important don't change it
+                    // otherwise recyclerview will remove different child each time
                     notifyItemRemoved(mOrderList.indexOf(order));
                     mOrderList.remove(order);
                 }
@@ -92,6 +99,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+       // Log.d(TAG, "onCreateViewHolder");
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.order_list_content, parent, false);
 
@@ -100,13 +108,26 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-
+        //Log.d(TAG, "onBindViewHolder: " + position);
         String status = mOrderList.get(position).getStatus().name();
         String content = mOrderList.get(position).getOrderId() + " " + status;
      //    holder.mContentView.setText(String.valueOf(mOrderList.get(position).getPrice()));
         //test
         holder.mContentView.setText(content);
         holder.mIdView.setText(String.valueOf(mOrderList.get(position).getShippingCharge()));
+
+        holder.mView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                    Context context = v.getContext();
+                    Intent intent = new Intent(context, OrderDetailActivity.class);
+                    intent.putExtra(OrderDetailFragment.ARG_ITEM_ID, position);
+
+                    context.startActivity(intent);
+
+            }
+        });
 
     }
 

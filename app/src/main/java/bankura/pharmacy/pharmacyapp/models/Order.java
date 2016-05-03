@@ -65,7 +65,9 @@ public class Order {
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    public enum Status { OPEN, CLOSED, CANCELED;
+    public enum Status {
+
+        OPEN, ACKNOWLEGED, CONFIRMED, CANCELED, CLOSED;
 
 
         // used for serializing Status to int , instead of "OPEN" or "CLOSED"

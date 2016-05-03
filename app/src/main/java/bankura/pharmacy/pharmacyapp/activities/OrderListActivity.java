@@ -65,8 +65,10 @@ public class OrderListActivity extends AppCompatActivity {
 
         // Set animator
         SlideInRightAnimator slideAnimator = new SlideInRightAnimator(new OvershootInterpolator(0.5f));
-        slideAnimator.setAddDuration(400);
-        slideAnimator.setSupportsChangeAnimations(false);
+        slideAnimator.setAddDuration(300);
+        slideAnimator.setRemoveDuration(300);
+        slideAnimator.setChangeDuration(300);
+        slideAnimator.setMoveDuration(300);
 
        // recyclerView.setItemAnimator(slideAnimator);
 //        SlideInOutRightItemAnimator animator = new SlideInOutRightItemAnimator(recyclerView);
