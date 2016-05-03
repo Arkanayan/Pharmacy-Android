@@ -15,4 +15,14 @@ public class Constants {
 
     public class Address {
     }
+
+    public class Order {
+
+        public static final String ORDER_ID = "order_id";
+    }
+
+    public class Path {
+
+        public static final String ORDERS = "orders";
+    }
 }

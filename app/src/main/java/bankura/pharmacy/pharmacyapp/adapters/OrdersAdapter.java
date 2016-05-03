@@ -1,7 +1,5 @@
 package bankura.pharmacy.pharmacyapp.adapters;
 
-import android.content.Context;
-import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,8 +18,6 @@ import java.util.List;
 
 import bankura.pharmacy.pharmacyapp.App;
 import bankura.pharmacy.pharmacyapp.R;
-import bankura.pharmacy.pharmacyapp.activities.OrderDetailActivity;
-import bankura.pharmacy.pharmacyapp.activities.OrderDetailFragment;
 import bankura.pharmacy.pharmacyapp.models.Order;
 
 /**
@@ -33,10 +29,12 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
 
     private List<Order> mOrderList;
     private RecyclerView mRecyclerView;
+    private OnOrderClickListener mListener;
 
-    public OrdersAdapter(RecyclerView recyclerView) {
+    public OrdersAdapter(RecyclerView recyclerView, OnOrderClickListener listener) {
         mOrderList = new ArrayList<Order>();
         mRecyclerView = recyclerView;
+        mListener = listener;
 
         Firebase ref = App.getFirebase();
         String uid = App.getFirebase().getAuth().getUid();
@@ -120,11 +118,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
             @Override
             public void onClick(View v) {
 
-                    Context context = v.getContext();
-                    Intent intent = new Intent(context, OrderDetailActivity.class);
-                    intent.putExtra(OrderDetailFragment.ARG_ITEM_ID, position);
-
-                    context.startActivity(intent);
+                mListener.onOrderClick(mOrderList.get(position).getOrderId());
 
             }
         });
@@ -152,5 +146,10 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
         public String toString() {
             return super.toString() + " '" + mContentView.getText() + "'";
         }
+    }
+
+    public interface OnOrderClickListener {
+
+        public void onOrderClick(String orderId);
     }
 }

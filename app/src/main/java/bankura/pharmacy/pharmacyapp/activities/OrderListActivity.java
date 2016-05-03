@@ -29,7 +29,7 @@ import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class OrderListActivity extends AppCompatActivity {
+public class OrderListActivity extends AppCompatActivity implements OrdersAdapter.OnOrderClickListener{
 
     public final String TAG = this.getClass().getSimpleName();
     /**
@@ -41,6 +41,14 @@ public class OrderListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Check if user logged in else go back to login activity
+        if (App.getFirebase().getAuth() == null) {
+            startActivity(LoginActivity.getInstance(this));
+            finish();
+            return;
+        }
+
         setContentView(R.layout.activity_order_list);
         ButterKnife.bind(this);
 
@@ -60,7 +68,7 @@ public class OrderListActivity extends AppCompatActivity {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.order_list);
         assert recyclerView != null;
        // setupRecyclerView((RecyclerView) recyclerView);
-        OrdersAdapter adapter = new OrdersAdapter(recyclerView);
+        OrdersAdapter adapter = new OrdersAdapter(recyclerView, this);
 
 
         // Set animator
@@ -83,6 +91,23 @@ public class OrderListActivity extends AppCompatActivity {
             // If this view is present, then the
             // activity should be in two-pane mode.
             mTwoPane = true;
+        }
+    }
+
+    @Override
+    public void onOrderClick(String orderId) {
+        if (mTwoPane) {
+            Bundle arguments = new Bundle();
+            arguments.putString(OrderDetailFragment.ORDER_ID, orderId);
+            OrderDetailFragment fragment = new OrderDetailFragment();
+            fragment.setArguments(arguments);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.order_detail_container, fragment)
+                    .commit();
+        } else {
+
+            startActivity(OrderDetailActivity.getInstance(this, orderId));
+
         }
     }
 
@@ -187,4 +212,6 @@ public class OrderListActivity extends AppCompatActivity {
 //        newOrderRef.setValue(order);
 //        ref.child("order_stats").child("open").child(newOrderRef.getKey()).setValue(true);
     }
+
+
 }

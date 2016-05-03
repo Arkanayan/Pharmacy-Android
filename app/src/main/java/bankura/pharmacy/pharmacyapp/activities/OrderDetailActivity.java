@@ -1,5 +1,6 @@
 package bankura.pharmacy.pharmacyapp.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -56,8 +57,8 @@ public class OrderDetailActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putString(OrderDetailFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(OrderDetailFragment.ARG_ITEM_ID));
+            arguments.putString(OrderDetailFragment.ORDER_ID,
+                    getIntent().getStringExtra(OrderDetailFragment.ORDER_ID));
             OrderDetailFragment fragment = new OrderDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
@@ -81,5 +82,12 @@ public class OrderDetailActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public static Intent getInstance(Context context, String orderId) {
+
+        Intent detailOrder = new Intent(context, OrderDetailActivity.class);
+        detailOrder.putExtra(OrderDetailFragment.ORDER_ID, orderId);
+        return detailOrder;
     }
 }
