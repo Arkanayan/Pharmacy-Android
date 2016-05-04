@@ -95,6 +95,6 @@ dependencies {
 
     compile 'jp.wasabeef:recyclerview-animators:2.2.1'
 
-
+    compile 'com.android.support:cardview-v7:23.3.0'
 
 }
