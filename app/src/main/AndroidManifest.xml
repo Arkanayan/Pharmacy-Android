@@ -30,10 +30,19 @@
         <activity
             android:name=".activities.OrderListActivity"
             android:label="@string/title_order_list"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.OrderDetailActivity"
             android:label="@string/title_order_detail"
+            android:parentActivityName=".activities.OrderListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="bankura.pharmacy.pharmacyapp.activities.OrderListActivity" />
+        </activity>
+        <activity
+            android:name=".activities.NewOrderActivity"
+            android:label="@string/title_activity_new_order"
             android:parentActivityName=".activities.OrderListActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data

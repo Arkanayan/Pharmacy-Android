@@ -2,4 +2,6 @@
     <string name="app_name">PharmacyApp</string>
     <string name="title_order_list">Orders</string>
     <string name="title_order_detail">Order Detail</string>
+    <string name="title_activity_new_order">NewOrderActivity</string>
+    <string name="action_settings">Settings</string>
 </resources>
