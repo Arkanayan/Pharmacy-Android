@@ -13,7 +13,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/tw__solid_white"
+            android:background="@color/colorPrimaryDark"
             app:popupTheme="@style/AppTheme.PopupOverlay"
             app:layout_scrollFlags="exitUntilCollapsed"
         >
@@ -50,7 +50,7 @@
         android:inputType="textPersonName"
         android:hint="Name"
         android:ems="10"
-        android:id="@+id/editText" />
+        android:id="@+id/input_name" />
     </LinearLayout>
 
     <LinearLayout
@@ -61,22 +61,53 @@
         android:id="@+id/layout_address"
         android:layout_below="@id/layout_user"
         >
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Address"
-        android:id="@+id/textView2" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Address"
+            android:id="@+id/label_address"
+            android:textSize="16sp"
+            android:layout_weight="2"
+            android:padding="5dp"
+            />
+<!--            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/action_edit"
+                android:id="@+id/label_edit_address"
+                android:layout_weight="9"
+                android:textSize="16sp"
+                android:padding="5dp"
+                android:textAlignment="center"
+                android:textColor="@color/colorPrimaryDark"
+                />-->
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/action_edit"
+                android:textSize="16sp"
+                android:padding="5dp"
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_weight="0"
+                android:id="@+id/button_edit_address"
+                />
+        </LinearLayout>
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editText2"
+        android:id="@+id/input_address_line_1"
         android:text="Address line 1" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editText3"
+        android:id="@+id/input_address_line_2"
         android:text="Address line 2" />
 
     <EditText
