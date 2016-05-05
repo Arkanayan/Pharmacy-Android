@@ -12,8 +12,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.client.AuthData;
@@ -50,7 +50,7 @@ public class NewOrderFragment extends BottomSheetDialogFragment {
     TextView editAddressTextView;*/
 
     @BindView(R.id.button_edit_address)
-    Button editAddressButton;
+    TextView editAddressButton;
 
     @BindView(R.id.input_name)
     EditText nameEditText;
