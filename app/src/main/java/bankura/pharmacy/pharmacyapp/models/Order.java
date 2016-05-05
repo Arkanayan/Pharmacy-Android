@@ -13,6 +13,7 @@ package bankura.pharmacy.pharmacyapp.models;
  "created_at": 343434
  "is_completed": true,
  "is_canceled": true,
+ "note": ""
  }
  */
 
@@ -38,7 +39,8 @@ import java.util.Map;
         "created_at",
         "is_completed",
         "is_canceled",
-        "status"
+        "status",
+        "note"
 })
 public class Order {
 
@@ -62,6 +64,8 @@ public class Order {
     private String orderId;
     @JsonProperty("status")
     private Status status = Status.OPEN;
+    @JsonProperty("note")
+    private String note = "";
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -251,6 +255,16 @@ public class Order {
     @JsonProperty("status")
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    @JsonProperty("note")
+    public String getNote() {
+        return note;
+    }
+
+    @JsonProperty("note")
+    public void setNote(String note) {
+        this.note = note;
     }
 
     @JsonAnyGetter

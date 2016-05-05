@@ -14,6 +14,7 @@ package bankura.pharmacy.pharmacyapp.models;
  "phone_number": "343434",
  "created_at": 34343434,
  "is_admin": false
+ "is_banned": false
  }
  */
 
@@ -35,7 +36,8 @@ import java.util.Map;
         "phone_number",
         "email_address",
         "created_at",
-        "is_admin"
+        "is_admin",
+        "is_banned"
         })
 public class User {
 
@@ -53,6 +55,8 @@ public class User {
     private long createdAt;
     @JsonProperty("is_admin")
     private boolean isAdmin = false;
+    @JsonProperty("is_banned")
+    private boolean isBanned = false;
 
 
     @JsonIgnore
@@ -178,6 +182,16 @@ public class User {
     @JsonProperty("is_admin")
     public boolean isAdmin() {
         return isAdmin;
+    }
+
+    @JsonProperty("is_banned")
+    public boolean isBanned() {
+        return isBanned;
+    }
+
+    @JsonProperty("is_banned")
+    public void setBanned(boolean banned) {
+        isBanned = banned;
     }
 
     @JsonAnyGetter

@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
 
@@ -114,7 +116,25 @@ public class OrderListActivity extends AppCompatActivity implements OrdersAdapte
         }
     }
 
-   /* private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_order_list, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                startActivity(EditUserActivity.getInstance(this));
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    /* private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(DummyContent.ITEMS));
     }
 
@@ -203,6 +223,7 @@ public class OrderListActivity extends AppCompatActivity implements OrdersAdapte
         order.setShippingCharge(34.23);
         order.setCompleted(false);
         order.setStatus(Order.Status.CANCELED);
+        order.setNote("this is a note");
 
         String key = OrderManager.createOrder(order);
 

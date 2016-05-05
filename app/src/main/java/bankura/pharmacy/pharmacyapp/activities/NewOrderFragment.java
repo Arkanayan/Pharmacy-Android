@@ -177,7 +177,7 @@ public class NewOrderFragment extends BottomSheetDialogFragment {
 
         toolbar.setNavigationIcon(R.drawable.ic_close);
         toolbar.setTitle("New Order");
-        toolbar.setTitleTextColor(getResources().getColor(R.color.tw__solid_white));
+        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -192,6 +192,11 @@ public class NewOrderFragment extends BottomSheetDialogFragment {
         startActivity(EditUserActivity.getInstance(getActivity()));
     }
 
+    @OnClick(R.id.button_scan)
+    void onScan() {
+
+
+    }
 
 
 
