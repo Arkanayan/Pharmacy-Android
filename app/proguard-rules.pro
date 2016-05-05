@@ -18,3 +18,9 @@
 -keep class **$$ViewBinder { *; }
 -keep class com.mobsandgeeks.saripaar.** {*;}
 -keep @com.mobsandgeeks.saripaar.annotation.ValidateUsing class * {*;}
+
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
+  **[] $VALUES;
+  public *;
+}

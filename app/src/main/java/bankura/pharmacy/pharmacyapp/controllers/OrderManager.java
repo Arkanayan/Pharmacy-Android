@@ -2,11 +2,17 @@ package bankura.pharmacy.pharmacyapp.controllers;
 
 import android.util.Log;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import bankura.pharmacy.pharmacyapp.App;
@@ -83,6 +89,44 @@ public class OrderManager {
                             subscriber.onError(firebaseError.toException());
                         }
                     });
+        });
+    }
+
+
+    public static Observable<String> uploadImage(File file) {
+        return Observable.create(subscriber -> {
+
+            Map config = new HashMap<>();
+            config.put("cloud_name", "dvlr2z7ge");
+            config.put("api_key", "182515124742239");
+            config.put("api_secret", "bfQHMO8LDc6bA3y4U_LUBaKNTis");
+
+            Cloudinary cloudinary = new Cloudinary(config);
+            String fileName = file.getName();
+            int pos = fileName.lastIndexOf(".");
+            if (pos > 0) {
+                fileName = fileName.substring(0, pos);
+            }
+            String folderName = "ahanaPharmacy/";
+
+            String public_id = folderName + fileName;
+            String uid = App.getFirebase().getAuth().getUid();
+
+            Map context = new HashMap();
+            context.put("uid", uid);
+
+            try {
+              Map map =  cloudinary.uploader().upload(file, ObjectUtils.asMap("public_id", public_id, "context", context));
+                String publicId = map.get("public_id").toString();
+                Log.d("uploadImage", "public_id: " + publicId);
+               subscriber.onNext(cloudinary.url().generate(publicId));
+                subscriber.onCompleted();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                subscriber.onError(e);
+            }
+
         });
     }
 }
