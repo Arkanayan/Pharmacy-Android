@@ -48,6 +48,10 @@ android {
 
             it.resValue "string", "twitter_key", TWITTER_KEY
             it.resValue "string", "twitter_secret", TWITTER_SECRET
+
+
+            it.resValue "string", "cloudinary_url", CLOUDINARY_URL
+
         }
 
         debug {
@@ -103,9 +107,10 @@ dependencies {
 
     compile 'com.cloudinary:cloudinary-android:1.4.1'
 
-    compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.5.0'
-
     compile 'com.github.chrisbanes:PhotoView:1.2.6'
+
+    compile 'com.github.dmytrodanylyk.android-process-button:library:1.0.0'
+
 
 
 }

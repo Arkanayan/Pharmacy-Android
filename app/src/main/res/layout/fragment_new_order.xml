@@ -136,45 +136,89 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
 
         >
-        <TextView
+        <GridLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Firstname lastname"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:id="@+id/textview_name"
-            />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/textview_address_line_1"
-        android:text="Address line 1"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        />
+            android:columnCount="2"
+            android:rowCount="2"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/activity_horizontal_margin"
+            >
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="30dp"
+                android:src="@drawable/avatar"
+                android:layout_columnSpan="1"
+                android:layout_gravity="left|top"
+                android:layout_row="0"
+                android:layout_column="0"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Firstname lastname"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:id="@+id/textview_name"
+                android:layout_row="0"
+                android:layout_column="1"
+                />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/textview_address_line_2"
-        android:text="Address line 2"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        />
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="30dp"
+                android:src="@drawable/address_book"
+                android:layout_columnSpan="1"
+                android:layout_gravity="left|top"
+                android:layout_row="1"
+                android:layout_column="0"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/textview_landmark"
-        android:text="Landmark"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        />
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_row="1"
+                android:layout_column="1"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                >
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/textview_pin"
-        android:text="Pin"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textview_address_line_1"
+                    android:text="Address line 1"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textview_address_line_2"
+                    android:text="Address line 2"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    />
 
-        />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textview_landmark"
+                    android:text="Landmark"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textview_pin"
+                    android:text="Pin"
+
+                    />
+
+            </LinearLayout>
+
+
+        </GridLayout>
+
 
     </LinearLayout>
     </LinearLayout>
@@ -210,6 +254,9 @@
                 />
 
         </LinearLayout>
+
+
+
     </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 

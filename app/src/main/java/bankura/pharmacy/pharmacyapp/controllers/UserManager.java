@@ -44,6 +44,13 @@ public class UserManager {
 
     }
 
+    public static Observable<User> getUser() {
+
+        String uid = App.getFirebase().getAuth().getUid();
+
+        return getUserFromId(uid);
+    }
+
     public static Observable<Address> getAddressFromId(String id) {
 
         return Observable.create(subscriber -> {

@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import bankura.pharmacy.pharmacyapp.App;
+import bankura.pharmacy.pharmacyapp.R;
 import bankura.pharmacy.pharmacyapp.Utils.Constants;
 import bankura.pharmacy.pharmacyapp.models.Order;
 import rx.Observable;
@@ -96,12 +97,8 @@ public class OrderManager {
     public static Observable<String> uploadImage(File file) {
         return Observable.create(subscriber -> {
 
-            Map config = new HashMap<>();
-            config.put("cloud_name", "dvlr2z7ge");
-            config.put("api_key", "182515124742239");
-            config.put("api_secret", "bfQHMO8LDc6bA3y4U_LUBaKNTis");
 
-            Cloudinary cloudinary = new Cloudinary(config);
+            Cloudinary cloudinary = new Cloudinary(App.getContext().getResources().getString(R.string.cloudinary_url));
             String fileName = file.getName();
             int pos = fileName.lastIndexOf(".");
             if (pos > 0) {
@@ -116,7 +113,7 @@ public class OrderManager {
             context.put("uid", uid);
 
             try {
-              Map map =  cloudinary.uploader().upload(file, ObjectUtils.asMap("public_id", public_id, "context", context));
+              Map map =  cloudinary.uploader().upload(file, ObjectUtils.asMap("context", context));
                 String publicId = map.get("public_id").toString();
                 Log.d("uploadImage", "public_id: " + publicId);
                subscriber.onNext(cloudinary.url().generate(publicId));

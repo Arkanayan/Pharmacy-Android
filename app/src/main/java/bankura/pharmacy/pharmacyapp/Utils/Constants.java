@@ -23,6 +23,8 @@ public class Constants {
 
     public class Path {
 
+        public static final String USERS = "users";
         public static final String ORDERS = "orders";
+        public static final String ADDRESSES = "addresses";
     }
 }

@@ -4,3 +4,11 @@ FIREBASE_URL=<Firebase Base Url>
 SERVER_URL=<App server base url>
 TWITTER_KEY=<Twitter key (used for digits)>
 TWITTER_SECRET=<Twitter secret (used for digits)>
+
+//cloudinary keys, available on cloudinary dashboard
+CLOUDINARY_CLOUD_NAME="<cloud name>"
+CLOUDINARY_API_KEY="<api key>"
+CLOUDINARY_API_SECRET="<api secret>"
+
+// FORMAT cloudinary://<api_key>:<api_secret>:<cloud_name>
+CLOUDINARY_URL = "cloudinary://<api_key>:<api_secret>:<cloud_name>"

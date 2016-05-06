@@ -21,22 +21,19 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.cloudinary.Cloudinary;
-import com.cloudinary.utils.ObjectUtils;
 import com.firebase.client.AuthData;
-import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import bankura.pharmacy.pharmacyapp.App;
 import bankura.pharmacy.pharmacyapp.R;
+import bankura.pharmacy.pharmacyapp.Utils.Constants;
 import bankura.pharmacy.pharmacyapp.models.Address;
+import bankura.pharmacy.pharmacyapp.models.User;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -54,15 +51,24 @@ public class NewOrderFragment extends BottomSheetDialogFragment {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
-/*    @BindView(R.id.label_edit_address)
-    TextView editAddressTextView;*/
+    @BindView(R.id.textview_name)
+    TextView nameTextView;
+
+    @BindView(R.id.textview_address_line_1)
+    TextView addressLine1TextView;
+
+    @BindView(R.id.textview_address_line_2)
+    TextView addressLine2TextView;
+
+    @BindView(R.id.textview_landmark)
+    TextView landmarkTextView;
+
+    @BindView(R.id.textview_pin)
+    TextView pinTextView;
 
     @BindView(R.id.button_edit_address)
     TextView editAddressButton;
 
-
-    @BindView(R.id.textview_address_line_1)
-    TextView addressLine1TextView;
 
     @BindView(R.id.button_scan)
     Button scanButton;
@@ -158,30 +164,32 @@ public class NewOrderFragment extends BottomSheetDialogFragment {
             Toast.makeText(getActivity(), "Sorry, unable to fetch data", Toast.LENGTH_SHORT).show();
         });
 */
-        mRef.child("users")
 
-        mRef.child("addresses").child(authData.getUid()).limitToFirst(1).addChildEventListener(new ChildEventListener() {
+        String uid = authData.getUid();
+
+       mRef.child(Constants.Path.USERS).child(uid).addValueEventListener(new ValueEventListener() {
+           @Override
+           public void onDataChange(DataSnapshot dataSnapshot) {
+               User user = dataSnapshot.getValue(User.class);
+               if (user != null) {
+                   populateUser(user);
+               }
+           }
+
+           @Override
+           public void onCancelled(FirebaseError firebaseError) {
+
+           }
+       });
+
+        mRef.child(Constants.Path.ADDRESSES).child(uid).limitToFirst(1).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                dataSnapshot = dataSnapshot.getChildren().iterator().next();
                 Address address = dataSnapshot.getValue(Address.class);
-                addressLine1TextView.setText(address.getAddressLine1());
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Address address = dataSnapshot.getValue(Address.class);
-                addressLine1TextView.setText(address.getAddressLine1());
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
+                if (address != null) {
+                    populateAddress(address);
+                }
             }
 
             @Override
@@ -189,6 +197,7 @@ public class NewOrderFragment extends BottomSheetDialogFragment {
 
             }
         });
+
 
         return super.onCreateView(inflater, container, savedInstanceState);
 
@@ -305,18 +314,18 @@ public class NewOrderFragment extends BottomSheetDialogFragment {
 
     }
 
-    private String uploadImagee(File file) throws IOException {
 
-        Map config = new HashMap<>();
-        config.put("cloud_name", "dvlr2z7ge");
-        config.put("api_key", "182515124742239");
-        config.put("api_secret", "bfQHMO8LDc6bA3y4U_LUBaKNTis");
+    private void populateUser(User user) {
 
-        Cloudinary cloudinary = new Cloudinary(config);
-        String fileName = "ahanaPharmacy" + file.getName();
-        cloudinary.uploader().upload(file, ObjectUtils.asMap("public_id", fileName));
+        nameTextView.setText(user.getFirstName() + " " + user.getLastName());
+    }
 
-       return cloudinary.url().generate();
+    private void populateAddress(Address address) {
+
+        addressLine1TextView.setText(address.getAddressLine1());
+        addressLine2TextView.setText(address.getAddressLine2());
+        landmarkTextView.setText(address.getLandmark());
+        pinTextView.setText(String.valueOf(address.getPin()));
     }
     /*    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
