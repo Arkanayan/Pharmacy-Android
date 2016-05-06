@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -92,6 +93,9 @@ public class EditUserActivity extends AppCompatActivity implements Validator.Val
         ButterKnife.setDebug(true);
 
         ButterKnife.bind(this);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         validator = new Validator(this);
         validator.setValidationListener(this);
 
@@ -188,9 +192,24 @@ public class EditUserActivity extends AppCompatActivity implements Validator.Val
         address.setLandmark(addressLandmarkEditText.getText().toString().trim());
         address.setPin(Integer.valueOf(addressPinEditText.getText().toString().trim()));
 
-        UserManager.updateAddress(address);
+        UserManager.updateAddress(address).subscribe(aVoid -> {
+            // it doesn't return anything so no op in onNext()
+        }, throwable -> {
+            showSnackBarOnErrorWithRetry("Sorry, Address couldn't be updated");
+        }, () -> {
+            Log.d(TAG, "Address updated");
+            Toast.makeText(this, "Info updated", Toast.LENGTH_SHORT).show();
+        });
 
         Log.d(TAG, "onValidationSucceeded: ");
+    }
+
+    private void showSnackBarOnErrorWithRetry(String message) {
+        Snackbar.make(firstNameEditText, message , Snackbar.LENGTH_LONG)
+                .setAction("Retry", v -> {
+                    validator.validate();
+                })
+                .show();
     }
 
     @Override

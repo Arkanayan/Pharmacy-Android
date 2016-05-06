@@ -122,6 +122,7 @@ public class NewOrderFragment extends BottomSheetDialogFragment {
         CoordinatorLayout.Behavior behavior = params.getBehavior();
         if (behavior != null && behavior instanceof BottomSheetBehavior) {
             ((BottomSheetBehavior) behavior).setBottomSheetCallback(mBottomSheetBehaviorCallback);
+            ((BottomSheetBehavior) behavior).setPeekHeight(500);
         }
 
     }
@@ -157,6 +158,7 @@ public class NewOrderFragment extends BottomSheetDialogFragment {
             Toast.makeText(getActivity(), "Sorry, unable to fetch data", Toast.LENGTH_SHORT).show();
         });
 */
+        mRef.child("users")
 
         mRef.child("addresses").child(authData.getUid()).limitToFirst(1).addChildEventListener(new ChildEventListener() {
             @Override

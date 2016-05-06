@@ -70,35 +70,39 @@ public class UserManager {
         });
     }
 
-    public static void updateAddress(Address address) {
+    public static Observable<Void> updateAddress(Address address) {
 
-        String TAG = App.getContext().getClass().getSimpleName();
+        return Observable.create(subscriber -> {
+            String TAG = App.getContext().getClass().getSimpleName();
 
-        String uid = App.getFirebase().getAuth().getUid();
+            String uid = App.getFirebase().getAuth().getUid();
 
-        Firebase addressRef = App.getFirebase().child("addresses").child(uid);
+            Firebase addressRef = App.getFirebase().child("addresses").child(uid);
 
-        addressRef.limitToFirst(1).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // Getting the dataSnapshot and key of the first address
-                // because we are only storing one address now
-               DataSnapshot addressSnapshot = dataSnapshot.getChildren().iterator().next();
+            addressRef.limitToFirst(1).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    // Getting the dataSnapshot and key of the first address
+                    // because we are only storing one address now
+                    DataSnapshot addressSnapshot = dataSnapshot.getChildren().iterator().next();
 
-               String addressKey = addressSnapshot.getKey();
+                    String addressKey = addressSnapshot.getKey();
 
-                Log.d(TAG, "Address key: " + addressKey);
+                    Log.d(TAG, "Address key: " + addressKey);
 
-                // Overwrite address by new address
-                 addressRef.child(addressKey).setValue(address);
+                    // Overwrite address by new address
+                    addressRef.child(addressKey).setValue(address);
+                    subscriber.onCompleted();
 
-            }
+                }
 
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+                    subscriber.onError(firebaseError.toException());
+                }
+            });
         });
+
     }
 
     public static void updateUser(Map<String, Object> userMap) {
