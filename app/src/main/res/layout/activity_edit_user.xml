@@ -26,19 +26,31 @@
         android:id="@+id/user_details_text_view"
         />-->
 
-        <TextView
-            android:layout_width="wrap_content"
+
+        <GridLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="User"
-            android:id="@+id/label_user"
-            android:textSize="18sp"
-            style="@style/TextAppearance.AppCompat.Body2"
-            android:textColor="@color/md_blue_grey_700"
-            android:padding="5dp"
-            />
+            android:columnCount="2"
+            android:rowCount="3"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/activity_horizontal_margin"
+            >
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="30dp"
+                android:src="@drawable/avatar"
+                android:layout_columnSpan="1"
+                android:layout_gravity="left|top"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+
+                >
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:paddingTop="@dimen/activity_horizontal_margin"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:layout_height="wrap_content">
         <android.support.design.widget.TextInputEditText
@@ -93,6 +105,14 @@
                 />
         </android.support.design.widget.TextInputLayout>
 
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/activity_vertical_margin"
+                android:layout_columnSpan="2"
+                />
+
 <!--    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -100,7 +120,7 @@
         style="?android:attr/listSeparatorTextViewStyle"
         android:id="@+id/textView"
         />-->
-        <TextView
+<!--        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Address"
@@ -110,10 +130,25 @@
             android:textColor="@color/md_blue_grey_700"
             android:paddingLeft="5dp"
             android:paddingTop="@dimen/activity_vertical_margin"
-            />
+            />-->
 
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="30dp"
+                android:src="@drawable/address_book"
+                android:layout_columnSpan="1"
+                android:layout_gravity="left|top"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                />
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+
+                >
     <android.support.design.widget.TextInputLayout
-        android:paddingTop="@dimen/activity_horizontal_margin"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -169,7 +204,9 @@
             android:inputType="numberSigned"
             />
     </android.support.design.widget.TextInputLayout>
+            </LinearLayout>
 
+        </GridLayout>
     </LinearLayout>
 </ScrollView>
     <android.support.design.widget.FloatingActionButton

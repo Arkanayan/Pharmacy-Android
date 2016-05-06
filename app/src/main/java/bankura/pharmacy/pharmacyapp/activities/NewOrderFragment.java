@@ -57,6 +57,7 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class NewOrderFragment extends BottomSheetDialogFragment {
 
+    public static final String KEY_PRESCRIPTION_URI = "prescription_uri";
     private final String TAG = this.getClass().getSimpleName();
     private Firebase mRef = App.getFirebase();
 
@@ -161,7 +162,12 @@ public class NewOrderFragment extends BottomSheetDialogFragment {
 
         AuthData authData = mRef.getAuth();
 
-
+        if (savedInstanceState != null) {
+            if (savedInstanceState.getString(KEY_PRESCRIPTION_URI) != null) {
+                String prescriptionUri = savedInstanceState.getString(KEY_PRESCRIPTION_URI);
+                setmPrescriptionFile(new File(prescriptionUri));
+            }
+        }
        /* Observable<User> fetchUser = UserManager.getUserFromId(authData.getUid());
         Observable<Address> fetchAddress = UserManager.getAddressFromId(authData.getUid());
         Observable.zip(fetchUser, fetchAddress, (user, address) -> {
@@ -281,7 +287,7 @@ public class NewOrderFragment extends BottomSheetDialogFragment {
     @OnClick(R.id.imageview_prescription)
     void onPrescriptionClick() {
 
-        String uri = mRxPath;
+        String uri = mPrescriptionFile.getPath();
         if (!uri.equals(""))
             startActivity(ImageViewActivity.getInstance(getActivity(), uri));
 
@@ -296,12 +302,9 @@ public class NewOrderFragment extends BottomSheetDialogFragment {
             public void onImagePicked(File file, EasyImage.ImageSource imageSource, int i) {
                 Log.d(TAG, "onImagePicked: file Absolute path: " + file.getAbsolutePath());
                 Log.d(TAG, "onImagePicked: file  path: " + file.getPath());
-                mRxPath = file.getPath();
-                mPrescriptionFile = file;
 
-                mScanButton.setEnabled(false);
+                setmPrescriptionFile(file);
                 attachImage(file);
-                enableSubmitButton();
 
                /* OrderManager.uploadImage(file)
                             .subscribeOn(Schedulers.io())
@@ -332,6 +335,11 @@ public class NewOrderFragment extends BottomSheetDialogFragment {
         });
     }
 
+    private void setmPrescriptionFile(File file) {
+        mPrescriptionFile = file;
+        attachImage(file);
+        enableSubmitButton();
+    }
 
     private void attachImage(File file) {
         Glide.with(this)
@@ -410,6 +418,14 @@ public class NewOrderFragment extends BottomSheetDialogFragment {
     public void onDestroy() {
         super.onDestroy();
         mCompositeSubscription.unsubscribe();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mPrescriptionFile != null) {
+            outState.putString(KEY_PRESCRIPTION_URI, mPrescriptionFile.getPath());
+        }
     }
 
     private void showSnackbar(String message) {
