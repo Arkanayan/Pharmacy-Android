@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.dd.processbutton.iml.ActionProcessButton;
 import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -28,17 +30,27 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 import bankura.pharmacy.pharmacyapp.App;
 import bankura.pharmacy.pharmacyapp.R;
 import bankura.pharmacy.pharmacyapp.Utils.Constants;
+import bankura.pharmacy.pharmacyapp.controllers.OrderManager;
+import bankura.pharmacy.pharmacyapp.controllers.UserManager;
 import bankura.pharmacy.pharmacyapp.models.Address;
+import bankura.pharmacy.pharmacyapp.models.Order;
 import bankura.pharmacy.pharmacyapp.models.User;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
+import rx.Observable;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -47,6 +59,10 @@ public class NewOrderFragment extends BottomSheetDialogFragment {
 
     private final String TAG = this.getClass().getSimpleName();
     private Firebase mRef = App.getFirebase();
+
+    private CompositeSubscription mCompositeSubscription;
+
+    private File mPrescriptionFile;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -71,11 +87,13 @@ public class NewOrderFragment extends BottomSheetDialogFragment {
 
 
     @BindView(R.id.button_scan)
-    Button scanButton;
+    Button mScanButton;
 
     @BindView(R.id.imageview_prescription)
     ImageView prescriptionImageview;
 
+    @BindView(R.id.button_submit_order)
+    ActionProcessButton mSubmitButton;
 
     String mRxPath = "";
 
@@ -123,6 +141,10 @@ public class NewOrderFragment extends BottomSheetDialogFragment {
         dialog.setContentView(contentView);
 
         setupToolbar();
+
+        mCompositeSubscription = new CompositeSubscription();
+
+        disableSubmitButton();
 
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) ((View) contentView.getParent()).getLayoutParams();
         CoordinatorLayout.Behavior behavior = params.getBehavior();
@@ -227,6 +249,19 @@ public class NewOrderFragment extends BottomSheetDialogFragment {
         });
     }
 
+    private void disableSubmitButton() {
+
+        mSubmitButton.setEnabled(false);
+        mSubmitButton.setClickable(false);
+        mSubmitButton.setAlpha(0.5f);
+    }
+    private void enableSubmitButton() {
+
+        mSubmitButton.setAlpha(1f);
+        mSubmitButton.setClickable(true);
+        mSubmitButton.setEnabled(true);
+    }
+
     @OnClick(R.id.button_edit_address)
     void onEditAddress() {
         startActivity(EditUserActivity.getInstance(getActivity()));
@@ -262,8 +297,11 @@ public class NewOrderFragment extends BottomSheetDialogFragment {
                 Log.d(TAG, "onImagePicked: file Absolute path: " + file.getAbsolutePath());
                 Log.d(TAG, "onImagePicked: file  path: " + file.getPath());
                 mRxPath = file.getPath();
+                mPrescriptionFile = file;
 
+                mScanButton.setEnabled(false);
                 attachImage(file);
+                enableSubmitButton();
 
                /* OrderManager.uploadImage(file)
                             .subscribeOn(Schedulers.io())
@@ -314,6 +352,71 @@ public class NewOrderFragment extends BottomSheetDialogFragment {
 
     }
 
+    @OnClick(R.id.button_submit_order)
+    void submitOrder() {
+
+
+        if (mPrescriptionFile != null) {
+            // enable indeterminate mode
+            mSubmitButton.setMode(ActionProcessButton.Mode.ENDLESS);
+            mSubmitButton.setProgress(2);
+
+         Observable<String> imageuploadObservable = OrderManager.uploadImage(mPrescriptionFile)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread());
+
+            Observable<String> addressKeyObservable = UserManager.getAddressKey();
+
+
+            Subscription orderSubscription = Observable.zip(imageuploadObservable, addressKeyObservable, (publicId, addressKey) -> {
+
+                Map<String, String> map = new HashMap<String, String>();
+                map.put("public_id", publicId);
+                map.put("address_key", addressKey);
+
+                return map;
+            }).subscribe(map -> {
+                String imageId = map.get("public_id");
+
+                Log.d(TAG, "submitOrder: ImageUrl: " + imageId);
+
+                String addressKey = map.get("address_key");
+
+                Order order = new Order();
+                order.setPrescriptionUrl(imageId);
+                order.setAddress(addressKey);
+
+                String orderId = OrderManager.createOrder(order);
+
+                showSnackbar("Order created " + orderId);
+
+            }, throwable -> {
+                        showSnackbar(throwable.getMessage());
+                        mSubmitButton.setProgress(-1);
+                    }, () -> {
+                        mSubmitButton.setProgress(100);
+                        mSubmitButton.setClickable(false);
+                    });
+
+            mCompositeSubscription.add(orderSubscription);
+
+        } else {
+            showSnackbar("Please attach a prescription");
+        }
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mCompositeSubscription.unsubscribe();
+    }
+
+    private void showSnackbar(String message) {
+
+        Snackbar.make(editAddressButton, message , Snackbar.LENGTH_LONG).show();
+
+    }
 
     private void populateUser(User user) {
 

@@ -3,6 +3,7 @@ package bankura.pharmacy.pharmacyapp.controllers;
 import android.util.Log;
 
 import com.cloudinary.Cloudinary;
+import com.cloudinary.Transformation;
 import com.cloudinary.utils.ObjectUtils;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -11,6 +12,7 @@ import com.firebase.client.ValueEventListener;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -26,6 +28,11 @@ import rx.Observable;
  */
 public class OrderManager {
 
+    /**
+     * Creates order
+     * @param order
+     * @return order id
+     */
     public static String createOrder(Order order) {
         Firebase ref = App.getFirebase();
         String uid = ref.getAuth().getUid();
@@ -36,18 +43,28 @@ public class OrderManager {
 
         String orderId;
 
-        orderId = "OD" + UUID.randomUUID().toString().substring(0,8).toUpperCase();
+        order.setUid(uid);
 
+        // set timestamp
+        long timestamp = System.currentTimeMillis() / 1000L;
+        order.setCreatedAt(timestamp);
+
+        //generate random uuid for order
+        String randomUuid = UUID.randomUUID().toString();
+        orderId = "OD" + randomUuid.substring(randomUuid.length() - 10).toUpperCase();
         order.setOrderId(orderId);
+
         newOrderRef.setValue(order);
         newOrderRef.setPriority(0 - order.getCreatedAt());
-
 
         ref.child("order_stats").child("open").child(newOrderKey).setValue(true);
         UserManager.getUserRef().child("orders").child(newOrderKey).setValue(true);
 
-        return newOrderKey;
+        return orderId;
     }
+
+
+
 
     public static void setCompleted(String key) {
 
@@ -94,6 +111,11 @@ public class OrderManager {
     }
 
 
+    /**
+     * Uploads image to cloudinary
+     * @param file to upload
+     * @return public_id of the uploaded image
+     */
     public static Observable<String> uploadImage(File file) {
         return Observable.create(subscriber -> {
 
@@ -112,16 +134,30 @@ public class OrderManager {
             Map context = new HashMap();
             context.put("uid", uid);
 
+            String tags = "prescription, " + uid;
+
+            Map options = ObjectUtils.asMap(
+              "eager", Arrays.asList(
+                            new Transformation().quality(30).width(0.3).crop("scale"),
+                            new Transformation().quality(30).width(75).height(75).crop("limit")),
+              "tags", tags,
+            "context", context,
+            "public_id", public_id,
+                    // store image as reduced quality 60%
+                    "transformation", new Transformation().quality(60)
+
+            );
+
             try {
-              Map map =  cloudinary.uploader().upload(file, ObjectUtils.asMap("context", context));
+              Map map =  cloudinary.uploader().upload(file, options );
                 String publicId = map.get("public_id").toString();
                 Log.d("uploadImage", "public_id: " + publicId);
-               subscriber.onNext(cloudinary.url().generate(publicId));
+               subscriber.onNext(publicId);
                 subscriber.onCompleted();
 
             } catch (IOException e) {
                 e.printStackTrace();
-                subscriber.onError(e);
+                subscriber.onError(new Throwable("Error uploading prescription. Make sure you're connected to internet"));
             }
 
         });

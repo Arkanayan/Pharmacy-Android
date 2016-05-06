@@ -37,8 +37,6 @@ import java.util.Map;
         "price",
         "shipping_charge",
         "created_at",
-        "is_completed",
-        "is_canceled",
         "status",
         "note"
 })
@@ -56,10 +54,6 @@ public class Order {
     private Double shippingCharge = 0.0;
     @JsonProperty("created_at")
     private Long createdAt;
-    @JsonProperty("is_completed")
-    private boolean isCompleted = false;
-    @JsonProperty("is_canceled")
-    private boolean isCanceled = false;
     @JsonProperty("order_id")
     private String orderId;
     @JsonProperty("status")
@@ -215,26 +209,6 @@ public class Order {
     @JsonProperty("created_at")
     public void setCreatedAt(Long createdAt) {
         this.createdAt = createdAt;
-    }
-
-    @JsonProperty("is_completed")
-    public boolean isCompleted() {
-
-        return isCompleted;
-    }
-    @JsonProperty("is_completed")
-    public void setCompleted(boolean completed) {
-        isCompleted = completed;
-    }
-
-    @JsonProperty("is_canceled")
-    public boolean isCanceled() {
-        return isCanceled;
-    }
-
-    @JsonProperty("is_canceled")
-    public void setCanceled(boolean canceled) {
-        isCanceled = canceled;
     }
 
     @JsonProperty("order_id")

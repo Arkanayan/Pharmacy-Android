@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     tools:context=".activities.NewOrderFragment"
     tools:showIn="@layout/activity_new_order">
 <android.support.design.widget.AppBarLayout
@@ -255,6 +256,24 @@
 
         </LinearLayout>
 
+        <com.dd.processbutton.iml.ActionProcessButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:text="Order"
+            android:clickable="true"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_gravity="center"
+            android:textColor="@android:color/white"
+            custom:pb_colorNormal="@color/colorPrimary"
+            custom:pb_colorPressed="@android:color/holo_blue_dark"
+            android:id="@+id/button_submit_order"
+            custom:pb_colorError="@color/md_red_A200"
+            custom:pb_textError="Failed"
+            custom:pb_textComplete="Success"
+            custom:pb_textProgress="Uploading"
+            />
 
 
     </LinearLayout>

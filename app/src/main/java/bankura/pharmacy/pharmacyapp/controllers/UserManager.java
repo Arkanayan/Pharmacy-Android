@@ -10,6 +10,7 @@ import com.firebase.client.ValueEventListener;
 import java.util.Map;
 
 import bankura.pharmacy.pharmacyapp.App;
+import bankura.pharmacy.pharmacyapp.Utils.Constants;
 import bankura.pharmacy.pharmacyapp.models.Address;
 import bankura.pharmacy.pharmacyapp.models.User;
 import rx.Observable;
@@ -110,6 +111,38 @@ public class UserManager {
             });
         });
 
+    }
+
+    public static Observable<String> getAddressKey() {
+        return Observable.create(subscriber -> {
+            String TAG = App.getContext().getClass().getSimpleName();
+
+            String uid = App.getFirebase().getAuth().getUid();
+
+            Firebase addressRef = App.getFirebase().child(Constants.Path.ADDRESSES).child(uid);
+
+            addressRef.limitToFirst(1).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    // Getting the dataSnapshot and key of the first address
+                    // because we are only storing one address now
+                    DataSnapshot addressSnapshot = dataSnapshot.getChildren().iterator().next();
+
+                    String addressKey = addressSnapshot.getKey();
+
+                    Log.d(TAG, "Address key: " + addressKey);
+
+                    subscriber.onNext(addressKey);
+                    subscriber.onCompleted();
+                }
+
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+                    subscriber.onError(firebaseError.toException());
+                }
+            });
+
+        });
     }
 
     public static void updateUser(Map<String, Object> userMap) {

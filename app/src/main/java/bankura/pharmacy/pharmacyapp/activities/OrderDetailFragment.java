@@ -1,18 +1,18 @@
 package bankura.pharmacy.pharmacyapp.activities;
 
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import bankura.pharmacy.pharmacyapp.R;
 import bankura.pharmacy.pharmacyapp.controllers.OrderManager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rx.Subscription;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * A fragment representing a single Order detail screen.
@@ -36,6 +36,8 @@ public class OrderDetailFragment extends Fragment {
      */
     private String mOrderId;
 
+    private CompositeSubscription compositeSubscription;
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -46,6 +48,7 @@ public class OrderDetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        compositeSubscription = new CompositeSubscription();
 
         if (getArguments().containsKey(ORDER_ID)) {
             // Load the dummy content specified by the fragment
@@ -70,15 +73,24 @@ public class OrderDetailFragment extends Fragment {
         // Show the dummy content as text in a TextView.
         if (mOrderId != null) {
 
-            OrderManager.fetchOrder(mOrderId).subscribe(order -> {
+
+           Subscription fetchOrderSubscription =  OrderManager.fetchOrder(mOrderId).subscribe(order -> {
                 orderTextView.setText(order.getUid());
-                Toast.makeText(getActivity(), "Order uid: " + order.getUid(), Toast.LENGTH_SHORT).show();
             }, throwable -> {
-                Snackbar.make(rootView, throwable.getMessage(), Snackbar.LENGTH_SHORT);
+               orderTextView.setText(throwable.getLocalizedMessage());
             });
+
+            compositeSubscription.add(fetchOrderSubscription);
 
         }
 
         return rootView;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        compositeSubscription.unsubscribe();
+
     }
 }

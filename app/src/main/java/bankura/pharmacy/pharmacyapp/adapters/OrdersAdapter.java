@@ -47,6 +47,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
                 mOrderList.add(0, order);
                 notifyItemInserted(mOrderList.indexOf(order));
               // mRecyclerView.smoothScrollToPosition(0);
+              //  ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(0, 20);
             }
 
             @Override
