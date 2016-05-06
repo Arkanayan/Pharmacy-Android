@@ -10,6 +10,8 @@
     <color name="colorDivider">#B6B6B6</color>
     <color name="white">#FFFFFF</color>
 
+    <color name="transparentBackground">#50000000</color>
+
 
 
 </resources>

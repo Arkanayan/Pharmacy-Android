@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,15 +37,12 @@ import java.util.Map;
 
 import bankura.pharmacy.pharmacyapp.App;
 import bankura.pharmacy.pharmacyapp.R;
-import bankura.pharmacy.pharmacyapp.controllers.OrderManager;
 import bankura.pharmacy.pharmacyapp.models.Address;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -76,6 +72,9 @@ public class NewOrderFragment extends BottomSheetDialogFragment {
 
     @BindView(R.id.imageview_prescription)
     ImageView prescriptionImageview;
+
+
+    String mRxPath = "";
 
     public NewOrderFragment() {
 
@@ -236,6 +235,15 @@ public class NewOrderFragment extends BottomSheetDialogFragment {
         EasyImage.openChooserWithGallery(this, "prescriptionScanner", 2);
     }
 
+    @OnClick(R.id.imageview_prescription)
+    void onPrescriptionClick() {
+
+        String uri = mRxPath;
+        if (!uri.equals(""))
+            startActivity(ImageViewActivity.getInstance(getActivity(), uri));
+
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -245,17 +253,20 @@ public class NewOrderFragment extends BottomSheetDialogFragment {
             public void onImagePicked(File file, EasyImage.ImageSource imageSource, int i) {
                 Log.d(TAG, "onImagePicked: file Absolute path: " + file.getAbsolutePath());
                 Log.d(TAG, "onImagePicked: file  path: " + file.getPath());
+                mRxPath = file.getPath();
+
                 attachImage(file);
 
-                OrderManager.uploadImage(file)
+               /* OrderManager.uploadImage(file)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(url -> {
                                 Log.d(TAG, "onImagePicked: cloud url: " + url);
+                                mRxPath = url;
 
                             }, throwable -> {
                                 Snackbar.make(toolbar, "There is a problem creating order", Snackbar.LENGTH_SHORT).show();
-                            });
+                            });*/
 
             }
 

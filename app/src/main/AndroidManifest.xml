@@ -51,6 +51,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="bankura.pharmacy.pharmacyapp.activities.OrderListActivity" />
         </activity>
+        <activity android:name=".activities.ImageViewActivity"
+            android:theme="@style/AppTheme.ImageViewerTheme"
+            >
+
+        </activity>
     </application>
 
 </manifest>

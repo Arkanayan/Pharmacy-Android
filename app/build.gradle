@@ -105,4 +105,7 @@ dependencies {
 
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.5.0'
 
+    compile 'com.github.chrisbanes:PhotoView:1.2.6'
+
+
 }

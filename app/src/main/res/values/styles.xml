@@ -21,4 +21,16 @@
         <item name="android:background">@color/tw__solid_white</item>
     </style>
 
+    <style name="AppTheme.ImageViewerTheme" parent="@android:style/Theme.Translucent.NoTitleBar">
+        <item name="android:windowAnimationStyle">@style/ImageViewerTheme</item>
+
+    </style>
+
+    <style name="ImageViewerTheme"
+        parent="@android:style/Animation.Activity"
+        >
+        <item name="android:windowEnterAnimation">@anim/fade_in</item>
+        <item name="android:windowExitAnimation">@anim/fade_out</item>
+
+    </style>
 </resources>
