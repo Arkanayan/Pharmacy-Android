@@ -5,4 +5,10 @@
         <item name="windowNoTitle">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
+
+    <style name="AppTheme.ColorButton.Amber" parent="Widget.AppCompat.Button">
+
+        <item name="android:colorButtonNormal">@color/md_amber_100</item>
+        <item name="android:backgroundTint">@color/md_amber_100</item>
+    </style>
 </resources>

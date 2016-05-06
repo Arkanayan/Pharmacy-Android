@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -61,11 +60,9 @@ public class NewOrderFragment extends BottomSheetDialogFragment {
     @BindView(R.id.button_edit_address)
     TextView editAddressButton;
 
-    @BindView(R.id.input_name)
-    EditText nameEditText;
 
-    @BindView(R.id.input_address_line_1)
-    EditText addressLine1EditText;
+    @BindView(R.id.textview_address_line_1)
+    TextView addressLine1TextView;
 
     @BindView(R.id.button_scan)
     Button scanButton;
@@ -165,13 +162,13 @@ public class NewOrderFragment extends BottomSheetDialogFragment {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Address address = dataSnapshot.getValue(Address.class);
-                addressLine1EditText.setText(address.getAddressLine1());
+                addressLine1TextView.setText(address.getAddressLine1());
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 Address address = dataSnapshot.getValue(Address.class);
-                addressLine1EditText.setText(address.getAddressLine1());
+                addressLine1TextView.setText(address.getAddressLine1());
 
             }
 
@@ -232,7 +229,7 @@ public class NewOrderFragment extends BottomSheetDialogFragment {
                 .setCopyExistingPicturesToPublicLocation(true)
                 .setImagesFolderName("prescriptions");
 
-        EasyImage.openChooserWithGallery(this, "prescriptionScanner", 2);
+        EasyImage.openChooserWithGallery(this, "Scan Prescription", 2);
     }
 
     @OnClick(R.id.imageview_prescription)
@@ -290,6 +287,7 @@ public class NewOrderFragment extends BottomSheetDialogFragment {
     private void attachImage(File file) {
         Glide.with(this)
                 .load(file)
+                .fitCenter()
                 .listener(new RequestListener<File, GlideDrawable>() {
                     @Override
                     public boolean onException(Exception e, File model, Target<GlideDrawable> target, boolean isFirstResource) {

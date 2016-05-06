@@ -33,4 +33,9 @@
         <item name="android:windowExitAnimation">@anim/fade_out</item>
 
     </style>
+
+    <style name="AppTheme.ColorButton.Amber" parent="Widget.AppCompat.Button">
+        <item name="colorButtonNormal">@color/md_amber_100</item>
+
+    </style>
 </resources>
