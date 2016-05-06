@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.transition.Fade;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -61,6 +62,12 @@ public class OrderListActivity extends AppCompatActivity implements OrdersAdapte
               //  startActivity(NewOrderActivity.getInstance(OrderListActivity.this));
 
                 BottomSheetDialogFragment bottomSheetDialogFragment = new NewOrderFragment();
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                    Fade explode = new Fade();
+                    explode.setDuration(1000);
+                    bottomSheetDialogFragment.setEnterTransition(explode);
+                }
+
                 bottomSheetDialogFragment.show(getSupportFragmentManager(), bottomSheetDialogFragment.getTag());
 
             }

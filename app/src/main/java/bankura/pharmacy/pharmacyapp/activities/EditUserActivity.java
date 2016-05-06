@@ -3,12 +3,15 @@ package bankura.pharmacy.pharmacyapp.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -95,6 +98,8 @@ public class EditUserActivity extends AppCompatActivity implements Validator.Val
         ButterKnife.bind(this);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
 
         validator = new Validator(this);
         validator.setValidationListener(this);
@@ -122,8 +127,15 @@ public class EditUserActivity extends AppCompatActivity implements Validator.Val
             User user = (User) userAddressMap.get("user");
             Address address = (Address) userAddressMap.get("address");
 
-            populateUserFields(user);
-            populateAddressFields(address);
+            // Add delay to show nice edit text animation
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    populateUserFields(user);
+                    populateAddressFields(address);
+                }
+            }, 300);
+
             Log.d(TAG, "User name: " + user.getFirstName());
             Log.d(TAG, "User phone: " + user.getPhoneNumber());
             Log.d(TAG, "User time: " + user.getCreatedAt());
@@ -135,6 +147,18 @@ public class EditUserActivity extends AppCompatActivity implements Validator.Val
         });
 
 
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
 
     }
 
@@ -221,6 +245,7 @@ public class EditUserActivity extends AppCompatActivity implements Validator.Val
             // Display error messages ;)
             if (view instanceof TextInputEditText) {
                 ((TextInputLayout) view.getParent()).setError(message);
+                view.requestFocus();
             } else {
                 Toast.makeText(this, message, Toast.LENGTH_LONG).show();
             }

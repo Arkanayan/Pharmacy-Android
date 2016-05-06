@@ -28,16 +28,22 @@
         <activity android:name=".activities.LoginActivity" />
         <activity
             android:name=".activities.EditUserActivity"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="stateHidden"
+            android:parentActivityName=".activities.OrderListActivity"
+            android:label="Edit"
+            />
         <activity
             android:name=".activities.OrderListActivity"
             android:label="@string/title_order_list"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleTop"
+            />
         <activity
             android:name=".activities.OrderDetailActivity"
             android:label="@string/title_order_detail"
             android:parentActivityName=".activities.OrderListActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="bankura.pharmacy.pharmacyapp.activities.OrderListActivity" />

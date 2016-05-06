@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -93,6 +94,9 @@ public class NewOrderFragment extends BottomSheetDialogFragment {
     @BindView(R.id.imageview_prescription)
     ImageView prescriptionImageview;
 
+    @BindView(R.id.input_note)
+    EditText noteEditText;
+
     @BindView(R.id.button_submit_order)
     ActionProcessButton mSubmitButton;
 
@@ -151,7 +155,8 @@ public class NewOrderFragment extends BottomSheetDialogFragment {
         CoordinatorLayout.Behavior behavior = params.getBehavior();
         if (behavior != null && behavior instanceof BottomSheetBehavior) {
             ((BottomSheetBehavior) behavior).setBottomSheetCallback(mBottomSheetBehaviorCallback);
-            ((BottomSheetBehavior) behavior).setPeekHeight(500);
+            // ((BottomSheetBehavior) behavior).setPeekHeight(600);
+            ((BottomSheetBehavior) behavior).setState(BottomSheetBehavior.STATE_EXPANDED);
         }
 
     }
@@ -287,10 +292,10 @@ public class NewOrderFragment extends BottomSheetDialogFragment {
     @OnClick(R.id.imageview_prescription)
     void onPrescriptionClick() {
 
-        String uri = mPrescriptionFile.getPath();
-        if (!uri.equals(""))
+        if (mPrescriptionFile != null) {
+            String uri = mPrescriptionFile.getPath();
             startActivity(ImageViewActivity.getInstance(getActivity(), uri));
-
+        }
     }
 
     @Override
@@ -393,6 +398,7 @@ public class NewOrderFragment extends BottomSheetDialogFragment {
                 Order order = new Order();
                 order.setPrescriptionUrl(imageId);
                 order.setAddress(addressKey);
+                order.setNote(noteEditText.getText().toString());
 
                 String orderId = OrderManager.createOrder(order);
 
