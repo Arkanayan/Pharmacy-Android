@@ -8,6 +8,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -181,7 +184,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
             ButterKnife.bind(this, view);
             /*mIdView = (TextView) view.findViewById(R.id.id);
             mContentView = (TextView) view.findViewById(R.id.content);*/
-            
+
         }
 
         @Override
@@ -193,19 +196,23 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
     private void setStatus(Order.Status status, ImageView imageView) {
         switch (status) {
             case CONFIRMED:
-                imageView.setColorFilter(ContextCompat.getColor(App.getContext(), R.color.md_amber_500),
+                imageView.setColorFilter(ContextCompat.getColor(App.getContext(), R.color.md_green_500),
                         PorterDuff.Mode.SRC_IN);
+                Animation pulse = AnimationUtils.loadAnimation(App.getContext(), R.anim.pulse);
+                imageView.startAnimation(pulse);
                 break;
             case ACKNOWLEDGED:
-                imageView.setColorFilter(ContextCompat.getColor(App.getContext(), R.color.md_pink_400),
+                imageView.setColorFilter(ContextCompat.getColor(App.getContext(), R.color.md_amber_500),
                         PorterDuff.Mode.SRC_IN);
+                startHangingAnimation(imageView);
                 break;
             case CANCELED:
                 imageView.setColorFilter(ContextCompat.getColor(App.getContext(), R.color.md_red_500),
                         PorterDuff.Mode.SRC_IN);
+
                 break;
             case CLOSED:
-                imageView.setColorFilter(ContextCompat.getColor(App.getContext(), R.color.colorPrimary),
+                imageView.setColorFilter(ContextCompat.getColor(App.getContext(), R.color.md_grey_400),
                         PorterDuff.Mode.SRC_IN);
                 break;
         }
@@ -214,5 +221,14 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
     public interface OnOrderClickListener {
 
         public void onOrderClick(String orderId);
+    }
+
+    private void startHangingAnimation(ImageView imageView) {
+        RotateAnimation rotate = new RotateAnimation(-10, 50, Animation.RELATIVE_TO_SELF, 0.2f, Animation.RELATIVE_TO_SELF, 0f);
+        rotate.setRepeatCount(Animation.INFINITE);
+        rotate.setRepeatMode(Animation.REVERSE);
+        rotate.setDuration(1500);
+        imageView.setAnimation(rotate);
+        rotate.start();
     }
 }
