@@ -131,8 +131,9 @@ public class OrderManager {
             Map context = new HashMap();
             context.put("uid", uid);
             context.put("order_id", orderId);
+            context.put("status", "OPEN");
 
-            String tags = "prescription, " + uid + "," + orderId;
+            String tags = "prescription, " + uid + "," + orderId + "," + "OPEN";
 
             Map options = ObjectUtils.asMap(
               "eager", Arrays.asList(
