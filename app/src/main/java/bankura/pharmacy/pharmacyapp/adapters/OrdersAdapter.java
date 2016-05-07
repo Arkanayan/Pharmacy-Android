@@ -1,11 +1,14 @@
 package bankura.pharmacy.pharmacyapp.adapters;
 
+import android.graphics.PorterDuff;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.firebase.client.ChildEventListener;
@@ -113,7 +116,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
     public void onBindViewHolder(ViewHolder holder, int position) {
         //Log.d(TAG, "onBindViewHolder: " + position);
         Order order = mOrderList.get(position);
-        String status =order.getStatus().name();
+        Order.Status status =order.getStatus();
         String orderId = order.getOrderId();
         double price = order.getPrice() + order.getShippingCharge();
      //    holder.mContentView.setText(String.valueOf(mOrderList.get(position).getPrice()));
@@ -136,6 +139,8 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("d", Locale.getDefault());
         holder.mDateTextView.setText(dateFormat.format(order.getCreatedAt()));
+
+        setStatus(status, holder.mStatusImageView);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -167,18 +172,42 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
         @BindView(R.id.text_view_month)
         public TextView mMonthTextView;
 
+        @BindView(R.id.image_view_status)
+        public ImageView mStatusImageView;
+
         public ViewHolder(View view) {
             super(view);
             mView = view;
             ButterKnife.bind(this, view);
             /*mIdView = (TextView) view.findViewById(R.id.id);
             mContentView = (TextView) view.findViewById(R.id.content);*/
-
+            
         }
 
         @Override
         public String toString() {
             return super.toString() + " '" + mOrderIdTextView.getText() + "'";
+        }
+    }
+
+    private void setStatus(Order.Status status, ImageView imageView) {
+        switch (status) {
+            case CONFIRMED:
+                imageView.setColorFilter(ContextCompat.getColor(App.getContext(), R.color.md_amber_500),
+                        PorterDuff.Mode.SRC_IN);
+                break;
+            case ACKNOWLEDGED:
+                imageView.setColorFilter(ContextCompat.getColor(App.getContext(), R.color.md_pink_400),
+                        PorterDuff.Mode.SRC_IN);
+                break;
+            case CANCELED:
+                imageView.setColorFilter(ContextCompat.getColor(App.getContext(), R.color.md_red_500),
+                        PorterDuff.Mode.SRC_IN);
+                break;
+            case CLOSED:
+                imageView.setColorFilter(ContextCompat.getColor(App.getContext(), R.color.colorPrimary),
+                        PorterDuff.Mode.SRC_IN);
+                break;
         }
     }
 
