@@ -41,7 +41,6 @@ public class OrderManager {
         String newOrderKey = newOrderRef.getKey();
 
         String orderId;
-
         order.setUid(uid);
 
         // saves the path, it can be retrived easily like /orders/<order_key>

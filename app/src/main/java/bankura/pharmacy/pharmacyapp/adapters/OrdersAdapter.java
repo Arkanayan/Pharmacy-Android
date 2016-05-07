@@ -13,12 +13,16 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import bankura.pharmacy.pharmacyapp.App;
 import bankura.pharmacy.pharmacyapp.R;
 import bankura.pharmacy.pharmacyapp.models.Order;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by arka on 4/30/16.
@@ -108,12 +112,30 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         //Log.d(TAG, "onBindViewHolder: " + position);
-        String status = mOrderList.get(position).getStatus().name();
-        String content = mOrderList.get(position).getOrderId() + " " + status;
+        Order order = mOrderList.get(position);
+        String status =order.getStatus().name();
+        String orderId = order.getOrderId();
+        double price = order.getPrice() + order.getShippingCharge();
      //    holder.mContentView.setText(String.valueOf(mOrderList.get(position).getPrice()));
         //test
-        holder.mContentView.setText(content);
-        holder.mIdView.setText(String.valueOf(mOrderList.get(position).getShippingCharge()));
+//        holder.mContentView.setText(content);
+      //  holder.mIdView.setText(String.valueOf(mOrderList.get(position).getShippingCharge()));
+
+       /* holder.mContentView.setText(App.getContext().getResources().getString(R.string.price, 15.0f));
+
+        long epoch = mOrderList.get(position).getCreatedAt() * 1000;
+        Date date = new Date(epoch);
+        DateFormat dateFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+        holder.mIdView.setText(dateFormat.format(epoch));*/
+
+        holder.mOrderIdTextView.setText(orderId);
+        holder.mPriceTextView.setText(App.getContext().getResources().getString(R.string.price, price));
+
+        SimpleDateFormat monthFormat = new SimpleDateFormat("MMM", Locale.getDefault());
+        holder.mMonthTextView.setText(monthFormat.format(order.getCreatedAt()));
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("d", Locale.getDefault());
+        holder.mDateTextView.setText(dateFormat.format(order.getCreatedAt()));
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,19 +155,30 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
+        @BindView(R.id.text_view_order_id)
+        public TextView mOrderIdTextView;
+
+        @BindView(R.id.text_view_price)
+        public TextView mPriceTextView;
+
+        @BindView(R.id.text_view_date)
+        public TextView mDateTextView;
+
+        @BindView(R.id.text_view_month)
+        public TextView mMonthTextView;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            ButterKnife.bind(this, view);
+            /*mIdView = (TextView) view.findViewById(R.id.id);
+            mContentView = (TextView) view.findViewById(R.id.content);*/
+
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + mOrderIdTextView.getText() + "'";
         }
     }
 

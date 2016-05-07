@@ -111,6 +111,7 @@ public class OrderDetailFragment extends Fragment {
 
                         Glide.with(OrderDetailFragment.this)
                                 .load(url)
+                                .placeholder(R.drawable.house)
                                 .into(prescriptionImageView);
                     }
                 }

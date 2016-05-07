@@ -1,20 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/md_amber_100"
+    android:layout_marginTop="@dimen/md_button_inset_horizontal"
+    android:layout_marginBottom="@dimen/md_button_inset_horizontal"
+    android:layout_marginRight="8dp"
+    android:layout_marginLeft="8dp"
+    app:cardCornerRadius="2dp"
+    android:orientation="horizontal"
+    android:foreground="?attr/selectableItemBackground"
+    >
 
-    <TextView
-        android:id="@+id/id"
-        android:layout_width="wrap_content"
+    <GridLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:textAppearance="?attr/textAppearanceListItem" />
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingBottom="@dimen/activity_horizontal_margin"
+        android:rowCount="1"
+        android:columnCount="4"
+        >
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:paddingTop="@dimen/activity_horizontal_margin"
 
-    <TextView
-        android:id="@+id/content"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="07"
+            android:id="@+id/text_view_date"
+            android:layout_gravity="center_horizontal"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+            android:paddingBottom="@dimen/md_button_inset_horizontal"
+            android:textColor="@color/md_grey_600"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="May"
+            android:id="@+id/text_view_month"
+            android:layout_gravity="center_horizontal"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+            android:textColor="@color/md_grey_600"
+
+            />
+    </LinearLayout>
+
+
+        <View
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:layout_width="@dimen/cardview_compat_inset_shadow"
+            android:layout_height="60dp"
+            android:background="@color/md_grey_400"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            />
+
+    <LinearLayout
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:orientation="vertical"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:textAppearance="?attr/textAppearanceListItem" />
-</LinearLayout>
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+            android:textSize="16sp"
+            tools:text="OD3434343423"
+            android:textColor="@color/md_grey_600"
+            android:id="@+id/text_view_order_id" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            tools:text="@string/price"
+            android:id="@+id/text_view_price"
+            android:paddingTop="@dimen/item_margin"
+            />
+
+
+    </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:layout_gravity="end|center_vertical"
+            android:visibility="visible"
+            android:layout_marginTop="-38dp"
+            >
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/tag_open"
+
+                />
+
+        </FrameLayout>
+
+
+    </GridLayout>
+
+</android.support.v7.widget.CardView>

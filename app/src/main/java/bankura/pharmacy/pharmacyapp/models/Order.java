@@ -68,7 +68,7 @@ public class Order {
 
     public enum Status {
 
-        OPEN, ACKNOWLEGED, CONFIRMED, CANCELED, CLOSED;
+        OPEN, ACKNOWLEDGED, CONFIRMED, CANCELED, CLOSED;
 
 
         // used for serializing Status to int , instead of "OPEN" or "CLOSED"
