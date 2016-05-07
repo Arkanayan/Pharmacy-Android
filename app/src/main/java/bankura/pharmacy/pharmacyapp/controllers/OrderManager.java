@@ -45,6 +45,9 @@ public class OrderManager {
 
         order.setUid(uid);
 
+        // saves the path, it can be retrived easily like /orders/<order_key>
+        order.setOrderPath(newOrderKey);
+
         // set timestamp
         long timestamp = System.currentTimeMillis() / 1000L;
         order.setCreatedAt(timestamp);

@@ -402,17 +402,6 @@ public class NewOrderFragment extends BottomSheetDialogFragment {
 
                 String orderId = OrderManager.createOrder(order);
 
-
- /*               Map options = new HashMap();
-                options = ObjectUtils.asMap(
-                        "context", ObjectUtils.asMap("order_id", orderId)
-                );
-                try {
-                    Utils.getCloudinary().uploader().addTag("OPEN",new String[]{ order.getPrescriptionUrl()}, options);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }*/
-
                 showSnackbar("Order created " + orderId);
 
             }, throwable -> {
