@@ -103,10 +103,10 @@ public class OrderListActivity extends AppCompatActivity implements OrdersAdapte
     }
 
     @Override
-    public void onOrderClick(String orderId) {
+    public void onOrderClick(String orderPath) {
         if (mTwoPane) {
             Bundle arguments = new Bundle();
-            arguments.putString(OrderDetailFragment.ORDER_ID, orderId);
+            arguments.putString(OrderDetailFragment.ORDER_PATH, orderPath);
             OrderDetailFragment fragment = new OrderDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
@@ -114,7 +114,7 @@ public class OrderListActivity extends AppCompatActivity implements OrdersAdapte
                     .commit();
         } else {
 
-            startActivity(OrderDetailActivity.getInstance(this, orderId));
+            startActivity(OrderDetailActivity.getInstance(this, orderPath));
 
         }
     }

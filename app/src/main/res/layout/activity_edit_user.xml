@@ -137,7 +137,7 @@
             <ImageView
                 android:layout_width="50dp"
                 android:layout_height="30dp"
-                android:src="@drawable/address_book"
+                android:src="@drawable/house"
                 android:layout_columnSpan="1"
                 android:layout_gravity="left|top"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"

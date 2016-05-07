@@ -119,7 +119,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
             @Override
             public void onClick(View v) {
 
-                mListener.onOrderClick(mOrderList.get(position).getOrderId());
+                mListener.onOrderClick(mOrderList.get(position).getOrderPath());
 
             }
         });

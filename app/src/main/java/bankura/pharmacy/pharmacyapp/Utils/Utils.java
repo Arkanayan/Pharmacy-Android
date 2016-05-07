@@ -2,8 +2,10 @@ package bankura.pharmacy.pharmacyapp.Utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.annotation.Nullable;
 
 import com.cloudinary.Cloudinary;
+import com.cloudinary.Transformation;
 
 import java.util.UUID;
 
@@ -41,5 +43,14 @@ public class Utils {
 
         return orderId;
 
+    }
+
+    public static String getImageLowerUrl(String publidId, @Nullable Cloudinary cloudinary) {
+
+        Cloudinary cloud = (cloudinary != null) ? cloudinary : getCloudinary();
+
+        return cloud.url()
+                .transformation(new Transformation().width(0.3).quality(30).crop("scale"))
+                .generate(publidId);
     }
 }
