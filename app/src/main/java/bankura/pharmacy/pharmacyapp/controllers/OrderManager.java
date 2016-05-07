@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import bankura.pharmacy.pharmacyapp.App;
 import bankura.pharmacy.pharmacyapp.R;
@@ -52,18 +51,13 @@ public class OrderManager {
         long timestamp = System.currentTimeMillis() / 1000L;
         order.setCreatedAt(timestamp);
 
-        //generate random uuid for order
-        String randomUuid = UUID.randomUUID().toString();
-        orderId = "OD" + randomUuid.substring(randomUuid.length() - 10).toUpperCase();
-        order.setOrderId(orderId);
-
         newOrderRef.setValue(order);
         newOrderRef.setPriority(0 - order.getCreatedAt());
 
         ref.child("order_stats").child("open").child(newOrderKey).setValue(true);
         UserManager.getUserRef().child("orders").child(newOrderKey).setValue(true);
 
-        return orderId;
+        return order.getOrderId();
     }
 
 
@@ -119,7 +113,7 @@ public class OrderManager {
      * @param file to upload
      * @return public_id of the uploaded image
      */
-    public static Observable<String> uploadImage(File file) {
+    public static Observable<String> uploadImage(File file, String orderId) {
         return Observable.create(subscriber -> {
 
 
@@ -136,8 +130,9 @@ public class OrderManager {
 
             Map context = new HashMap();
             context.put("uid", uid);
+            context.put("order_id", orderId);
 
-            String tags = "prescription, " + uid;
+            String tags = "prescription, " + uid + "," + orderId;
 
             Map options = ObjectUtils.asMap(
               "eager", Arrays.asList(

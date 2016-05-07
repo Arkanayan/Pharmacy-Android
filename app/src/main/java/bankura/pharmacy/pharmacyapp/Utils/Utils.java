@@ -5,6 +5,8 @@ import android.content.Context;
 
 import com.cloudinary.Cloudinary;
 
+import java.util.UUID;
+
 import bankura.pharmacy.pharmacyapp.App;
 import bankura.pharmacy.pharmacyapp.R;
 import bankura.pharmacy.pharmacyapp.activities.LoginActivity;
@@ -29,5 +31,15 @@ public class Utils {
     public static Cloudinary getCloudinary() {
 
         return new Cloudinary(App.getContext().getString(R.string.cloudinary_url));
+    }
+
+    public static String generateOrderId() {
+
+        //generate random uuid for order
+        String randomUuid = UUID.randomUUID().toString();
+        String orderId = "OD" + randomUuid.substring(randomUuid.length() - 10).toUpperCase();
+
+        return orderId;
+
     }
 }

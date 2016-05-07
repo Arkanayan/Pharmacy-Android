@@ -37,6 +37,7 @@ import java.util.Map;
 import bankura.pharmacy.pharmacyapp.App;
 import bankura.pharmacy.pharmacyapp.R;
 import bankura.pharmacy.pharmacyapp.Utils.Constants;
+import bankura.pharmacy.pharmacyapp.Utils.Utils;
 import bankura.pharmacy.pharmacyapp.controllers.OrderManager;
 import bankura.pharmacy.pharmacyapp.controllers.UserManager;
 import bankura.pharmacy.pharmacyapp.models.Address;
@@ -374,7 +375,12 @@ public class NewOrderFragment extends BottomSheetDialogFragment {
             mSubmitButton.setMode(ActionProcessButton.Mode.ENDLESS);
             mSubmitButton.setProgress(2);
 
-         Observable<String> imageuploadObservable = OrderManager.uploadImage(mPrescriptionFile)
+            //Create order instance
+            Order order = new Order();
+            order.setNote(noteEditText.getText().toString());
+            order.setOrderId(Utils.generateOrderId());
+
+         Observable<String> imageuploadObservable = OrderManager.uploadImage(mPrescriptionFile, order.getOrderId())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread());
 
@@ -392,13 +398,13 @@ public class NewOrderFragment extends BottomSheetDialogFragment {
                 String imageId = map.get("public_id");
 
                 Log.d(TAG, "submitOrder: ImageUrl: " + imageId);
-
-                String addressKey = map.get("address_key");
-
-                Order order = new Order();
+                // set order prescription image
                 order.setPrescriptionUrl(imageId);
+
+                // set order address
+                String addressKey = map.get("address_key");
                 order.setAddress(addressKey);
-                order.setNote(noteEditText.getText().toString());
+
 
                 String orderId = OrderManager.createOrder(order);
 
