@@ -1,5 +1,8 @@
 package bankura.pharmacy.pharmacyapp.adapters;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.graphics.PorterDuff;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -8,8 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.RotateAnimation;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -51,42 +53,54 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
         ref.child("orders").orderByChild("uid").equalTo(uid).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Log.d(TAG, "onChildAdded: key: " + dataSnapshot.getKey());
-                Order order = dataSnapshot.getValue(Order.class);
-                mOrderList.add(0, order);
-                notifyItemInserted(mOrderList.indexOf(order));
-              // mRecyclerView.smoothScrollToPosition(0);
-              //  ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(0, 20);
+                try {
+                    Log.d(TAG, "onChildAdded: key: " + dataSnapshot.getKey());
+                    Order order = dataSnapshot.getValue(Order.class);
+                    mOrderList.add(0, order);
+                    notifyItemInserted(mOrderList.indexOf(order));
+                    // mRecyclerView.smoothScrollToPosition(0);
+                    //  ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(0, 20);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Log.d(TAG, "onChildchanged: key: " + dataSnapshot.getKey());
-                Order order = dataSnapshot.getValue(Order.class);
-                if (order != null) {
+                try {
+                    Log.d(TAG, "onChildchanged: key: " + dataSnapshot.getKey());
+                    Order order = dataSnapshot.getValue(Order.class);
+                    if (order != null) {
 
-                    int position = mOrderList.indexOf(order);
-                    mOrderList.set(position, order);
-                    Log.d(TAG, "onChildchanged: position: " + position);
-                    Log.d(TAG, "onChildChanged: new shipping charge: " + order.getShippingCharge());
-                    notifyItemChanged(position, order);
+                        int position = mOrderList.indexOf(order);
+                        mOrderList.set(position, order);
+                        Log.d(TAG, "onChildchanged: position: " + position);
+                        Log.d(TAG, "onChildChanged: new shipping charge: " + order.getShippingCharge());
+                        notifyItemChanged(position, order);
 
 
-                    // notifyItemRangeChanged(position, 1, order);
+                        // notifyItemRangeChanged(position, 1, order);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                Order order = dataSnapshot.getValue(Order.class);
-                if (order != null) {
-                    Log.d(TAG, "onChildRemoved: ID: " + order.getOrderId());
-                    Log.d(TAG, "onChildRemoved: position: " + mOrderList.indexOf(order));
-                    // the order of the next two lines are important don't change it
-                    // otherwise recyclerview will remove different child each time
-                    notifyItemRemoved(mOrderList.indexOf(order));
-                    mOrderList.remove(order);
+                try {
+                    Order order = dataSnapshot.getValue(Order.class);
+                    if (order != null) {
+                        Log.d(TAG, "onChildRemoved: ID: " + order.getOrderId());
+                        Log.d(TAG, "onChildRemoved: position: " + mOrderList.indexOf(order));
+                        // the order of the next two lines are important don't change it
+                        // otherwise recyclerview will remove different child each time
+                        notifyItemRemoved(mOrderList.indexOf(order));
+                        mOrderList.remove(order);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 
@@ -225,15 +239,45 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
 
     private void clearAnimation(ImageView imageView) {
         imageView.clearAnimation();
+        if (imageView.getAnimation() != null) {
+            imageView.getAnimation().cancel();
+        }
 
     }
     private void startHangingAnimation(ImageView imageView) {
-        RotateAnimation rotate = new RotateAnimation(-10, 50, Animation.RELATIVE_TO_SELF, 0.2f, Animation.RELATIVE_TO_SELF, 0f);
+/*        RotateAnimation rotate = new RotateAnimation(-10, 50, Animation.RELATIVE_TO_SELF, 0.2f, Animation.RELATIVE_TO_SELF, 0f);
         rotate.setRepeatCount(Animation.INFINITE);
         rotate.setRepeatMode(Animation.REVERSE);
         rotate.setDuration(1500);
         imageView.setAnimation(rotate);
-        rotate.start();
+        rotate.start();*/
+
+        ObjectAnimator rotation = ObjectAnimator.ofFloat(imageView,
+                "rotation", -10f, 50f);
+
+        rotation.setRepeatMode(ValueAnimator.REVERSE);
+        rotation.setRepeatCount(ValueAnimator.INFINITE);
+        ObjectAnimator rotationX = ObjectAnimator.ofFloat(imageView,
+                "rotationX", -20f, 5f);
+
+        rotationX.setRepeatMode(ValueAnimator.REVERSE);
+        rotationX.setRepeatCount(ValueAnimator.INFINITE);
+        imageView.setPivotX(25f);
+        imageView.setPivotY(0f);
+/*        Log.d(TAG, "startHangingAnimation: pivotX: " + imageView.getPivotX());
+        Log.d(TAG, "startHangingAnimation: pivotY: " + imageView.getPivotY());*/
+        ObjectAnimator pivotX = ObjectAnimator.ofFloat(imageView, "pivotX", imageView.getPivotX());
+        pivotX.setRepeatMode(ValueAnimator.REVERSE);
+        pivotX.setRepeatCount(ValueAnimator.INFINITE);
+        ObjectAnimator pivotY = ObjectAnimator.ofFloat(imageView, "pivotY", imageView.getPivotY());
+        pivotY.setRepeatMode(ValueAnimator.REVERSE);
+        pivotY.setRepeatCount(ValueAnimator.INFINITE);
+
+        AnimatorSet animation = new AnimatorSet();
+        animation.playTogether(rotation,rotationX, pivotX, pivotY);
+        animation.setDuration(1500);
+        animation.setInterpolator(new AccelerateDecelerateInterpolator());
+        animation.start();
     }
 
 

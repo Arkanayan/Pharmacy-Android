@@ -181,15 +181,21 @@ public class NewOrderFragment extends Fragment {
        mUserEventListener = mUserRef.addValueEventListener(new ValueEventListener() {
            @Override
            public void onDataChange(DataSnapshot dataSnapshot) {
-               User user = dataSnapshot.getValue(User.class);
-               if (user != null) {
-                   populateUser(user);
-                   mUser = user;
+               try {
+                   User user = dataSnapshot.getValue(User.class);
+                   if (user != null) {
+                       populateUser(user);
+                       mUser = user;
+                   }
+               } catch (Exception e) {
+                   showSnackbar("Sorry, Unable to retrive your details");
+                   e.printStackTrace();
                }
            }
 
            @Override
            public void onCancelled(FirebaseError firebaseError) {
+               firebaseError.toException().printStackTrace();
                 showSnackbar("Sorry, Unable to retrive your details");
            }
        });
@@ -198,15 +204,21 @@ public class NewOrderFragment extends Fragment {
         mAddressEventListener = mAddressRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                dataSnapshot = dataSnapshot.getChildren().iterator().next();
-                Address address = dataSnapshot.getValue(Address.class);
-                if (address != null) {
-                    populateAddress(address);
+                try {
+                    dataSnapshot = dataSnapshot.getChildren().iterator().next();
+                    Address address = dataSnapshot.getValue(Address.class);
+                    if (address != null) {
+                        populateAddress(address);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showSnackbar("Sorry, Unable to retrive your address");
                 }
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
+                firebaseError.toException().printStackTrace();
                 showSnackbar("Sorry, Unable to retrive your address");
 
             }
