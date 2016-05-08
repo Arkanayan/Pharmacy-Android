@@ -19,6 +19,7 @@ import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.Query;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,6 +42,8 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
     private List<Order> mOrderList;
     private RecyclerView mRecyclerView;
     private OnOrderClickListener mListener;
+    private Query mOrdersQuery;
+    private ChildEventListener mOrdersListener;
 
     public OrdersAdapter(RecyclerView recyclerView, OnOrderClickListener listener) {
         mOrderList = new ArrayList<Order>();
@@ -50,7 +53,9 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
         Firebase ref = App.getFirebase();
         String uid = App.getFirebase().getAuth().getUid();
 
-        ref.child("orders").orderByChild("uid").equalTo(uid).addChildEventListener(new ChildEventListener() {
+        mOrdersQuery = ref.child("orders").orderByChild("uid").equalTo(uid);
+
+        mOrdersListener =  mOrdersQuery.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 try {
@@ -278,6 +283,11 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
         animation.setDuration(1500);
         animation.setInterpolator(new AccelerateDecelerateInterpolator());
         animation.start();
+    }
+
+    public void cleanUp() {
+
+        mOrdersQuery.removeEventListener(mOrdersListener);
     }
 
 

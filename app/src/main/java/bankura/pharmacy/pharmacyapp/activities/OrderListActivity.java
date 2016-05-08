@@ -35,6 +35,8 @@ public class OrderListActivity extends AppCompatActivity implements OrdersAdapte
      */
     private boolean mTwoPane;
 
+    private OrdersAdapter mOrdersAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +53,6 @@ public class OrderListActivity extends AppCompatActivity implements OrdersAdapte
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setTitle(getTitle());
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -74,7 +75,7 @@ public class OrderListActivity extends AppCompatActivity implements OrdersAdapte
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.order_list);
         assert recyclerView != null;
        // setupRecyclerView((RecyclerView) recyclerView);
-        OrdersAdapter adapter = new OrdersAdapter(recyclerView, this);
+        mOrdersAdapter = new OrdersAdapter(recyclerView, this);
 
 
         // Set animator
@@ -89,7 +90,7 @@ public class OrderListActivity extends AppCompatActivity implements OrdersAdapte
 //        animator.setAddDuration(400);
 //        animator.setChangeDuration(400);
         recyclerView.setItemAnimator(slideAnimator);
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(mOrdersAdapter);
 
         if (findViewById(R.id.order_detail_container) != null) {
             // The detail container view will be present only in the
@@ -139,5 +140,10 @@ public class OrderListActivity extends AppCompatActivity implements OrdersAdapte
         return new Intent(context, OrderListActivity.class);
     }
 
-
+    @Override
+    protected void onDestroy() {
+        // Clean up child listener
+        mOrdersAdapter.cleanUp();
+        super.onDestroy();
+    }
 }
