@@ -2,13 +2,18 @@ package bankura.pharmacy.pharmacyapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -18,11 +23,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.dd.processbutton.iml.ActionProcessButton;
 import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 
 import java.io.File;
@@ -92,8 +97,17 @@ public class NewOrderFragment extends Fragment {
     @BindView(R.id.input_note)
     EditText noteEditText;
 
-    @BindView(R.id.button_submit_order)
-    ActionProcessButton mSubmitButton;
+/*    @BindView(R.id.button_submit_order)
+    ActionProcessButton mSubmitButton;*/
+
+    @BindView(R.id.fab_order)
+    FloatingActionButton fabOrderButton;
+
+    // Used for detaching the listeners
+    Query mUserRef;
+    Query mAddressRef;
+    ValueEventListener mUserEventListener;
+    ValueEventListener mAddressEventListener;
 
     String mRxPath = "";
 
@@ -125,7 +139,9 @@ public class NewOrderFragment extends Fragment {
 
 
 
+/*
         disableSubmitButton();
+*/
         AuthData authData = mRef.getAuth();
 
         if (savedInstanceState != null) {
@@ -160,8 +176,9 @@ public class NewOrderFragment extends Fragment {
 */
 
         String uid = authData.getUid();
+        mUserRef = mRef.child(Constants.Path.USERS).child(uid);
 
-       mRef.child(Constants.Path.USERS).child(uid).addValueEventListener(new ValueEventListener() {
+       mUserEventListener = mUserRef.addValueEventListener(new ValueEventListener() {
            @Override
            public void onDataChange(DataSnapshot dataSnapshot) {
                User user = dataSnapshot.getValue(User.class);
@@ -177,7 +194,8 @@ public class NewOrderFragment extends Fragment {
            }
        });
 
-        mRef.child(Constants.Path.ADDRESSES).child(uid).limitToFirst(1).addValueEventListener(new ValueEventListener() {
+        mAddressRef = mRef.child(Constants.Path.ADDRESSES).child(uid).limitToFirst(1);
+        mAddressEventListener = mAddressRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 dataSnapshot = dataSnapshot.getChildren().iterator().next();
@@ -201,7 +219,7 @@ public class NewOrderFragment extends Fragment {
     }
 
 
-    private void disableSubmitButton() {
+/*    private void disableSubmitButton() {
 
         mSubmitButton.setEnabled(false);
         mSubmitButton.setClickable(false);
@@ -212,7 +230,7 @@ public class NewOrderFragment extends Fragment {
         mSubmitButton.setAlpha(1f);
         mSubmitButton.setClickable(true);
         mSubmitButton.setEnabled(true);
-    }
+    }*/
 
     @OnClick(R.id.button_edit_address)
     void onEditAddress() {
@@ -284,7 +302,44 @@ public class NewOrderFragment extends Fragment {
     private void setmPrescriptionFile(File file) {
         mPrescriptionFile = file;
         attachImage(file);
+/*
         enableSubmitButton();
+*/
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                fabShowAndClickable();
+            }
+        }, 1000);
+    }
+
+    private void fabShowAndClickable() {
+        fabOrderButton.show();
+        fabOrderButton.setClickable(true);
+
+    }
+
+    private void fabShowLoadingAnimation() {
+        fabOrderButton.clearAnimation();
+        fabOrderButton.setImageResource(R.drawable.refresh);
+        fabOrderButton.setClickable(false);
+        Animation roate = AnimationUtils.loadAnimation(App.getContext(), R.anim.loading_roate);
+        fabOrderButton.startAnimation(roate);
+    }
+
+    private void fabShowFailed() {
+        fabOrderButton.clearAnimation();
+        fabOrderButton.setImageResource(R.drawable.failed);
+        fabOrderButton.setBackgroundTintList(ContextCompat.getColorStateList(getActivity(), R.color.md_red_400));
+
+    }
+
+    private void fabShowSuccess() {
+
+        fabOrderButton.clearAnimation();
+        fabOrderButton.setImageResource(R.drawable.ok_mark);
+        fabOrderButton.setBackgroundTintList(ContextCompat.getColorStateList(getActivity(), R.color.md_green_400));
+
     }
 
     private void attachImage(File file) {
@@ -306,21 +361,23 @@ public class NewOrderFragment extends Fragment {
 
     }
 
-    @OnClick(R.id.button_submit_order)
+
+    @OnClick(R.id.fab_order)
     void submitOrder() {
 
 
         if (mPrescriptionFile != null) {
             // enable indeterminate mode
-            mSubmitButton.setMode(ActionProcessButton.Mode.ENDLESS);
-            mSubmitButton.setProgress(2);
+/*            mSubmitButton.setMode(ActionProcessButton.Mode.ENDLESS);
+            mSubmitButton.setProgress(2);*/
+            fabShowLoadingAnimation();
 
             //Create order instance
             Order order = new Order();
             order.setNote(noteEditText.getText().toString());
             order.setOrderId(Utils.generateOrderId());
 
-         Observable<String> imageuploadObservable = OrderManager.uploadImage(mPrescriptionFile, order.getOrderId())
+            Observable<String> imageuploadObservable = OrderManager.uploadImage(mPrescriptionFile, order.getOrderId())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread());
 
@@ -351,12 +408,9 @@ public class NewOrderFragment extends Fragment {
                 showSnackbar("Order created " + orderId);
 
             }, throwable -> {
-                        showSnackbar(throwable.getMessage());
-                        mSubmitButton.setProgress(-1);
-                    }, () -> {
-                        mSubmitButton.setProgress(100);
-                        mSubmitButton.setClickable(false);
-                    });
+                showSnackbar(throwable.getMessage());
+                fabShowFailed();
+            }, this::fabShowSuccess);
 
             mCompositeSubscription.add(orderSubscription);
 
@@ -370,6 +424,10 @@ public class NewOrderFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         mCompositeSubscription.unsubscribe();
+        // clear firebase event listeners
+        mUserRef.removeEventListener(mUserEventListener);
+        mAddressRef.removeEventListener(mAddressEventListener);
+
     }
 
     @Override

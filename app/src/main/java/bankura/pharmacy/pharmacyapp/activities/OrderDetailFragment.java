@@ -37,7 +37,7 @@ public class OrderDetailFragment extends Fragment {
     @BindView(R.id.order_detail)
     TextView orderTextView;
 
-    Firebase mRef;
+    Firebase mOrderRef;
 
     /**
      * The fragment argument representing the item ID that this fragment
@@ -54,6 +54,8 @@ public class OrderDetailFragment extends Fragment {
 
     @BindView(R.id.image_view_prescripiton)
     ImageView prescriptionImageView;
+
+    ValueEventListener mOrderListener;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -90,7 +92,7 @@ public class OrderDetailFragment extends Fragment {
         // Show the dummy content as text in a TextView.
         if (mOrderPath != null) {
             Log.d(TAG, "onCreateView: order path: " + mOrderPath);
-            mRef = App.getFirebase();
+            mOrderRef = App.getFirebase().child(Constants.Path.ORDERS).child(mOrderPath);
 
 /*           Subscription fetchOrderSubscription =  OrderManager.fetchOrder(mOrderPath).subscribe(order -> {
                 orderTextView.setText(order.getUid());
@@ -99,7 +101,7 @@ public class OrderDetailFragment extends Fragment {
             });
 
             compositeSubscription.add(fetchOrderSubscription);*/
-            mRef.child(Constants.Path.ORDERS).child(mOrderPath).addValueEventListener(new ValueEventListener() {
+      mOrderListener = mOrderRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     Order order = dataSnapshot.getValue(Order.class);
@@ -107,9 +109,9 @@ public class OrderDetailFragment extends Fragment {
                     if (order != null) {
                         orderTextView.setText(order.getNote());
 
-                        String url = Utils.getImageLowerUrl(order.getPrescriptionUrl(), null);
+                        String url = Utils.getImageLowerUrl(order.getPrescriptionUrl());
 
-                        Glide.with(OrderDetailFragment.this)
+                        Glide.with(getActivity())
                                 .load(url)
                                 .placeholder(R.drawable.house)
                                 .into(prescriptionImageView);
@@ -130,6 +132,7 @@ public class OrderDetailFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mOrderRef.removeEventListener(mOrderListener);
         compositeSubscription.unsubscribe();
 
     }

@@ -2,7 +2,7 @@ package bankura.pharmacy.pharmacyapp.Utils;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.Transformation;
@@ -45,12 +45,42 @@ public class Utils {
 
     }
 
-    public static String getImageLowerUrl(String publidId, @Nullable Cloudinary cloudinary) {
+    public static String getImageLowerUrl(String publicId, @NonNull Cloudinary cloudinary) {
 
-        Cloudinary cloud = (cloudinary != null) ? cloudinary : getCloudinary();
 
-        return cloud.url()
-                .transformation(new Transformation().width(0.3).quality(30).crop("scale"))
-                .generate(publidId);
+        return cloudinary.url()
+                .transformation(getLowerTransformation())
+                .format("jpg")
+                .generate(publicId);
+    }
+
+    public static String getImageLowerUrl(String publicId) {
+
+        return getImageLowerUrl(publicId, getCloudinary());
+    }
+
+    public static String getThumbUrl(String publicId, @NonNull Cloudinary cloudinary) {
+
+        return cloudinary.url()
+                .transformation(getThumbnailTransformation())
+                .format("jpg")
+                .generate(publicId);
+    }
+
+    public static String getThumbUrl(String publicId) {
+
+        return getThumbUrl(publicId, getCloudinary());
+    }
+
+
+
+    public static Transformation getLowerTransformation() {
+
+        return new Transformation().quality(30).width(0.3).crop("scale").fetchFormat("jpg");
+    }
+
+    public static Transformation getThumbnailTransformation() {
+
+       return new Transformation().quality(30).width(75).height(75).crop("limit").fetchFormat("jpg");
     }
 }

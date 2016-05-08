@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -198,8 +197,8 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
             case CONFIRMED:
                 imageView.setColorFilter(ContextCompat.getColor(App.getContext(), R.color.md_green_500),
                         PorterDuff.Mode.SRC_IN);
-                Animation pulse = AnimationUtils.loadAnimation(App.getContext(), R.anim.pulse);
-                imageView.startAnimation(pulse);
+/*                Animation pulse = AnimationUtils.loadAnimation(App.getContext(), R.anim.pulse);
+                imageView.startAnimation(pulse);*/
                 break;
             case ACKNOWLEDGED:
                 imageView.setColorFilter(ContextCompat.getColor(App.getContext(), R.color.md_amber_500),

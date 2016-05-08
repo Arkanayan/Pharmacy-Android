@@ -53,3 +53,7 @@
 }
 
 -dontwarn org.w3c.dom.bootstrap.DOMImplementationRegistry
+
+-keepattributes *Annotation*
+-keep public class * extends android.support.design.widget.CoordinatorLayout.Behavior { *; }
+-keep public class * extends android.support.design.widget.ViewOffsetBehavior { *; }

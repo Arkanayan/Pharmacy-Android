@@ -263,7 +263,7 @@
 
         </LinearLayout>
 
-        <com.dd.processbutton.iml.ActionProcessButton
+<!--        <com.dd.processbutton.iml.ActionProcessButton
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/activity_vertical_margin"
@@ -280,10 +280,23 @@
             custom:pb_textError="Failed"
             custom:pb_textComplete="Success"
             custom:pb_textProgress="Uploading"
-            />
-
+            />-->
 
     </LinearLayout>
     </ScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_order"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@drawable/send"
+        app:pressedTranslationZ="36dp"
+        app:fabSize="normal"
+        android:visibility="invisible"
+        app:rippleColor="@color/md_red_900"
+        />
+
 
 </android.support.design.widget.CoordinatorLayout>

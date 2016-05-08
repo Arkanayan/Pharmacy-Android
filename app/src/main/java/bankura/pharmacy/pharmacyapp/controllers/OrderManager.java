@@ -19,6 +19,7 @@ import java.util.Map;
 import bankura.pharmacy.pharmacyapp.App;
 import bankura.pharmacy.pharmacyapp.R;
 import bankura.pharmacy.pharmacyapp.Utils.Constants;
+import bankura.pharmacy.pharmacyapp.Utils.Utils;
 import bankura.pharmacy.pharmacyapp.models.Order;
 import rx.Observable;
 
@@ -32,6 +33,7 @@ public class OrderManager {
      * @param order
      * @return order id
      */
+    // TODO: 8/5/16 set callback handling on order creation failed
     public static String createOrder(Order order) {
         Firebase ref = App.getFirebase();
         String uid = ref.getAuth().getUid();
@@ -58,7 +60,6 @@ public class OrderManager {
 
         return order.getOrderId();
     }
-
 
 
 
@@ -136,8 +137,8 @@ public class OrderManager {
 
             Map options = ObjectUtils.asMap(
               "eager", Arrays.asList(
-                            new Transformation().quality(30).width(0.3).crop("scale"),
-                            new Transformation().quality(30).width(75).height(75).crop("limit")),
+                            Utils.getLowerTransformation(),
+                            Utils.getThumbnailTransformation()),
               "tags", tags,
             "context", context,
             "public_id", public_id,
