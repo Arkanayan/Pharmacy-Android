@@ -81,21 +81,39 @@
             android:textColor="@color/md_grey_600"
             android:id="@+id/text_view_order_id" />
 
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            tools:text="@string/price"
-            android:id="@+id/text_view_price"
+            android:orientation="horizontal"
             android:paddingTop="@dimen/item_margin"
 
-            />
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                tools:text="@string/price"
+                android:id="@+id/text_view_price"
+
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                tools:text="@string/price"
+                android:id="@+id/text_view_status"
+                android:paddingLeft="12dp"
+                />
+
+        </LinearLayout>
+
 
 
     </LinearLayout>
 
         <LinearLayout
-            android:layout_width="200dp"
+            android:layout_width="100dp"
             android:layout_height="70dp"
             android:layout_gravity="end"
             android:visibility="visible"
@@ -106,10 +124,12 @@
                 android:layout_width="60dp"
                 android:layout_height="40dp"
                 android:id="@+id/image_view_status"
-                android:layout_gravity="center"
+                android:layout_gravity="center_horizontal"
                 android:src="@drawable/tag_open"
                 android:adjustViewBounds="true"
                 />
+
+
 
         </LinearLayout>
 

@@ -162,6 +162,8 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
             SimpleDateFormat dateFormat = new SimpleDateFormat("d", Locale.getDefault());
             holder.mDateTextView.setText(dateFormat.format(order.getCreatedAtLong()));
 
+            holder.mStatusTextView.setText(status.name());
+
             setStatus(status, holder.mStatusImageView);
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -199,6 +201,9 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
 
         @BindView(R.id.image_view_status)
         public ImageView mStatusImageView;
+
+        @BindView(R.id.text_view_status)
+        public TextView mStatusTextView;
 
         public ViewHolder(View view) {
             super(view);
