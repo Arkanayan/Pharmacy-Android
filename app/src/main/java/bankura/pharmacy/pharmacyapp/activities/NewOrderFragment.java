@@ -344,6 +344,7 @@ public class NewOrderFragment extends Fragment {
         fabOrderButton.clearAnimation();
         fabOrderButton.setImageResource(R.drawable.failed);
         fabOrderButton.setBackgroundTintList(ContextCompat.getColorStateList(getActivity(), R.color.md_red_400));
+        fabOrderButton.setClickable(true);
 
     }
 
@@ -352,7 +353,13 @@ public class NewOrderFragment extends Fragment {
         fabOrderButton.clearAnimation();
         fabOrderButton.setImageResource(R.drawable.ok_mark);
         fabOrderButton.setBackgroundTintList(ContextCompat.getColorStateList(getActivity(), R.color.md_green_400));
-
+        fabOrderButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().finish();
+                return;
+            }
+        });
     }
 
     private void attachImage(File file) {
