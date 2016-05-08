@@ -76,7 +76,7 @@ public class Utils {
 
     public static Transformation getLowerTransformation() {
 
-        return new Transformation().quality(30).width(0.3).crop("scale").fetchFormat("jpg");
+        return new Transformation().quality(40).width(0.3).crop("scale").fetchFormat("jpg");
     }
 
     public static Transformation getThumbnailTransformation() {

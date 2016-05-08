@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="bankura.pharmacy.pharmacyapp">
+    package="bankura.pharmacy.pharmacyapp" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -12,8 +12,8 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".activities.InitialActivity">
+        android:theme="@style/AppTheme" >
+        <activity android:name=".activities.InitialActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,22 +28,19 @@
         <activity android:name=".activities.LoginActivity" />
         <activity
             android:name=".activities.EditUserActivity"
-            android:windowSoftInputMode="stateHidden"
-            android:parentActivityName=".activities.OrderListActivity"
             android:label="Edit"
-            />
+            android:parentActivityName=".activities.OrderListActivity"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.OrderListActivity"
             android:label="@string/title_order_list"
-            android:theme="@style/AppTheme.NoActionBar"
             android:launchMode="singleTop"
-            />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.OrderDetailActivity"
             android:label="@string/title_order_detail"
             android:parentActivityName=".activities.OrderListActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            >
+            android:theme="@style/AppTheme.NoActionBar" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="bankura.pharmacy.pharmacyapp.activities.OrderListActivity" />
@@ -52,15 +49,14 @@
             android:name=".activities.NewOrderActivity"
             android:label="@string/title_activity_new_order"
             android:parentActivityName=".activities.OrderListActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="bankura.pharmacy.pharmacyapp.activities.OrderListActivity" />
         </activity>
-        <activity android:name=".activities.ImageViewActivity"
-            android:theme="@style/AppTheme.ImageViewerTheme"
-            >
-
+        <activity
+            android:name=".activities.ImageViewActivity"
+            android:theme="@style/AppTheme.ImageViewerTheme" >
         </activity>
     </application>
 

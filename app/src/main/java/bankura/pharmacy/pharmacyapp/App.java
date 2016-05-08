@@ -2,6 +2,7 @@ package bankura.pharmacy.pharmacyapp;
 
 import android.app.Application;
 import android.content.Context;
+import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
@@ -18,6 +19,7 @@ import io.fabric.sdk.android.Fabric;
 public class App extends Application {
 
 
+    private final String TAG = this.getClass().getSimpleName();
     private static Firebase mFirebase;
     private static Context mContext;
 
@@ -46,6 +48,15 @@ public class App extends Application {
 
 
 
+    }
+
+    public static void logout() {
+        String TAG = BuildConfig.APPLICATION_ID + ".App";
+        if (Digits.getSessionManager() != null) {
+            Digits.getSessionManager().clearActiveSession();
+            Log.d(TAG, "Logged out from digits");
+        }
+        mFirebase.unauth();
     }
 
     public static Firebase getFirebase() {

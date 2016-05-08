@@ -35,10 +35,8 @@ import java.util.Map;
 
 import bankura.pharmacy.pharmacyapp.App;
 import bankura.pharmacy.pharmacyapp.R;
-import bankura.pharmacy.pharmacyapp.controllers.UserManager;
 import bankura.pharmacy.pharmacyapp.models.Address;
 import bankura.pharmacy.pharmacyapp.models.User;
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -52,8 +50,8 @@ public class LoginActivity extends AppCompatActivity {
    // @BindView(R.id.button_logout)
     Button logoutButton;
 
-    @BindView(R.id.button_edit_user)
-    Button lauchEditUserButton;
+/*    @BindView(R.id.button_edit_user)
+    Button lauchEditUserButton;*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,7 +160,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-
+                    // user exists
                     Toast.makeText(LoginActivity.this, "Firebase no: " + dataSnapshot.child("phone_number").getValue(),
                             Toast.LENGTH_SHORT).show();
                     //todo start activity user edit or order details
@@ -175,10 +173,8 @@ public class LoginActivity extends AppCompatActivity {
                     map.put("created_at", Long.toString(timestamp));
                     */
                     // store created_at as unix timestamp
-                    long timestamp = System.currentTimeMillis() / 1000L;
                     User user = new User();
                     user.setUid(authData.getUid());
-                    user.setCreatedAt(timestamp);
                     user.setPhoneNumber((String) authData.getAuth().get("phone_number"));
                     Firebase userRef = ref.child("users").child(authData.getUid());
                     userRef.setValue(user);
@@ -186,9 +182,9 @@ public class LoginActivity extends AppCompatActivity {
                     // address test start
                     Firebase addressRef = App.getFirebase().child("addresses");
                     Address address = new Address();
-                    address.setAddressLine1("address line 1");
-                    address.setAddressLine2("address line 2");
-                    address.setLandmark("landmark");
+                    address.setAddressLine1("");
+                    address.setAddressLine2("");
+                    address.setLandmark("");
                     addressRef.child(authData.getUid()).push().setValue(address);
                     //address test finish
 
@@ -197,13 +193,14 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, "Welcome", Toast.LENGTH_SHORT).show();
                     //todo start activity where user can enter his info
                     startActivity(EditUserActivity.getInstance(LoginActivity.this));
+                    finish();
                     //finish
                 }
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-
+                Toast.makeText(LoginActivity.this, "Unable to fetch data", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -218,14 +215,14 @@ public class LoginActivity extends AppCompatActivity {
         App.getFirebase().unauth();
     }
 
-    // for testing
+/*    // for testing
     @OnClick(R.id.button_edit_user)
     public void lauchEdit(View view) {
         Log.d(TAG, "lauchEdit: clicked");
         startActivity(EditUserActivity.getInstance(this));
-    }
+    }*/
 
-    @OnClick(R.id.button_edit_address)
+/*    @OnClick(R.id.button_edit_address)
     public void editAddress(View view) {
         Log.d(TAG, "editAddress");
         Address address = new Address();
@@ -235,7 +232,7 @@ public class LoginActivity extends AppCompatActivity {
 
         UserManager.updateAddress(address);
 
-    }
+    }*/
 
     public static Intent getInstance(Context context) {
 

@@ -57,3 +57,60 @@
 -keepattributes *Annotation*
 -keep public class * extends android.support.design.widget.CoordinatorLayout.Behavior { *; }
 -keep public class * extends android.support.design.widget.ViewOffsetBehavior { *; }
+
+-keep class com.firebase.** { *; }
+-keep class org.apache.** { *; }
+-keepnames class com.fasterxml.jackson.** { *; }
+-keepnames class javax.servlet.** { *; }
+-keepnames class org.ietf.jgss.** { *; }
+-dontwarn org.w3c.dom.**
+-dontwarn org.joda.time.**
+-dontwarn org.shaded.apache.**
+-dontwarn org.ietf.jgss.**
+
+# Only necessary if you downloaded the SDK jar directly instead of from maven.
+-keep class com.shaded.fasterxml.jackson.** { *; }
+
+
+-keep class rx.android.plugins.RxAndroidPlugins {
+    public static <methods>;
+}
+
+-keep class rx.android.plugins.RxAndroidSchedulersHook {
+    public static <methods>;
+}
+
+-keepclassmembers class rx.internal.util.unsafe.*ArrayQueue*Field* {
+    long producerIndex;
+    long consumerIndex;
+}
+-keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueProducerNodeRef {
+    long producerNode;
+    long consumerNode;
+}
+
+-keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueConsumerNodeRef {
+    rx.internal.util.atomic.LinkedQueueNode consumerNode;
+}
+
+-keepclassmembers class bankura.pharmacy.pharmacyapp.models.User {
+    *;
+}
+
+-keepclassmembers class bankura.pharmacy.pharmacyapp.models.Address {
+    *;
+}
+
+-keepclassmembers class bankura.pharmacy.pharmacyapp.models.Order {
+    *;
+}
+
+-keepclassmembers class bankura.pharmacy.pharmacyapp.models.Order$** {
+    *;
+}
+
+-keep class com.firebase.client.core.** {
+    *;
+}
+
+-keep class com.cloudinary.** { *; }
