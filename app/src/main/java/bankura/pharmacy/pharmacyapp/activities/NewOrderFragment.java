@@ -1,15 +1,10 @@
 package bankura.pharmacy.pharmacyapp.activities;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.BottomSheetDialogFragment;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v7.widget.Toolbar;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,18 +52,17 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class NewOrderFragment extends BottomSheetDialogFragment {
+public class NewOrderFragment extends Fragment {
 
     public static final String KEY_PRESCRIPTION_URI = "prescription_uri";
     private final String TAG = this.getClass().getSimpleName();
     private Firebase mRef = App.getFirebase();
 
+    private User mUser;
+
     private CompositeSubscription mCompositeSubscription;
 
     private File mPrescriptionFile;
-
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
 
     @BindView(R.id.textview_name)
     TextView nameTextView;
@@ -113,59 +107,25 @@ public class NewOrderFragment extends BottomSheetDialogFragment {
         // Check if user logged in else go back to login activity
         if (App.getFirebase().getAuth() == null) {
             startActivity(LoginActivity.getInstance(getActivity()));
-            dismiss();
+            getActivity().finish();
             return;
         }
-    }
-
-    private BottomSheetBehavior.BottomSheetCallback mBottomSheetBehaviorCallback = new BottomSheetBehavior.BottomSheetCallback() {
-
-        @Override
-        public void onStateChanged(@NonNull View bottomSheet, int newState) {
-
-            switch (newState) {
-                case BottomSheetBehavior.STATE_HIDDEN:
-                    dismiss();
-                    break;
-            }
-
-
-        }
-
-        @Override
-        public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-        }
-    };
-
-
-    @Override
-    public void setupDialog(Dialog dialog, int style) {
-        super.setupDialog(dialog, style);
-        View contentView = View.inflate(getContext()
-                , R.layout.fragment_new_order, null);
-        ButterKnife.bind(this, contentView);
-        dialog.setContentView(contentView);
-
-        setupToolbar();
-
         mCompositeSubscription = new CompositeSubscription();
 
-        disableSubmitButton();
-
-        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) ((View) contentView.getParent()).getLayoutParams();
-        CoordinatorLayout.Behavior behavior = params.getBehavior();
-        if (behavior != null && behavior instanceof BottomSheetBehavior) {
-            ((BottomSheetBehavior) behavior).setBottomSheetCallback(mBottomSheetBehaviorCallback);
-            // ((BottomSheetBehavior) behavior).setPeekHeight(600);
-            ((BottomSheetBehavior) behavior).setState(BottomSheetBehavior.STATE_EXPANDED);
-        }
-
     }
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
+
+        View rootView = inflater.inflate(R.layout.fragment_new_order, container, false);
+        ButterKnife.bind(this, rootView);
+
+
+
+        disableSubmitButton();
         AuthData authData = mRef.getAuth();
 
         if (savedInstanceState != null) {
@@ -207,12 +167,13 @@ public class NewOrderFragment extends BottomSheetDialogFragment {
                User user = dataSnapshot.getValue(User.class);
                if (user != null) {
                    populateUser(user);
+                   mUser = user;
                }
            }
 
            @Override
            public void onCancelled(FirebaseError firebaseError) {
-
+                showSnackbar("Sorry, Unable to retrive your details");
            }
        });
 
@@ -228,38 +189,17 @@ public class NewOrderFragment extends BottomSheetDialogFragment {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
+                showSnackbar("Sorry, Unable to retrive your address");
 
             }
         });
 
 
-        return super.onCreateView(inflater, container, savedInstanceState);
+       // return super.onCreateView(inflater, container, savedInstanceState);
+        return rootView;
 
     }
 
-    private void setupToolbar() {
-        if (toolbar == null) {
-            return;
-        }
-
-/*        AppCompatActivity activity = (AppCompatActivity) getActivity();
-        activity.setSupportActionBar(toolbar);
-        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        activity.getSupportActionBar().setTitle("New Order");
-        activity.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
-        activity.getSupportActionBar().setHomeButtonEnabled(true);*/
-
-        toolbar.setNavigationIcon(R.drawable.ic_close);
-        toolbar.setTitle("New Order");
-        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
-
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
-    }
 
     private void disableSubmitButton() {
 

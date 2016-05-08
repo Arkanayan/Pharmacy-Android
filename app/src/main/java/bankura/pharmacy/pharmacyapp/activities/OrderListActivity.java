@@ -3,12 +3,10 @@ package bankura.pharmacy.pharmacyapp.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.transition.Fade;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -59,16 +57,16 @@ public class OrderListActivity extends AppCompatActivity implements OrdersAdapte
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              //  startActivity(NewOrderActivity.getInstance(OrderListActivity.this));
+                startActivity(NewOrderActivity.getInstance(OrderListActivity.this));
 
-                BottomSheetDialogFragment bottomSheetDialogFragment = new NewOrderFragment();
+               /* BottomSheetDialogFragment bottomSheetDialogFragment = new NewOrderFragment();
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                     Fade explode = new Fade();
                     explode.setDuration(1000);
                     bottomSheetDialogFragment.setEnterTransition(explode);
                 }
 
-                bottomSheetDialogFragment.show(getSupportFragmentManager(), bottomSheetDialogFragment.getTag());
+                bottomSheetDialogFragment.show(getSupportFragmentManager(), bottomSheetDialogFragment.getTag());*/
 
             }
         });
