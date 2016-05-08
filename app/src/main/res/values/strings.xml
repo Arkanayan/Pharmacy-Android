@@ -11,4 +11,5 @@
 
     <string name="price" formatted="false">\u20B9 %1$.2f</string>
 
+    <string name="pharmacy_contact_number">9534324234</string>
 </resources>

@@ -1,6 +1,7 @@
 package bankura.pharmacy.pharmacyapp.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -161,6 +162,7 @@ public class NewOrderFragment extends Fragment {
                    User user = dataSnapshot.getValue(User.class);
                    if (user != null) {
                        populateUser(user);
+                       disableOrderCreationIfBanned(user);
                        mUser = user;
                    }
                } catch (Exception e) {
@@ -307,6 +309,28 @@ public class NewOrderFragment extends Fragment {
 
     }
 
+    private void disableOrderCreationIfBanned(User user) {
+
+        if (user.isBanned()) {
+            mScanButton.setClickable(false);
+            mScanButton.setEnabled(false);
+            Snackbar.make(mScanButton, "Sorry, You are not allowed to order", Snackbar.LENGTH_INDEFINITE)
+                    .setAction("Contact Pharmacy", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String contactNo = getResources().getString(R.string.pharmacy_contact_number);
+                            String number = "tel:" + contactNo;
+
+                            Intent callingIntent = new Intent(Intent.ACTION_DIAL, Uri.parse(number));
+                            startActivity(callingIntent);
+                        }
+                    })
+            .show();
+        } else {
+            mScanButton.setClickable(true);
+            mScanButton.setEnabled(true);
+        }
+    }
     private void fabShowLoadingAnimation() {
         fabOrderButton.clearAnimation();
         fabOrderButton.setImageResource(R.drawable.refresh);
