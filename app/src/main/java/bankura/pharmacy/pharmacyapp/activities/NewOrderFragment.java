@@ -150,30 +150,6 @@ public class NewOrderFragment extends Fragment {
                 setmPrescriptionFile(new File(prescriptionUri));
             }
         }
-       /* Observable<User> fetchUser = UserManager.getUserFromId(authData.getUid());
-        Observable<Address> fetchAddress = UserManager.getAddressFromId(authData.getUid());
-        Observable.zip(fetchUser, fetchAddress, (user, address) -> {
-
-                    Map<String, Object> map = new HashMap<String, Object>();
-                    map.put("user", user);
-                    map.put("address", address);
-                    return map;
-                }
-        ).subscribe(userAddressMap -> {
-            User user = (User) userAddressMap.get("user");
-            Address address = (Address) userAddressMap.get("address");
-
-            nameEditText.setText(user.getFirstName());
-            Log.d(TAG, "User name: " + user.getFirstName());
-            Log.d(TAG, "User phone: " + user.getPhoneNumber());
-            Log.d(TAG, "User time: " + user.getCreatedAt());
-            Log.d(TAG, "Address line 1 " + address.getAddressLine1());
-
-        }, throwable -> {
-            throwable.printStackTrace();
-            Toast.makeText(getActivity(), "Sorry, unable to fetch data", Toast.LENGTH_SHORT).show();
-        });
-*/
 
         String uid = authData.getUid();
         mUserRef = mRef.child(Constants.Path.USERS).child(uid);

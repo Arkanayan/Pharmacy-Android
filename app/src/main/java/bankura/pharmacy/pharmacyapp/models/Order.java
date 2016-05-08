@@ -25,6 +25,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.firebase.client.ServerValue;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -194,13 +195,20 @@ public class Order {
         this.shippingCharge = shippingCharge;
     }
 
+
+
     /**
-     *
-     * @return
+     *  Populate the timestamp server side
+     * @return Firebase ServerValue.TIMESTAMP
      * The createdAt
      */
     @JsonProperty("created_at")
-    public Long getCreatedAt() {
+    public Map<String, String> getCreatedAt() {
+        return ServerValue.TIMESTAMP;
+    }
+
+    @JsonIgnore
+    public Long getCreatedAtLong() {
         return createdAt;
     }
 

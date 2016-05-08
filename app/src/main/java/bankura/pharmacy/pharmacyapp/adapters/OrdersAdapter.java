@@ -135,15 +135,16 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        //Log.d(TAG, "onBindViewHolder: " + position);
-        Order order = mOrderList.get(position);
-        Order.Status status =order.getStatus();
-        String orderId = order.getOrderId();
-        double price = order.getPrice() + order.getShippingCharge();
-     //    holder.mContentView.setText(String.valueOf(mOrderList.get(position).getPrice()));
-        //test
+        try {
+            //Log.d(TAG, "onBindViewHolder: " + position);
+            Order order = mOrderList.get(position);
+            Order.Status status = order.getStatus();
+            String orderId = order.getOrderId();
+            double price = order.getPrice() + order.getShippingCharge();
+            //    holder.mContentView.setText(String.valueOf(mOrderList.get(position).getPrice()));
+            //test
 //        holder.mContentView.setText(content);
-      //  holder.mIdView.setText(String.valueOf(mOrderList.get(position).getShippingCharge()));
+            //  holder.mIdView.setText(String.valueOf(mOrderList.get(position).getShippingCharge()));
 
        /* holder.mContentView.setText(App.getContext().getResources().getString(R.string.price, 15.0f));
 
@@ -152,25 +153,28 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
         DateFormat dateFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
         holder.mIdView.setText(dateFormat.format(epoch));*/
 
-        holder.mOrderIdTextView.setText(orderId);
-        holder.mPriceTextView.setText(App.getContext().getResources().getString(R.string.price, price));
+            holder.mOrderIdTextView.setText(orderId);
+            holder.mPriceTextView.setText(App.getContext().getResources().getString(R.string.price, price));
 
-        SimpleDateFormat monthFormat = new SimpleDateFormat("MMM", Locale.getDefault());
-        holder.mMonthTextView.setText(monthFormat.format(order.getCreatedAt()));
+            SimpleDateFormat monthFormat = new SimpleDateFormat("MMM", Locale.getDefault());
+            holder.mMonthTextView.setText(monthFormat.format(order.getCreatedAtLong()));
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("d", Locale.getDefault());
-        holder.mDateTextView.setText(dateFormat.format(order.getCreatedAt()));
+            SimpleDateFormat dateFormat = new SimpleDateFormat("d", Locale.getDefault());
+            holder.mDateTextView.setText(dateFormat.format(order.getCreatedAtLong()));
 
-        setStatus(status, holder.mStatusImageView);
+            setStatus(status, holder.mStatusImageView);
 
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            holder.mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-                mListener.onOrderClick(mOrderList.get(position).getOrderPath());
+                    mListener.onOrderClick(mOrderList.get(position).getOrderPath());
 
-            }
-        });
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 

@@ -50,10 +50,10 @@ public class OrderManager {
 
         // set timestamp
         long timestamp = System.currentTimeMillis() / 1000L;
-        order.setCreatedAt(timestamp);
+//        order.setCreatedAt(timestamp);
 
         newOrderRef.setValue(order);
-        newOrderRef.setPriority(0 - order.getCreatedAt());
+        newOrderRef.setPriority(0 - timestamp);
 
         ref.child("order_stats").child("open").child(newOrderKey).setValue(true);
         UserManager.getUserRef().child("orders").child(newOrderKey).setValue(true);
@@ -118,14 +118,13 @@ public class OrderManager {
 
 
             Cloudinary cloudinary = new Cloudinary(App.getContext().getResources().getString(R.string.cloudinary_url));
-            String fileName = file.getName();
+/*            String fileName = file.getName();
             int pos = fileName.lastIndexOf(".");
             if (pos > 0) {
                 fileName = fileName.substring(0, pos);
-            }
+            }*/
             String folderName = "ahanaPharmacy/";
 
-            String public_id = folderName + fileName;
             String uid = App.getFirebase().getAuth().getUid();
 
             Map context = new HashMap();
@@ -141,7 +140,7 @@ public class OrderManager {
                             Utils.getThumbnailTransformation()),
               "tags", tags,
             "context", context,
-            "public_id", public_id,
+            "folder", folderName,
                     // store image as reduced quality 60%
                     "transformation", new Transformation().quality(60)
 
@@ -159,6 +158,20 @@ public class OrderManager {
                 subscriber.onError(new Throwable("Error uploading prescription. Make sure you're connected to internet"));
             }
 
+        });
+    }
+
+    public static Observable<Boolean> deleteImage(String publicId) {
+        return Observable.create(subscriber -> {
+            try {
+                Cloudinary cloudinary = Utils.getCloudinary();
+                cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
+                subscriber.onNext(true);
+                subscriber.onCompleted();
+            } catch (IOException e) {
+                e.printStackTrace();
+                subscriber.onError(e);
+            }
         });
     }
 }
