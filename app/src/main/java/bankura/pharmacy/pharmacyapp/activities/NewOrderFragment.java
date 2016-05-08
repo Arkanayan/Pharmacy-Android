@@ -325,6 +325,7 @@ public class NewOrderFragment extends Fragment {
         fabOrderButton.setClickable(false);
         Animation roate = AnimationUtils.loadAnimation(App.getContext(), R.anim.loading_roate);
         fabOrderButton.startAnimation(roate);
+
     }
 
     private void fabShowFailed() {

@@ -193,6 +193,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
     }
 
     private void setStatus(Order.Status status, ImageView imageView) {
+        clearAnimation(imageView);
         switch (status) {
             case CONFIRMED:
                 imageView.setColorFilter(ContextCompat.getColor(App.getContext(), R.color.md_green_500),
@@ -222,6 +223,10 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
         public void onOrderClick(String orderId);
     }
 
+    private void clearAnimation(ImageView imageView) {
+        imageView.clearAnimation();
+
+    }
     private void startHangingAnimation(ImageView imageView) {
         RotateAnimation rotate = new RotateAnimation(-10, 50, Animation.RELATIVE_TO_SELF, 0.2f, Animation.RELATIVE_TO_SELF, 0f);
         rotate.setRepeatCount(Animation.INFINITE);
@@ -230,4 +235,6 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
         imageView.setAnimation(rotate);
         rotate.start();
     }
+
+
 }
