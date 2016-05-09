@@ -69,10 +69,10 @@ public class Order {
 
     public enum Status {
 
-        OPEN, ACKNOWLEDGED, CONFIRMED, CANCELED, CLOSED;
+        OPEN, ACKNOWLEDGED, CONFIRMED, CANCELED, COMPLETED;
 
 
-        // used for serializing Status to int , instead of "OPEN" or "CLOSED"
+        // used for serializing Status to int , instead of "OPEN" or "COMPLETED"
         @JsonValue
         public int getValue() {
             return this.ordinal();

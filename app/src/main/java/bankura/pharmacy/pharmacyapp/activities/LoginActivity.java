@@ -3,6 +3,7 @@ package bankura.pharmacy.pharmacyapp.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -74,7 +75,9 @@ public class LoginActivity extends AppCompatActivity {
 */
 
         final DigitsAuthButton authButton = (DigitsAuthButton) findViewById(R.id.button_auth);
+        authButton.setAuthTheme(R.style.AppTheme);
         authButton.setText("Login");
+        authButton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary));
 
 
         authButton.setCallback(new AuthCallback() {
@@ -159,13 +162,20 @@ public class LoginActivity extends AppCompatActivity {
         ref.child("users").child(authData.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                // check if user exists
                 if (dataSnapshot.exists()) {
-                    // user exists
-                    Toast.makeText(LoginActivity.this, "Firebase no: " + dataSnapshot.child("phone_number").getValue(),
-                            Toast.LENGTH_SHORT).show();
-                    //todo start activity user edit or order details
-                    startActivity(EditUserActivity.getInstance(LoginActivity.this));
-                    // finish();
+                    try {
+                        User user = dataSnapshot.getValue(User.class);
+                        Toast.makeText(LoginActivity.this, "Welcome " + user.getFirstName(),
+                                Toast.LENGTH_SHORT).show();
+                        //todo start activity user edit or order details
+                        startActivity(EditUserActivity.getInstance(LoginActivity.this));
+                        finish();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        startActivity(EditUserActivity.getInstance(LoginActivity.this));
+                        finish();
+                    }
                 } else {
 /*                    final Map<String, String> map = new HashMap<>();
                     map.put("uid", authData.getUid());

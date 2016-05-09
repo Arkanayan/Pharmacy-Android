@@ -1,9 +1,7 @@
 package bankura.pharmacy.pharmacyapp.adapters;
 
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.graphics.PorterDuff;
+import android.support.annotation.ColorInt;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -11,7 +9,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -164,6 +164,13 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
 
             holder.mStatusTextView.setText(status.name());
 
+
+            holder.mStatusTextView.getBackground().setColorFilter(getColorFromStatus(status), PorterDuff.Mode.SRC_IN);
+
+
+            fadeOnAck(status, holder.mStatusTextView);
+
+                // on tag image
             setStatus(status, holder.mStatusImageView);
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -220,11 +227,13 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
         }
     }
 
+
+
     private void setStatus(Order.Status status, ImageView imageView) {
         clearAnimation(imageView);
         switch (status) {
             case CONFIRMED:
-                imageView.setColorFilter(ContextCompat.getColor(App.getContext(), R.color.md_green_500),
+                imageView.setColorFilter(getColorFromStatus(status),
                         PorterDuff.Mode.SRC_IN);
 /*                Animation pulse = AnimationUtils.loadAnimation(App.getContext(), R.anim.pulse);
                 imageView.startAnimation(pulse);*/
@@ -239,11 +248,31 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
                         PorterDuff.Mode.SRC_IN);
 
                 break;
-            case CLOSED:
+            case COMPLETED:
                 imageView.setColorFilter(ContextCompat.getColor(App.getContext(), R.color.md_grey_400),
                         PorterDuff.Mode.SRC_IN);
                 break;
         }
+    }
+
+    @ColorInt
+    private int getColorFromStatus(Order.Status status) {
+
+        switch (status) {
+            case CONFIRMED:
+                return ContextCompat.getColor(App.getContext(), R.color.md_green_500);
+            case ACKNOWLEDGED:
+                return ContextCompat.getColor(App.getContext(), R.color.md_amber_500);
+            case CANCELED:
+                return ContextCompat.getColor(App.getContext(), R.color.md_red_500);
+            case COMPLETED:
+                return ContextCompat.getColor(App.getContext(), R.color.md_grey_400);
+            case OPEN:
+                return ContextCompat.getColor(App.getContext(), R.color.colorPrimary);
+
+        }
+
+        return ContextCompat.getColor(App.getContext(), R.color.colorPrimary);
     }
 
     public interface OnOrderClickListener {
@@ -251,22 +280,25 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
         public void onOrderClick(String orderId);
     }
 
-    private void clearAnimation(ImageView imageView) {
-        imageView.clearAnimation();
-        if (imageView.getAnimation() != null) {
-            imageView.getAnimation().cancel();
+    private void clearAnimation(View View) {
+        View.clearAnimation();
+        if (View.getAnimation() != null) {
+            View.getAnimation().cancel();
         }
 
     }
     private void startHangingAnimation(ImageView imageView) {
-/*        RotateAnimation rotate = new RotateAnimation(-10, 50, Animation.RELATIVE_TO_SELF, 0.2f, Animation.RELATIVE_TO_SELF, 0f);
+        // Clear animation before starting another
+        clearAnimation(imageView);
+
+        RotateAnimation rotate = new RotateAnimation(-10, 50, Animation.RELATIVE_TO_SELF, 0.2f, Animation.RELATIVE_TO_SELF, 0f);
         rotate.setRepeatCount(Animation.INFINITE);
         rotate.setRepeatMode(Animation.REVERSE);
         rotate.setDuration(1500);
         imageView.setAnimation(rotate);
-        rotate.start();*/
+        rotate.start();
 
-        ObjectAnimator rotation = ObjectAnimator.ofFloat(imageView,
+/*        ObjectAnimator rotation = ObjectAnimator.ofFloat(imageView,
                 "rotation", -10f, 50f);
 
         rotation.setRepeatMode(ValueAnimator.REVERSE);
@@ -278,8 +310,8 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
         rotationX.setRepeatCount(ValueAnimator.INFINITE);
         imageView.setPivotX(25f);
         imageView.setPivotY(0f);
-/*        Log.d(TAG, "startHangingAnimation: pivotX: " + imageView.getPivotX());
-        Log.d(TAG, "startHangingAnimation: pivotY: " + imageView.getPivotY());*/
+*//*        Log.d(TAG, "startHangingAnimation: pivotX: " + imageView.getPivotX());
+        Log.d(TAG, "startHangingAnimation: pivotY: " + imageView.getPivotY());*//*
         ObjectAnimator pivotX = ObjectAnimator.ofFloat(imageView, "pivotX", imageView.getPivotX());
         pivotX.setRepeatMode(ValueAnimator.REVERSE);
         pivotX.setRepeatCount(ValueAnimator.INFINITE);
@@ -291,7 +323,39 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
         animation.playTogether(rotation,rotationX, pivotX, pivotY);
         animation.setDuration(1500);
         animation.setInterpolator(new AccelerateDecelerateInterpolator());
-        animation.start();
+        animation.start();*/
+    }
+
+    private void fadeOnAck(Order.Status status, View view) {
+
+        clearAnimation(view);
+
+        if (status == Order.Status.ACKNOWLEDGED) {
+
+            AlphaAnimation alphaAnimation = new AlphaAnimation(0.3f, 0.9f);
+            alphaAnimation.setDuration(700);
+            alphaAnimation.setRepeatMode(Animation.REVERSE);
+            alphaAnimation.setRepeatCount(Animation.INFINITE);
+            view.setAnimation(alphaAnimation);
+            alphaAnimation.start();
+
+
+
+            // color animation
+/*        ObjectAnimator slide = ObjectAnimator.ofObject(view,
+                "backgroundColor",
+                new ArgbEvaluator(),
+                ContextCompat.getColor(App.getContext(), R.color.white),
+                ContextCompat.getColor(App.getContext(), R.color.md_deep_orange_50));*/
+
+            /*     ObjectAnimator slide = ObjectAnimator.ofFloat(view,
+                    "alpha", 0.3f, 0.9f);
+            slide.setInterpolator(new AccelerateDecelerateInterpolator());
+            slide.setDuration(700);
+            slide.setRepeatCount(ValueAnimator.INFINITE);
+            slide.setRepeatMode(ValueAnimator.REVERSE);
+            slide.start();*/
+        }
     }
 
     public void cleanUp() {
