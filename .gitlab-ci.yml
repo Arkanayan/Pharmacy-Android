@@ -1,10 +1,9 @@
 before_script:
   - wget --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u92-b14/jdk-8u92-linux-x64.tar.gz
-  - tar -zxf jdk-8u5-linux-x64.tar.gz -C /opt/jdk
+  - tar -zxf jdk-8u92-linux-x64.tar.gz -C /opt/jdk
   - update-alternatives --install /usr/bin/java java /opt/jdk/jdk1.8.0_92/bin/java 100
   - update-alternatives --install /usr/bin/java java /opt/jdk/jdk1.8.0_92/bin/javac 100
   - java -version
-  - update-java-alternatives --set java-8-oracle
   - apt-get --quiet install --yes wget tar unzip lib32stdc++6 lib32z1
   - wget --quiet --output-document=android-sdk.tgz https://dl.google.com/android/android-sdk_r24.4.1-linux.tgz
   - tar --extract --gzip --file=android-sdk.tgz
