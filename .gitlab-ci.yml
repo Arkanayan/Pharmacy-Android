@@ -1,7 +1,10 @@
 before_script:
   - apt-get --quiet update --yes
+  - apt-get install -y python3-software-properties debconf-i18n
+  - apt-get --quiet update --yes
   - add-apt-repository -y ppa:webupd8team/java
   - apt-get --quiet update --yes
+  - echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | debconf-set-selections
   - apt-get install -y oracle-java8-installer
   - update-java-alternatives --set java-8-oracle
   - apt-get --quiet install --yes wget tar unzip lib32stdc++6 lib32z1
