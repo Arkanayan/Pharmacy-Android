@@ -9,5 +9,5 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     app:layoutManager="LinearLayoutManager"
     android:scrollbars="vertical"
-    tools:context="bankura.pharmacy.pharmacyapp.activities.OrderListActivity"
+    tools:context="com.apharmacy.app.activities.OrderListActivity"
     tools:listitem="@layout/order_list_content" />

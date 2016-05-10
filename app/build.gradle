@@ -41,7 +41,7 @@ android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
     defaultConfig {
-        applicationId "bankura.pharmacy.pharmacyapp"
+        applicationId "com.apharmacy.app"
         minSdkVersion 15
         targetSdkVersion 23
         versionCode 1
@@ -85,10 +85,10 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile('com.digits.sdk.android:digits:1.10.2@aar') {
+    compile('com.digits.sdk.android:digits:1.10.3@aar') {
         transitive = true;
     }
-    compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
+    compile('com.crashlytics.sdk.android:crashlytics:+@aar') {
         transitive = true;
     }
     apt 'com.jakewharton:butterknife-compiler:8.0.1'

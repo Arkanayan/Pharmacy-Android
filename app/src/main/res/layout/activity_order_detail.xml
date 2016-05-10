@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="bankura.pharmacy.pharmacyapp.activities.OrderDetailActivity"
+    tools:context="com.apharmacy.app.activities.OrderDetailActivity"
     tools:ignore="MergeRootFrame">
 
     <android.support.design.widget.AppBarLayout

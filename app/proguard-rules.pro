@@ -93,19 +93,19 @@
     rx.internal.util.atomic.LinkedQueueNode consumerNode;
 }
 
--keepclassmembers class bankura.pharmacy.pharmacyapp.models.User {
+-keepclassmembers class com.apharmacy.app.models.User {
     *;
 }
 
--keepclassmembers class bankura.pharmacy.pharmacyapp.models.Address {
+-keepclassmembers class com.apharmacy.app.models.Address {
     *;
 }
 
--keepclassmembers class bankura.pharmacy.pharmacyapp.models.Order {
+-keepclassmembers class com.apharmacy.app.models.Order {
     *;
 }
 
--keepclassmembers class bankura.pharmacy.pharmacyapp.models.Order$** {
+-keepclassmembers class com.apharmacy.app.models.Order$** {
     *;
 }
 
