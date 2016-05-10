@@ -20,6 +20,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.apharmacy.app.App;
+import com.apharmacy.app.R;
+import com.apharmacy.app.Utils.Constants;
+import com.apharmacy.app.Utils.Utils;
+import com.apharmacy.app.controllers.OrderManager;
+import com.apharmacy.app.controllers.UserManager;
+import com.apharmacy.app.models.Address;
+import com.apharmacy.app.models.Order;
+import com.apharmacy.app.models.User;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
@@ -35,15 +44,6 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.apharmacy.app.App;
-import com.apharmacy.app.R;
-import com.apharmacy.app.Utils.Constants;
-import com.apharmacy.app.Utils.Utils;
-import com.apharmacy.app.controllers.OrderManager;
-import com.apharmacy.app.controllers.UserManager;
-import com.apharmacy.app.models.Address;
-import com.apharmacy.app.models.Order;
-import com.apharmacy.app.models.User;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -209,19 +209,6 @@ public class NewOrderFragment extends Fragment {
     }
 
 
-/*    private void disableSubmitButton() {
-
-        mSubmitButton.setEnabled(false);
-        mSubmitButton.setClickable(false);
-        mSubmitButton.setAlpha(0.5f);
-    }
-    private void enableSubmitButton() {
-
-        mSubmitButton.setAlpha(1f);
-        mSubmitButton.setClickable(true);
-        mSubmitButton.setEnabled(true);
-    }*/
-
     @OnClick(R.id.button_edit_address)
     void onEditAddress() {
         startActivity(EditUserActivity.getInstance(getActivity()));
@@ -260,16 +247,9 @@ public class NewOrderFragment extends Fragment {
                 setmPrescriptionFile(file);
                 attachImage(file);
 
-               /* OrderManager.uploadImage(file)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(url -> {
-                                Log.d(TAG, "onImagePicked: cloud url: " + url);
-                                mRxPath = url;
+                //enable prescription viewer after setting prescription
+                prescriptionImageview.setVisibility(View.VISIBLE);
 
-                            }, throwable -> {
-                                Snackbar.make(toolbar, "There is a problem creating order", Snackbar.LENGTH_SHORT).show();
-                            });*/
 
             }
 
@@ -292,9 +272,7 @@ public class NewOrderFragment extends Fragment {
     private void setmPrescriptionFile(File file) {
         mPrescriptionFile = file;
         attachImage(file);
-/*
-        enableSubmitButton();
-*/
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -411,7 +389,50 @@ public class NewOrderFragment extends Fragment {
                 map.put("address_key", addressKey);
 
                 return map;
-            }).subscribe(map -> {
+            }).flatMap(map -> {
+                String imageId = map.get("public_id");
+
+                Log.d(TAG, "submitOrder: ImageUrl: " + imageId);
+                // set order prescription image
+                order.setPrescriptionUrl(imageId);
+
+                // set order address
+                String addressKey = map.get("address_key");
+                order.setAddress(addressKey);
+
+
+                return OrderManager.createOrder(order);
+
+            }).subscribe(orderKey -> {
+
+            }, throwable -> {
+                showSnackbar(throwable.getMessage());
+                fabShowFailed();
+                if (order.getPrescriptionUrl() != null) {
+                    // delete image on order failed
+                    OrderManager.deleteImage(order.getPrescriptionUrl())
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(aVoid -> {
+                                // image deleted onNext
+                                // no operation on onNext because of Void
+                            }, throwable1 -> {
+                                // image delete failed
+                            }, () -> {
+                                // image deleted completed
+                            });
+
+                }
+            }, () -> {
+                fabShowSuccess();
+                showSnackbar("Order created " + order.getOrderId());
+
+            });
+
+
+
+
+  /*                  .subscribe(map -> {
                 String imageId = map.get("public_id");
 
                 Log.d(TAG, "submitOrder: ImageUrl: " + imageId);
@@ -430,7 +451,7 @@ public class NewOrderFragment extends Fragment {
             }, throwable -> {
                 showSnackbar(throwable.getMessage());
                 fabShowFailed();
-            }, this::fabShowSuccess);
+            }, this::fabShowSuccess);*/
 
             mCompositeSubscription.add(orderSubscription);
 

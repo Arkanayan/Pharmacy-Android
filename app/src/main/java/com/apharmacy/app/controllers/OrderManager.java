@@ -2,6 +2,11 @@ package com.apharmacy.app.controllers;
 
 import android.util.Log;
 
+import com.apharmacy.app.App;
+import com.apharmacy.app.R;
+import com.apharmacy.app.Utils.Constants;
+import com.apharmacy.app.Utils.Utils;
+import com.apharmacy.app.models.Order;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.Transformation;
 import com.cloudinary.utils.ObjectUtils;
@@ -16,11 +21,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.apharmacy.app.App;
-import com.apharmacy.app.R;
-import com.apharmacy.app.Utils.Constants;
-import com.apharmacy.app.Utils.Utils;
-import com.apharmacy.app.models.Order;
 import rx.Observable;
 
 /**
@@ -33,8 +33,7 @@ public class OrderManager {
      * @param order
      * @return order id
      */
-    // TODO: 8/5/16 set callback handling on order creation failed
-    public static String createOrder(Order order) {
+/*    public static String createOrder(Order order) {
         Firebase ref = App.getFirebase();
         String uid = ref.getAuth().getUid();
 
@@ -59,8 +58,47 @@ public class OrderManager {
         UserManager.getUserRef().child("orders").child(newOrderKey).setValue(true);
 
         return order.getOrderId();
-    }
+    }*/
 
+    /**
+     * Creates order reactively
+     * @param order
+     * @return order key
+     */
+    public static Observable<String> createOrder(Order order) {
+
+        return Observable.create(subscriber -> {
+            Firebase ref = App.getFirebase();
+            String uid = ref.getAuth().getUid();
+
+            Firebase newOrderRef =  ref.child("orders").push();
+
+            String newOrderKey = newOrderRef.getKey();
+
+            String orderId;
+            order.setUid(uid);
+
+            // saves the path, it can be retrived easily like /orders/<order_key>
+            order.setOrderPath(newOrderKey);
+
+            // set timestamp
+             long timestamp = System.currentTimeMillis() / 1000L;
+
+            newOrderRef.setValue(order);
+            newOrderRef.setPriority(0 - timestamp);
+
+            UserManager.getUserRef().child("orders").child(newOrderKey).setValue(true, (firebaseError, firebase) -> {
+                if (firebaseError != null) {
+                    subscriber.onError(firebaseError.toException());
+
+                } else {
+                    ref.child("order_stats").child("open").child(newOrderKey).setValue(true);
+                    subscriber.onNext(firebase.getKey());
+                    subscriber.onCompleted();
+                }
+            });
+        });
+    }
 
 
     public static void setCompleted(String key) {
@@ -161,12 +199,18 @@ public class OrderManager {
         });
     }
 
-    public static Observable<Boolean> deleteImage(String publicId) {
+
+    /**
+     * Deletes image on the given id
+     * @implNote Run it on other than MainThread
+     * @param publicId
+     * @return void
+     */
+    public static Observable<Void> deleteImage(String publicId) {
         return Observable.create(subscriber -> {
             try {
                 Cloudinary cloudinary = Utils.getCloudinary();
                 cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
-                subscriber.onNext(true);
                 subscriber.onCompleted();
             } catch (IOException e) {
                 e.printStackTrace();

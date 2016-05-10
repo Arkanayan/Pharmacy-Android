@@ -258,6 +258,7 @@
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:background="?attr/selectableItemBackgroundBorderless"
+                android:visibility="gone"
                 />
 
         </LinearLayout>
