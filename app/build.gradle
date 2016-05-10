@@ -111,4 +111,7 @@ dependencies {
     compile 'com.cloudinary:cloudinary-android:1.4.1'
     compile 'com.github.chrisbanes:PhotoView:1.2.6'
     compile 'com.github.dmytrodanylyk.android-process-button:library:1.0.4'
+
+    compile 'com.jakewharton.timber:timber:4.1.2'
+
 }

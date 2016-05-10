@@ -114,3 +114,6 @@
 }
 
 -keep class com.cloudinary.** { *; }
+
+-keep class com.crashlytics.android.** { *; }
+-keep class io.fabric.sdk.android.** { *; }

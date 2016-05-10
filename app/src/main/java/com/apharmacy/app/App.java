@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
+import com.apharmacy.app.analytics.CrashlyticsTree;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.digits.sdk.android.Digits;
@@ -12,6 +13,7 @@ import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterCore;
 
 import io.fabric.sdk.android.Fabric;
+import timber.log.Timber;
 
 /**
  * Created by arka on 4/28/16.
@@ -46,7 +48,11 @@ public class App extends Application {
 
         Fabric.with(this, new TwitterCore(authConfig), new Digits(), crashlyticsKit);
 
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree());
+        }
 
+        Timber.plant(new CrashlyticsTree());
 
     }
 
