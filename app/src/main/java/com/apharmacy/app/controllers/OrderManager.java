@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import rx.Observable;
+import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 /**
  * Created by arka on 4/30/16.
@@ -75,7 +77,6 @@ public class OrderManager {
 
             String newOrderKey = newOrderRef.getKey();
 
-            String orderId;
             order.setUid(uid);
 
             // saves the path, it can be retrived easily like /orders/<order_key>
@@ -84,19 +85,29 @@ public class OrderManager {
             // set timestamp
              long timestamp = System.currentTimeMillis() / 1000L;
 
-            newOrderRef.setValue(order);
-            newOrderRef.setPriority(0 - timestamp);
 
-            UserManager.getUserRef().child("orders").child(newOrderKey).setValue(true, (firebaseError, firebase) -> {
+            newOrderRef.setValue(order, (firebaseError, firebase) -> {
                 if (firebaseError != null) {
+                    Timber.e(firebaseError.toException(), "Order create failed, id: %s", order.getOrderId());
                     subscriber.onError(firebaseError.toException());
 
                 } else {
-                    ref.child("order_stats").child("open").child(newOrderKey).setValue(true);
+                    Timber.i("Order created, id: %s", order.getOrderId());
+                    newOrderRef.setPriority(0 - timestamp);
                     subscriber.onNext(firebase.getKey());
                     subscriber.onCompleted();
                 }
             });
+  /*          UserManager.getUserRef().child("orders").child(newOrderKey).setValue(true, (firebaseError, firebase) -> {
+                if (firebaseError != null) {
+                    subscriber.onError(firebaseError.toException());
+
+                } else {
+                   // ref.child("order_stats").child("open").child(newOrderKey).setValue(true);
+                    subscriber.onNext(firebase.getKey());
+                    subscriber.onCompleted();
+                }
+            });*/
         });
     }
 
@@ -115,6 +126,11 @@ public class OrderManager {
 
     }
 
+    /**
+     * Fetch order by order id
+     * @param orderId
+     * @return Order
+     */
     public static Observable<Order> fetchOrder(String orderId) {
         return Observable.create(subscriber -> {
             App.getFirebase().child(Constants.Path.ORDERS).orderByChild(Constants.Order.ORDER_ID)
@@ -211,11 +227,114 @@ public class OrderManager {
             try {
                 Cloudinary cloudinary = Utils.getCloudinary();
                 cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
+                Timber.i("Image deleted, id: %s", publicId);
                 subscriber.onCompleted();
             } catch (IOException e) {
+                Timber.e(e, "Image delete error, id: %s", publicId);
                 e.printStackTrace();
                 subscriber.onError(e);
             }
+        });
+    }
+
+    /**
+     * Fetch order by order address key
+     * @param key
+     * @return Order
+     */
+    public static Observable<Order> fetchOrderByKey(String key) {
+        return Observable.create(subscriber -> {
+            App.getFirebase().child(Constants.Path.ORDERS).child(key).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    try {
+                        Order order = dataSnapshot.getValue(Order.class);
+                        subscriber.onNext(order);
+                        subscriber.onCompleted();
+                    } catch (Exception e) {
+                        Timber.e(e, "Order retrival by key failed, key: %s", key);
+                        subscriber.onError(e);
+                    }
+                }
+
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+                    Timber.e(firebaseError.toException(), "Order retrival by key failed, key: %s", key);
+                    subscriber.onError(firebaseError.toException());
+                }
+            });
+
+        });
+    }
+
+
+
+    /**
+     * Deletes order with Image
+     *
+     * @return void
+     */
+    public static Observable<Void> deleteOrder(Order order) {
+
+        Observable<Void> deleteImageObservable = deleteImage(order.getPrescriptionUrl())
+                .subscribeOn(Schedulers.io());
+
+        // deltes order image
+
+        // Deletes order without image
+        Observable<Void> deleteOrderObservable = Observable.create(subscriber -> {
+
+            App.getFirebase().child(Constants.Path.ORDERS).child(order.getOrderPath()).removeValue((firebaseError, firebase) -> {
+                if (firebaseError != null) {
+                    // on order delete failed
+                    Timber.e(firebaseError.toException(), "Order delete failed on id ", order.getOrderId());
+                    subscriber.onError(firebaseError.toException());
+                } else {
+                    Timber.i("Order deleted, key: %s", order.getOrderPath());
+                    subscriber.onCompleted();
+                }
+
+            });
+
+        });
+
+       /* return Observable.zip(
+                deleteImageObservable,
+                deleteOrderObservable, (aVoid, aVoid2) -> {
+                    return aVoid;
+                }
+        );*/
+
+       // return deleteImageObservable.concatWith(deleteOrderObservable);
+
+      //  return deleteImageObservable.zipWith(deleteOrderObservable, (aVoid, aVoid2) -> aVoid);
+        return deleteImageObservable.mergeWith(deleteOrderObservable);
+    }
+
+    /**
+     * Deletes Order by order key
+     *
+     * @return void
+     */
+    public static Observable<Void> deleteOrderByKey(String key) {
+
+        return fetchOrderByKey(key).concatMap(order -> {
+           return deleteImage(order.getPrescriptionUrl()).subscribeOn(Schedulers.io());
+        }).concatMap(aVoid -> {
+            return Observable.create(subscriber -> {
+
+                     App.getFirebase().child(Constants.Path.ORDERS).child(key).removeValue((firebaseError, firebase) -> {
+                         if (firebaseError != null) {
+                             // on order delete failed
+                             Timber.e(firebaseError.toException(), "Order delete failed on key %s", key);
+                             subscriber.onError(firebaseError.toException());
+                         } else {
+                             Timber.i("Order deleted, key: %s", key);
+                             subscriber.onCompleted();
+                         }
+                     });
+                 }
+            );
         });
     }
 }

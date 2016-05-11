@@ -8,21 +8,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.apharmacy.app.App;
+import com.apharmacy.app.R;
+import com.apharmacy.app.Utils.Constants;
+import com.apharmacy.app.Utils.Utils;
+import com.apharmacy.app.controllers.OrderManager;
+import com.apharmacy.app.models.Order;
 import com.bumptech.glide.Glide;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
-import com.apharmacy.app.App;
-import com.apharmacy.app.R;
-import com.apharmacy.app.Utils.Constants;
-import com.apharmacy.app.Utils.Utils;
-import com.apharmacy.app.models.Order;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
 /**
  * A fragment representing a single Order detail screen.
@@ -56,6 +60,8 @@ public class OrderDetailFragment extends Fragment {
     ImageView prescriptionImageView;
 
     ValueEventListener mOrderListener;
+
+    private Order mOrder;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -101,10 +107,11 @@ public class OrderDetailFragment extends Fragment {
             });
 
             compositeSubscription.add(fetchOrderSubscription);*/
-      mOrderListener = mOrderRef.addValueEventListener(new ValueEventListener() {
+            mOrderListener = mOrderRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     Order order = dataSnapshot.getValue(Order.class);
+                    mOrder = order;
 
                     if (order != null) {
                         orderTextView.setText(order.getNote());
@@ -124,9 +131,43 @@ public class OrderDetailFragment extends Fragment {
                 }
             });
 
-        }
+/*            prescriptionImageView.setOnClickListener(v -> {
 
+                OrderManager.deleteOrder(mOrder).subscribe(aVoid -> {
+
+                }, throwable -> {
+                    Toast.makeText(getActivity(), "Order delete failed", Toast.LENGTH_SHORT).show();
+                }, () -> {
+                    Toast.makeText(getActivity(), "Order deleted", Toast.LENGTH_SHORT).show();
+                    getActivity().finish();
+                });
+
+*//*                OrderManager.deleteOrderByKey(mOrderPath).subscribe(aVoid -> {}, throwable -> {
+                    Toast.makeText(getActivity(), "Order delete failed", Toast.LENGTH_SHORT).show();
+                }, () -> {
+
+                    Toast.makeText(getActivity(), "Order deleted", Toast.LENGTH_SHORT).show();
+                    getActivity().finish();
+                });
+            });*//*
+
+            });*/
+        }
         return rootView;
+
+    }
+
+    @OnClick(R.id.image_view_prescripiton)
+    void onPrescriptionClick(View view) {
+        Timber.e("Prescription click");
+        OrderManager.deleteOrder(mOrder).subscribe(aVoid -> {
+
+        }, throwable -> {
+            Toast.makeText(getActivity(), "Order delete failed", Toast.LENGTH_SHORT).show();
+        }, () -> {
+            Toast.makeText(getActivity(), "Order deleted", Toast.LENGTH_SHORT).show();
+            getActivity().finish();
+        });
     }
 
     @Override

@@ -40,7 +40,8 @@ import java.util.Map;
         "created_at",
         "status",
         "note",
-        "order_path"
+        "order_path",
+        "sellerNote"
 })
 public class Order {
 
@@ -64,6 +65,8 @@ public class Order {
     private String note = "";
     @JsonProperty("order_path")
     private String orderPath;
+    @JsonProperty("seller_note")
+    private String sellerNote = "";
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -260,6 +263,14 @@ public class Order {
     @JsonProperty("order_path")
     public void setOrderPath(String orderPath) {
         this.orderPath = orderPath;
+    }
+
+    public String getSellerNote() {
+        return sellerNote;
+    }
+
+    public void setSellerNote(String sellerNote) {
+        this.sellerNote = sellerNote;
     }
 
     @JsonAnyGetter

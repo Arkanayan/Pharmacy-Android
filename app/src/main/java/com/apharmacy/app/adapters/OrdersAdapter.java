@@ -4,7 +4,6 @@ import android.graphics.PorterDuff;
 import android.support.annotation.ColorInt;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,6 +31,7 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 /**
  * Created by arka on 4/30/16.
@@ -63,9 +63,10 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
                     Log.d(TAG, "onChildAdded: key: " + dataSnapshot.getKey());
                     Order order = dataSnapshot.getValue(Order.class);
                     mOrderList.add(0, order);
-                    notifyItemInserted(mOrderList.indexOf(order));
+                   // notifyItemInserted(mOrderList.indexOf(order));
+                    notifyItemInserted(0);
                     // mRecyclerView.smoothScrollToPosition(0);
-                      ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(0, 20);
+                   //   ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(0, 20);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -79,6 +80,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
                     if (order != null) {
 
                         int position = mOrderList.indexOf(order);
+                        Timber.d("Item changed at position: %d",position);
                         mOrderList.set(position, order);
 
                         notifyItemChanged(position, order);
@@ -137,7 +139,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
     public void onBindViewHolder(ViewHolder holder, int position) {
         try {
             //Log.d(TAG, "onBindViewHolder: " + position);
-            Order order = mOrderList.get(position);
+            Order order = mOrderList.get(holder.getAdapterPosition());
             Order.Status status = order.getStatus();
             String orderId = order.getOrderId();
             double price = order.getPrice() + order.getShippingCharge();
@@ -155,6 +157,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
 
             holder.mOrderIdTextView.setText(orderId);
             holder.mPriceTextView.setText(App.getContext().getResources().getString(R.string.price, price));
+           // holder.mPriceTextView.setText(String.valueOf(holder.getAdapterPosition()));
 
             SimpleDateFormat monthFormat = new SimpleDateFormat("MMM", Locale.getDefault());
             holder.mMonthTextView.setText(monthFormat.format(order.getCreatedAtLong()));
@@ -177,7 +180,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
                 @Override
                 public void onClick(View v) {
 
-                    mListener.onOrderClick(mOrderList.get(position).getOrderPath());
+                    mListener.onOrderClick(mOrderList.get(holder.getAdapterPosition()).getOrderPath());
 
                 }
             });
