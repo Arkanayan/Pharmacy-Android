@@ -6,8 +6,7 @@ before_script:
   - tar -zxf jdk-8u92-linux-x64.tar.gz -C jdk
   - update-alternatives --install /usr/bin/java java $(pwd)/jdk/jdk1.8.0_92/bin/java 100
   - update-alternatives --install /usr/bin/java java $(pwd)/jdk/jdk1.8.0_92/bin/javac 100
-  - java -version
-  - apt-get --quiet install --yes wget tar unzip lib32stdc++6 lib32z1
+  - javac -version
   - wget --quiet --output-document=android-sdk.tgz https://dl.google.com/android/android-sdk_r24.4.1-linux.tgz
   - tar --extract --gzip --file=android-sdk.tgz
   - echo y | android-sdk-linux/tools/android --silent update sdk --no-ui --all --filter platform-tools,tools,build-tools-22.0.1,android-22,extra-android-m2repository
