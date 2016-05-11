@@ -38,26 +38,29 @@ import java.util.Map;
         "email_address",
         "created_at",
         "is_admin",
-        "is_banned"
+        "is_banned",
+        "total_orders"
         })
 public class User {
 
     @JsonProperty("uid")
     private String uid;
     @JsonProperty("first_name")
-    private String firstName;
+    private String firstName = "";
     @JsonProperty("last_name")
-    private String lastName;
+    private String lastName = "";
     @JsonProperty("phone_number")
-    private String phoneNumber;
+    private String phoneNumber = "";
     @JsonProperty("email_address")
-    private String emailAddress;
+    private String emailAddress = "";
     @JsonProperty("created_at")
     private long createdAt;
     @JsonProperty("is_admin")
     private boolean isAdmin = false;
     @JsonProperty("is_banned")
     private boolean isBanned = false;
+    @JsonProperty("total_orders")
+    private int totalOrders = 0;
 
 
     @JsonIgnore
@@ -195,9 +198,14 @@ public class User {
         return isBanned;
     }
 
-    @JsonProperty("is_banned")
-    public void setBanned(boolean banned) {
-        isBanned = banned;
+    @JsonProperty("total_orders")
+    public int getTotalOrders() {
+        return totalOrders;
+    }
+
+    @JsonProperty("total_orders")
+    public void setTotalOrders(int totalOrders) {
+        this.totalOrders = totalOrders;
     }
 
     @JsonAnyGetter
