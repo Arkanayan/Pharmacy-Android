@@ -4,6 +4,7 @@ import android.graphics.PorterDuff;
 import android.support.annotation.ColorInt;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +16,9 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.apharmacy.app.App;
+import com.apharmacy.app.R;
+import com.apharmacy.app.models.Order;
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -26,9 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import com.apharmacy.app.App;
-import com.apharmacy.app.R;
-import com.apharmacy.app.models.Order;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -64,7 +65,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
                     mOrderList.add(0, order);
                     notifyItemInserted(mOrderList.indexOf(order));
                     // mRecyclerView.smoothScrollToPosition(0);
-                    //  ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(0, 20);
+                      ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(0, 20);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -79,8 +80,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
 
                         int position = mOrderList.indexOf(order);
                         mOrderList.set(position, order);
-                        Log.d(TAG, "onChildchanged: position: " + position);
-                        Log.d(TAG, "onChildChanged: new shipping charge: " + order.getShippingCharge());
+
                         notifyItemChanged(position, order);
 
 
@@ -166,7 +166,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
 
 
             holder.mStatusTextView.getBackground().setColorFilter(getColorFromStatus(status), PorterDuff.Mode.SRC_IN);
-
+           // Timber.d("Status: %s , Color: %d", status.name(), getColorFromStatus(status));
 
             fadeOnAck(status, holder.mStatusTextView);
 
@@ -252,6 +252,10 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
                 imageView.setColorFilter(ContextCompat.getColor(App.getContext(), R.color.md_grey_400),
                         PorterDuff.Mode.SRC_IN);
                 break;
+            case OPEN:
+                imageView.setColorFilter(ContextCompat.getColor(App.getContext(), R.color.md_cyan_500),
+                        PorterDuff.Mode.SRC_IN);
+                break;
         }
     }
 
@@ -268,11 +272,11 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
             case COMPLETED:
                 return ContextCompat.getColor(App.getContext(), R.color.md_grey_400);
             case OPEN:
-                return ContextCompat.getColor(App.getContext(), R.color.colorPrimary);
+                return ContextCompat.getColor(App.getContext(), R.color.md_cyan_500);
 
         }
 
-        return ContextCompat.getColor(App.getContext(), R.color.colorPrimary);
+        return ContextCompat.getColor(App.getContext(), R.color.md_cyan_500);
     }
 
     public interface OnOrderClickListener {
