@@ -2,6 +2,10 @@ package com.apharmacy.app.controllers;
 
 import android.util.Log;
 
+import com.apharmacy.app.App;
+import com.apharmacy.app.Utils.Constants;
+import com.apharmacy.app.models.Address;
+import com.apharmacy.app.models.User;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -9,11 +13,8 @@ import com.firebase.client.ValueEventListener;
 
 import java.util.Map;
 
-import com.apharmacy.app.App;
-import com.apharmacy.app.Utils.Constants;
-import com.apharmacy.app.models.Address;
-import com.apharmacy.app.models.User;
 import rx.Observable;
+import timber.log.Timber;
 
 /**
  * Created by arka on 4/29/16.
@@ -99,14 +100,22 @@ public class UserManager {
                     Log.d(TAG, "Address key: " + addressKey);
 
                     // Overwrite address by new address
-                    addressRef.child(addressKey).setValue(address);
-                    subscriber.onCompleted();
+                    addressRef.child(addressKey).setValue(address, (firebaseError, firebase) -> {
+                        if (firebaseError != null) {
+                            Timber.e(firebaseError.toException(), "Address not updated");
+                            subscriber.onError(new Throwable("Sorry, Address couldn't be updated"));
+                        } else {
+
+                            subscriber.onCompleted();
+                        }
+                    });
 
                 }
 
                 @Override
                 public void onCancelled(FirebaseError firebaseError) {
-                    subscriber.onError(firebaseError.toException());
+                    Timber.e(firebaseError.toException(), "Address not updated");
+                    subscriber.onError(new Throwable("Sorry, Address couldn't be updated"));
                 }
             });
         });
@@ -145,7 +154,7 @@ public class UserManager {
         });
     }
 
-    public static void updateUser(Map<String, Object> userMap) {
+/*    public static void updateUser(Map<String, Object> userMap) {
 
         String uid = App.getFirebase().getAuth().getUid();
 
@@ -153,6 +162,29 @@ public class UserManager {
 
         userRef.updateChildren(userMap);
 
+    }*/
+
+    /**
+     * Update user reactively
+     *
+     * @return void
+     * @throws  Throwable()
+     * @erorMessage "User couldn't be upddated"
+     */
+    public static Observable<Void> updateUser(Map<String, Object> userMap) {
+
+        String uid = App.getFirebase().getAuth().getUid();
+
+        Firebase userRef = App.getFirebase().child("users").child(uid);
+        return Observable.create(subscriber -> {
+            userRef.updateChildren(userMap, (firebaseError, firebase) -> {
+                if (firebaseError != null) {
+                    subscriber.onError(new Throwable("Sorry, User couldn't be upddated"));
+                } else {
+                  subscriber.onCompleted();
+                }
+            });
+        });
     }
 
     public static Firebase getUserRef() {

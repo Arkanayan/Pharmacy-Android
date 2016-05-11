@@ -37,10 +37,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rx.Observable;
+import rx.Subscription;
+import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
 public class EditUserActivity extends AppCompatActivity implements Validator.ValidationListener {
 
     public final String TAG = this.getClass().getSimpleName();
+
+    CompositeSubscription compositeSubscription;
 
     Firebase mRef = App.getFirebase();
 
@@ -92,6 +97,8 @@ public class EditUserActivity extends AppCompatActivity implements Validator.Val
             return;
         }
 
+        compositeSubscription = new CompositeSubscription();
+
         setContentView(R.layout.activity_edit_user);
         ButterKnife.setDebug(true);
 
@@ -116,7 +123,7 @@ public class EditUserActivity extends AppCompatActivity implements Validator.Val
 
         });*/
 
-        Observable.zip(fetchUser, fetchAddress, (user, address) -> {
+       Subscription fetchUserSubscription = Observable.zip(fetchUser, fetchAddress, (user, address) -> {
 
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("user", user);
@@ -145,6 +152,8 @@ public class EditUserActivity extends AppCompatActivity implements Validator.Val
             throwable.printStackTrace();
             Toast.makeText(EditUserActivity.this, "There is some error on processing", Toast.LENGTH_SHORT).show();
         });
+
+        compositeSubscription.add(fetchUserSubscription);
 
 
 
@@ -201,14 +210,22 @@ public class EditUserActivity extends AppCompatActivity implements Validator.Val
     }
 
     @Override
+    protected void onDestroy() {
+        compositeSubscription.unsubscribe();
+        super.onDestroy();
+
+    }
+
+    @Override
     public void onValidationSucceeded() {
+
         Map<String, Object> userMap = new HashMap<String, Object>();
 
         userMap.put(Constants.User.FIRST_NAME, firstNameEditText.getText().toString().trim());
         userMap.put(Constants.User.LAST_NAME, lastNameEditText.getText().toString().trim());
         userMap.put(Constants.User.EMAIL_ADDRESS, emailEditText.getText().toString().trim());
 
-        UserManager.updateUser(userMap);
+        Observable<Void> userUpdateObserver = UserManager.updateUser(userMap);
 
         Address address = new Address();
         address.setAddressLine1(addressLine1EditText.getText().toString().trim());
@@ -216,17 +233,37 @@ public class EditUserActivity extends AppCompatActivity implements Validator.Val
         address.setLandmark(addressLandmarkEditText.getText().toString().trim());
         address.setPin(Integer.valueOf(addressPinEditText.getText().toString().trim()));
 
-        UserManager.updateAddress(address).subscribe(aVoid -> {
-            // it doesn't return anything so no op in onNext()
-        }, throwable -> {
-            showSnackBarOnErrorWithRetry("Sorry, Address couldn't be updated");
+        Observable<Void> addressUpdateObserver = UserManager.updateAddress(address);
+
+        Subscription infoUpdateSubscription = Observable.zip(userUpdateObserver, addressUpdateObserver, (t1, t2) -> {
+            // return null because "Void" observable
+            return null;
+        }).subscribe(r -> {
+            // do nothing on onNext
+        }, infoUpdateThrowable -> {
+            showSnackBarOnErrorWithRetry(infoUpdateThrowable.getMessage());
+
         }, () -> {
-            Log.d(TAG, "Address updated");
+            // Update success and completed
+            Timber.i("User info updated");
             Toast.makeText(this, "Info updated", Toast.LENGTH_SHORT).show();
+
+            // TODO: 11/5/16 if first time edit redirect to new order page
+
+
+            // Finish edit user activity after some delay
+            new Handler().postDelayed(() -> {
+                finish();
+
+            }, 300);
+
         });
 
-        Log.d(TAG, "onValidationSucceeded: ");
+        compositeSubscription.add(infoUpdateSubscription);
+
     }
+
+
 
     private void showSnackBarOnErrorWithRetry(String message) {
         Snackbar.make(firstNameEditText, message , Snackbar.LENGTH_LONG)
