@@ -5,7 +5,7 @@ before_script:
   - mkdir jdk
   - tar -zxf jdk-8u92-linux-x64.tar.gz -C jdk
   - update-alternatives --install /usr/bin/java java $(pwd)/jdk/jdk1.8.0_92/bin/java 100
-  - update-alternatives --install /usr/bin/java java $(pwd)/jdk/jdk1.8.0_92/bin/javac 100
+  - update-alternatives --install /usr/bin/javac java $(pwd)/jdk/jdk1.8.0_92/bin/javac 100
   - javac -version
   - wget --quiet --output-document=android-sdk.tgz https://dl.google.com/android/android-sdk_r24.4.1-linux.tgz
   - tar --extract --gzip --file=android-sdk.tgz
