@@ -56,6 +56,7 @@ public class App extends Application {
 
     }
 
+    //Logs out user and redirects to login activity
     public static void logout() {
         String TAG = BuildConfig.APPLICATION_ID + ".App";
         if (Digits.getSessionManager() != null) {

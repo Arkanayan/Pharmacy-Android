@@ -132,6 +132,12 @@ public class OrderListActivity extends AppCompatActivity implements OrdersAdapte
             case R.id.action_settings:
                 startActivity(EditUserActivity.getInstance(this));
                 break;
+            case R.id.action_logout:
+                App.logout();
+                startActivity(LoginActivity.getInstance(this));
+                finish();
+                return false;
+
         }
         return super.onOptionsItemSelected(item);
     }

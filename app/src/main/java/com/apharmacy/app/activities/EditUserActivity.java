@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.apharmacy.app.App;
 import com.apharmacy.app.R;
 import com.apharmacy.app.Utils.Constants;
+import com.apharmacy.app.Utils.Prefs;
 import com.apharmacy.app.Utils.Utils;
 import com.apharmacy.app.controllers.UserManager;
 import com.apharmacy.app.models.Address;
@@ -250,10 +251,16 @@ public class EditUserActivity extends AppCompatActivity implements Validator.Val
 
             // TODO: 11/5/16 if first time edit redirect to new order page
 
-
+            Prefs.getInstance(this);
             // Finish edit user activity after some delay
             new Handler().postDelayed(() -> {
-                finish();
+                if (Prefs.getInstance().getBoolean(Prefs.Key.IS_FIRST_TIME, true)) {
+                    startActivity(NewOrderActivity.getInstance(this));
+                    Prefs.getInstance().put(Prefs.Key.IS_FIRST_TIME, false);
+                } else {
+                    finish();
+
+                }
 
             }, 300);
 
