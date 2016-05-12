@@ -49,7 +49,11 @@ public class Prefs {
         public static final String IS_FIRST_TIME = "is_first_time";
         public static final String IS_USER_DETAILS_PRESENT = "is_user_details_present";
 
-        public static final String HAS_INTRO_SHOWN = "intro_shown";
+        public static final String HAS_INTRO_SHOWN = "has_intro_shown";
+
+        public static final String HAS_SHOWN_ORDER_LIST_TUTORIAL = "has_shown_order_list_tutorial";
+
+        public static final String HAS_SHOWN_NEW_ORDER_TUTORIAL = "has_shown_new_order_tutorial";
 
 
 

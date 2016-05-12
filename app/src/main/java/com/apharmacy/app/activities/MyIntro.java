@@ -1,49 +1,83 @@
 package com.apharmacy.app.activities;
 
 import android.Manifest;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
 import com.apharmacy.app.R;
-import com.github.paolorotolo.appintro.AppIntro2;
+import com.apharmacy.app.Utils.Prefs;
+import com.github.paolorotolo.appintro.AppIntro;
 import com.github.paolorotolo.appintro.AppIntroFragment;
 
-public class MyIntro extends AppIntro2 {
+public class MyIntro extends AppIntro {
 
 
     @Override
     public void init(@Nullable Bundle savedInstanceState) {
+        Prefs.getInstance(this);
 
-        addSlide(AppIntroFragment.newInstance("Introduction", "This is description",
-                R.drawable.ic_image,
-                R.color.md_amber_200));
+        addSlide(AppIntroFragment.newInstance("Order medicines", "From your home",
+                R.drawable.home,
+                Color.parseColor("#222222")));
 
-        askForPermissions(new String[]{Manifest.permission.CAMERA}, 1); // OR
+       // askForPermissions(new String[]{Manifest.permission.CAMERA}, 1); // OR
 
 
-        addSlide(AppIntroFragment.newInstance("Introduction 2 ", "This is description 2",
-                R.drawable.delivery_truck,
-                R.color.md_green_200));
+        addSlide(AppIntroFragment.newInstance("From your bed ", "You get it. :-)\n\n From Everywhere",
+                R.drawable.bed,
+                Color.parseColor("#00BCD4")));
 
-        addSlide(AppIntroFragment.newInstance("Introduction 3 ", "This is description 3",
-                R.drawable.delivery_truck,
-                R.color.md_blue_200));
+        addSlide(AppIntroFragment.newInstance("Just scan and order", "As easy as that  \n\n" +
+                "For this, we need your permission to take pictures and storage ",
+                R.drawable.camera,
+                ContextCompat.getColor(this, R.color.md_teal_500)));
+
+        askForPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 3);
+
+
+        addSlide(AppIntroFragment.newInstance("We just need", "Your phone number \n\n To verify you \n\n " +
+                "P.S. This app is not compatible with your landphone",
+                R.drawable.telephone,
+                Color.parseColor("#5C6BC0")));
+
+        askForPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, 4);
+
+        addSlide(AppIntroFragment.newInstance("We just need", "Your permission to read the OTP \n\n " +
+                "This app works fine even without this permission \n\n " +
+                        "P.S. Did I tell you this app is not compatible with your landphone.",
+                R.drawable.sms,
+                ContextCompat.getColor(this, R.color.md_cyan_500)));
+
+        askForPermissions(new String[]{Manifest.permission.RECEIVE_SMS}, 5);
+
+        addSlide(AppIntroFragment.newInstance("We are nearly done", "In the next page click login",
+                R.drawable.pill_icon,
+                ContextCompat.getColor(this, R.color.md_purple_500)));
+
 
         showStatusBar(false);
 
-        setSwipeLock(false);
+        setSwipeLock(true);
 
-        setCustomTransformer(new ZoomOutPageTransformer());
+      //  setCustomTransformer(new ZoomOutPageTransformer());
     }
 
-
+    @Override
+    public void onSkipPressed() {
+        Prefs.getInstance().put(Prefs.Key.HAS_INTRO_SHOWN, true);
+        startActivity(InitialActivity.getInstance(this));
+        finish();
+    }
 
 
     @Override
     public void onDonePressed() {
-        startActivity(OrderListActivity.getInstance(this));
+        Prefs.getInstance().put(Prefs.Key.HAS_INTRO_SHOWN, true);
+        startActivity(InitialActivity.getInstance(this));
         finish();
     }
 

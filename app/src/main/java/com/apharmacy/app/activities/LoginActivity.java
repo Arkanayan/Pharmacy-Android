@@ -1,13 +1,14 @@
 package com.apharmacy.app.activities;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.apharmacy.app.App;
@@ -15,7 +16,6 @@ import com.apharmacy.app.R;
 import com.apharmacy.app.models.Address;
 import com.apharmacy.app.models.User;
 import com.digits.sdk.android.AuthCallback;
-import com.digits.sdk.android.Digits;
 import com.digits.sdk.android.DigitsAuthButton;
 import com.digits.sdk.android.DigitsException;
 import com.digits.sdk.android.DigitsOAuthSigning;
@@ -38,8 +38,8 @@ import com.twitter.sdk.android.core.TwitterCore;
 import java.io.IOException;
 import java.util.Map;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -48,17 +48,19 @@ public class LoginActivity extends AppCompatActivity {
    // @BindView(R.id.button_auth)
     DigitsAuthButton authButton;
 
-   // @BindView(R.id.button_logout)
-    Button logoutButton;
 
-/*    @BindView(R.id.button_edit_user)
-    Button lauchEditUserButton;*/
+    @BindView(R.id.app_icon)
+    ImageView appIconImageView;
+
+    private ObjectAnimator mAnimator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+
+        mAnimator = new ObjectAnimator();
 
 /*
         logoutButton = (Button) findViewById(R.id.button_logout);
@@ -93,7 +95,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 doLogin(authHeaders);
 
-                Toast.makeText(LoginActivity.this, "Phone no: " + session.getPhoneNumber(), Toast.LENGTH_SHORT).show();
+              //  Toast.makeText(LoginActivity.this, "Phone no: " + session.getPhoneNumber(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -105,6 +107,8 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private void doLogin(Map<String, String> authHeaders) {
+
+        showIconAnimation();
 
         OkHttpClient client = new OkHttpClient();
 
@@ -215,15 +219,40 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    @OnClick(R.id.button_logout)
-    public void logout(View view) {
+    private void showIconAnimation() {
+
+        mAnimator = ObjectAnimator.ofFloat(
+                appIconImageView,
+                "rotation",
+                0f,
+                360f
+        );
+        mAnimator.setDuration(1000);
+        mAnimator.setRepeatCount(ValueAnimator.INFINITE);
+        mAnimator.setRepeatMode(ValueAnimator.RESTART);
+
+        mAnimator.start();
+    }
+
+    private void stopIconAnimation() {
+
+        mAnimator.cancel();
+    }
+
+    @Override
+    protected void onDestroy() {
+        stopIconAnimation();
+        super.onDestroy();
+    }
+
+    /*    public void logout() {
         Log.d(TAG, "Logout clicked");
         if (Digits.getSessionManager() != null) {
             Digits.getSessionManager().clearActiveSession();
             Log.d(TAG, "Logged out ");
         }
         App.getFirebase().unauth();
-    }
+    }*/
 
 /*    // for testing
     @OnClick(R.id.button_edit_user)

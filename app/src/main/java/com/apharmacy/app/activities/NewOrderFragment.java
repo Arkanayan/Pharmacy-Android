@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.apharmacy.app.App;
 import com.apharmacy.app.R;
 import com.apharmacy.app.Utils.Constants;
+import com.apharmacy.app.Utils.Prefs;
 import com.apharmacy.app.Utils.Utils;
 import com.apharmacy.app.controllers.OrderManager;
 import com.apharmacy.app.controllers.UserManager;
@@ -431,7 +432,7 @@ public class NewOrderFragment extends Fragment {
             }, () -> {
                 fabShowSuccess();
                 showSnackbar("Order created " + order.getOrderId());
-
+                firstTimeGoToList();
             });
 
 
@@ -472,25 +473,47 @@ public class NewOrderFragment extends Fragment {
                             OrderManager.createOrder(order)
                             )
                             .subscribe(s -> {
-                                fabShowSuccess();
-                                showSnackbar("onnext Order created " + order.getOrderId());
+                               /* fabShowSuccess();
+                                showSnackbar("onnext Order created " + order.getOrderId());*/
                             }, throwable -> {
                                 showSnackbar("Order failed. Make sure your are connected to internet.");
                                 fabShowFailed();
                             }, () -> {
                                 fabShowSuccess();
                                 showSnackbar("Order created " + order.getOrderId());
+                                firstTimeGoToList();
                             });
                     mCompositeSubscription.add(orderSubscription);
 
                 }).setNegativeButton(android.R.string.no, null).show();
     }
 
+    private void firstTimeGoToList() {
+
+        if (Prefs.getInstance(getActivity()).getBoolean(Prefs.Key.IS_FIRST_TIME, true)) {
+            // Now no need to go back to list
+            Prefs.getInstance().put(Prefs.Key.IS_FIRST_TIME, false);
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    startActivity(OrderListActivity.getInstance(getActivity()));
+                    getActivity().finish();
+                    return;
+                }
+            }, 1000);
+
+        }
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
         Timber.d("On destroy called");
-        mCompositeSubscription.unsubscribe();
+        if (mCompositeSubscription != null) {
+
+            mCompositeSubscription.unsubscribe();
+        }
         // clear firebase event listeners
         mUserRef.removeEventListener(mUserEventListener);
         mAddressRef.removeEventListener(mAddressEventListener);

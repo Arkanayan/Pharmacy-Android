@@ -91,6 +91,8 @@ public class EditUserActivity extends AppCompatActivity implements Validator.Val
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        compositeSubscription = new CompositeSubscription();
+
         // Check if user logged in else go back to login activity
         if (mRef.getAuth() == null) {
             startActivity(LoginActivity.getInstance(EditUserActivity.this));
@@ -98,7 +100,6 @@ public class EditUserActivity extends AppCompatActivity implements Validator.Val
             return;
         }
 
-        compositeSubscription = new CompositeSubscription();
 
         setContentView(R.layout.activity_edit_user);
         ButterKnife.setDebug(true);
@@ -212,7 +213,10 @@ public class EditUserActivity extends AppCompatActivity implements Validator.Val
 
     @Override
     protected void onDestroy() {
-        compositeSubscription.unsubscribe();
+        if (compositeSubscription != null) {
+
+            compositeSubscription.unsubscribe();
+        }
         super.onDestroy();
 
     }
@@ -245,6 +249,8 @@ public class EditUserActivity extends AppCompatActivity implements Validator.Val
             showSnackBarOnErrorWithRetry(infoUpdateThrowable.getMessage());
 
         }, () -> {
+            // Set has details preferences to true
+            Prefs.getInstance(this).put(Prefs.Key.IS_USER_DETAILS_PRESENT, true);
             // Update success and completed
             Timber.i("User info updated");
             Toast.makeText(this, "Info updated", Toast.LENGTH_SHORT).show();
@@ -256,7 +262,6 @@ public class EditUserActivity extends AppCompatActivity implements Validator.Val
             new Handler().postDelayed(() -> {
                 if (Prefs.getInstance().getBoolean(Prefs.Key.IS_FIRST_TIME, true)) {
                     startActivity(NewOrderActivity.getInstance(this));
-                    Prefs.getInstance().put(Prefs.Key.IS_FIRST_TIME, false);
                 } else {
                     finish();
 

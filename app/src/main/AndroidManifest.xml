@@ -17,7 +17,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.InitialActivity">
+        <activity android:name=".activities.InitialActivity"
+            android:theme="@style/SplashTheme"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,7 +31,9 @@
             android:name="io.fabric.ApiKey"
             android:value="bb160c850d73a3d1d80fc1de490e2bb9b672f015" />
 
-        <activity android:name=".activities.LoginActivity" />
+        <activity android:name=".activities.LoginActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            />
         <activity
             android:name=".activities.EditUserActivity"
             android:label="Edit"
