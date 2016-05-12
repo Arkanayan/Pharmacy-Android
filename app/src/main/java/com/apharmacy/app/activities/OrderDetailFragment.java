@@ -137,8 +137,8 @@ public class OrderDetailFragment extends Fragment implements ValueEventListener 
     @OnClick(R.id.image_view_prescripiton)
     void onPrescriptionClick(View view) {
         Timber.e("Prescription click");
-
-        startActivity(ImageViewActivity.getInstance(getActivity(),Utils.getImageLowerUrl(mOrder.getPrescriptionUrl())));
+        if (!mOrder.getPrescriptionUrl().isEmpty())
+            startActivity(ImageViewActivity.getInstance(getActivity(),Utils.getImageLowerUrl(mOrder.getPrescriptionUrl())));
     }
 
     @Override

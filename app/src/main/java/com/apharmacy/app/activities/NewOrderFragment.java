@@ -10,6 +10,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,6 +56,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -126,7 +128,6 @@ public class NewOrderFragment extends Fragment {
             getActivity().finish();
             return;
         }
-        mCompositeSubscription = new CompositeSubscription();
 
     }
 
@@ -140,6 +141,7 @@ public class NewOrderFragment extends Fragment {
         ButterKnife.bind(this, rootView);
 
 
+        mCompositeSubscription = new CompositeSubscription();
 
 /*
         disableSubmitButton();
@@ -365,6 +367,11 @@ public class NewOrderFragment extends Fragment {
     @OnClick(R.id.fab_order)
     void submitOrder() {
 
+        //Create order instance
+        Order order = new Order();
+        order.setNote(noteEditText.getText().toString());
+        order.setOrderId(Utils.generateOrderId());
+
 
         if (mPrescriptionFile != null) {
             // enable indeterminate mode
@@ -372,10 +379,6 @@ public class NewOrderFragment extends Fragment {
             mSubmitButton.setProgress(2);*/
             fabShowLoadingAnimation();
 
-            //Create order instance
-            Order order = new Order();
-            order.setNote(noteEditText.getText().toString());
-            order.setOrderId(Utils.generateOrderId());
 
             Observable<String> imageuploadObservable = OrderManager.uploadImage(mPrescriptionFile, order.getOrderId())
                     .subscribeOn(Schedulers.io())
@@ -406,7 +409,7 @@ public class NewOrderFragment extends Fragment {
                 return OrderManager.createOrder(order);
 
             }).subscribe(orderKey -> {
-
+                Timber.d("Onsuccess key: %s", orderKey);
             }, throwable -> {
                 showSnackbar(throwable.getMessage());
                 fabShowFailed();
@@ -432,44 +435,71 @@ public class NewOrderFragment extends Fragment {
             });
 
 
-
-
-  /*                  .subscribe(map -> {
-                String imageId = map.get("public_id");
-
-                Log.d(TAG, "submitOrder: ImageUrl: " + imageId);
-                // set order prescription image
-                order.setPrescriptionUrl(imageId);
-
-                // set order address
-                String addressKey = map.get("address_key");
-                order.setAddress(addressKey);
-
-
-                String orderId = OrderManager.createOrder(order);
-
-                showSnackbar("Order created " + orderId);
-
-            }, throwable -> {
-                showSnackbar(throwable.getMessage());
-                fabShowFailed();
-            }, this::fabShowSuccess);*/
-
             mCompositeSubscription.add(orderSubscription);
 
-        } else {
-            showSnackbar("Please attach a prescription");
+        } else if (mPrescriptionFile == null && noteEditText.getText().toString().isEmpty()){
+
+            // User has not entered both medicine details and prescription
+           // showSnackbar("Please attach a prescription");
+            showSnackbar("Please at least enter medicine details or attach your prescription");
+
+        } else if (mPrescriptionFile == null && !noteEditText.getText().toString().isEmpty()) {
+            // if user has not attached but entered medicine details
+
+            showPrescriptionRequiredAndOrder();
+
         }
 
+    }
+
+    public void showPrescriptionRequiredAndOrder() {
+
+        new AlertDialog.Builder(getActivity())
+                .setTitle("Prescription required")
+                .setMessage("You have to show prescription at the time of delivery. Do you want to order ?")
+                .setPositiveButton(android.R.string.yes, (dialog, which) -> {
+                    fabShowLoadingAnimation();
+
+                    //Create order instance
+                    Order order = new Order();
+                    order.setNote(noteEditText.getText().toString());
+                    order.setOrderId(Utils.generateOrderId());
+                    order.setPrescriptionUrl("");
+
+                    Subscription orderSubscription =
+                            Observable.merge(
+                                    Utils.isNetworkAvailable(),
+                            OrderManager.createOrder(order)
+                            )
+                            .subscribe(s -> {
+                                fabShowSuccess();
+                                showSnackbar("onnext Order created " + order.getOrderId());
+                            }, throwable -> {
+                                showSnackbar("Order failed. Make sure your are connected to internet.");
+                                fabShowFailed();
+                            }, () -> {
+                                fabShowSuccess();
+                                showSnackbar("Order created " + order.getOrderId());
+                            });
+                    mCompositeSubscription.add(orderSubscription);
+
+                }).setNegativeButton(android.R.string.no, null).show();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Timber.d("On destroy called");
         mCompositeSubscription.unsubscribe();
         // clear firebase event listeners
         mUserRef.removeEventListener(mUserEventListener);
         mAddressRef.removeEventListener(mAddressEventListener);
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
 
     }
 
