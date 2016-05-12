@@ -114,4 +114,6 @@ dependencies {
 
     compile 'com.jakewharton.timber:timber:4.1.2'
 
+    compile 'com.github.medyo:android-about-page:1.0.8'
+
 }

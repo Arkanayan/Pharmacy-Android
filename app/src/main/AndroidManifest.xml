@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.apharmacy.app" >
+    package="com.apharmacy.app">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
 
     <application
-        android:name="com.apharmacy.app.App"
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" >
-        <activity android:name=".activities.InitialActivity" >
+        android:theme="@style/AppTheme">
+        <activity android:name=".activities.InitialActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,8 +24,8 @@
 
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="bb160c850d73a3d1d80fc1de490e2bb9b672f015"
-            />
+            android:value="bb160c850d73a3d1d80fc1de490e2bb9b672f015" />
+
         <activity android:name=".activities.LoginActivity" />
         <activity
             android:name=".activities.EditUserActivity"
@@ -33,32 +33,34 @@
             android:parentActivityName=".activities.OrderListActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.apharmacy.app.activities.OrderListActivity"
+            android:name=".activities.OrderListActivity"
             android:label="@string/title_order_list"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.apharmacy.app.activities.OrderDetailActivity"
+            android:name=".activities.OrderDetailActivity"
             android:label="@string/title_order_detail"
             android:parentActivityName=".activities.OrderListActivity"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.apharmacy.app.activities.OrderListActivity" />
         </activity>
         <activity
-            android:name="com.apharmacy.app.activities.NewOrderActivity"
+            android:name=".activities.NewOrderActivity"
             android:label="@string/title_activity_new_order"
             android:parentActivityName=".activities.OrderListActivity"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.OrderDetailActivity" />
         </activity>
         <activity
             android:name=".activities.ImageViewActivity"
-            android:theme="@style/AppTheme.ImageViewerTheme" >
-        </activity>
+            android:theme="@style/AppTheme.ImageViewerTheme"></activity>
+        <activity android:name=".activities.AboutPage"
+            android:parentActivityName=".activities.OrderListActivity"
+            ></activity>
     </application>
 
 </manifest>

@@ -15,6 +15,7 @@ import android.view.animation.OvershootInterpolator;
 import com.apharmacy.app.App;
 import com.apharmacy.app.R;
 import com.apharmacy.app.adapters.OrdersAdapter;
+
 import butterknife.ButterKnife;
 import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
 
@@ -137,6 +138,9 @@ public class OrderListActivity extends AppCompatActivity implements OrdersAdapte
                 startActivity(LoginActivity.getInstance(this));
                 finish();
                 return false;
+            case R.id.action_about:
+                startActivity(AboutPage.getInstance(this));
+                break;
 
         }
         return super.onOptionsItemSelected(item);
