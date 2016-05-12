@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -334,7 +335,8 @@ public class NewOrderFragment extends Fragment {
         fabOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().finish();
+               // getActivity().finish();
+                NavUtils.navigateUpTo(getActivity(), OrderListActivity.getInstance(getActivity()));
                 return;
             }
         });
