@@ -85,9 +85,9 @@ public class ImageViewActivity extends Activity {
         overridePendingTransition(0,0);
     }
 
-    public static Intent getInstance(Context context, String path) {
+    public static Intent getInstance(Context context, String url) {
         Intent intent = new  Intent(context, ImageViewActivity.class);
-        intent.putExtra(RX_URI, path);
+        intent.putExtra(RX_URI, url);
 
         return intent;
     }

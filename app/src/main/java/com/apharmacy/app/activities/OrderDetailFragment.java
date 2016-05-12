@@ -1,11 +1,14 @@
 package com.apharmacy.app.activities;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,12 +37,11 @@ import timber.log.Timber;
  * in two-pane mode (on tablets) or a {@link OrderDetailActivity}
  * on handsets.
  */
-public class OrderDetailFragment extends Fragment {
+public class OrderDetailFragment extends Fragment implements ValueEventListener {
 
     private final String TAG = this.getClass().getSimpleName();
 
-    @BindView(R.id.order_detail)
-    TextView orderTextView;
+
 
     Firebase mOrderRef;
 
@@ -56,10 +58,33 @@ public class OrderDetailFragment extends Fragment {
 
     private CompositeSubscription compositeSubscription;
 
+
+    @BindView(R.id.text_view_order_id)
+    TextView orderIdTextView;
+
     @BindView(R.id.image_view_prescripiton)
     ImageView prescriptionImageView;
 
-    ValueEventListener mOrderListener;
+    @BindView(R.id.button_order_confirm)
+    Button confirmButton;
+
+    @BindView(R.id.button_order_cancel)
+    Button cancelButton;
+
+    @BindView(R.id.text_view_total_price)
+    TextView totalPriceTextView;
+
+    @BindView(R.id.text_view_order_price)
+    TextView orderPriceTextView;
+
+    @BindView(R.id.text_view_shipping_charge)
+    TextView shippingChargeTextView;
+
+    @BindView(R.id.text_view_seller_note)
+    TextView sellerNoteTextView;
+
+    @BindView(R.id.image_view_status)
+    ImageView statusImageView;
 
     private Order mOrder;
 
@@ -100,58 +125,10 @@ public class OrderDetailFragment extends Fragment {
             Log.d(TAG, "onCreateView: order path: " + mOrderPath);
             mOrderRef = App.getFirebase().child(Constants.Path.ORDERS).child(mOrderPath);
 
-/*           Subscription fetchOrderSubscription =  OrderManager.fetchOrder(mOrderPath).subscribe(order -> {
-                orderTextView.setText(order.getUid());
-            }, throwable -> {
-               orderTextView.setText(throwable.getLocalizedMessage());
-            });
 
-            compositeSubscription.add(fetchOrderSubscription);*/
-            mOrderListener = mOrderRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    Order order = dataSnapshot.getValue(Order.class);
-                    mOrder = order;
+            mOrderRef.addValueEventListener(this);
 
-                    if (order != null) {
-                        orderTextView.setText(order.getNote());
 
-                        String url = Utils.getImageLowerUrl(order.getPrescriptionUrl());
-
-                        Glide.with(getActivity())
-                                .load(url)
-                                .placeholder(R.drawable.house)
-                                .into(prescriptionImageView);
-                    }
-                }
-
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
-
-                }
-            });
-
-/*            prescriptionImageView.setOnClickListener(v -> {
-
-                OrderManager.deleteOrder(mOrder).subscribe(aVoid -> {
-
-                }, throwable -> {
-                    Toast.makeText(getActivity(), "Order delete failed", Toast.LENGTH_SHORT).show();
-                }, () -> {
-                    Toast.makeText(getActivity(), "Order deleted", Toast.LENGTH_SHORT).show();
-                    getActivity().finish();
-                });
-
-*//*                OrderManager.deleteOrderByKey(mOrderPath).subscribe(aVoid -> {}, throwable -> {
-                    Toast.makeText(getActivity(), "Order delete failed", Toast.LENGTH_SHORT).show();
-                }, () -> {
-
-                    Toast.makeText(getActivity(), "Order deleted", Toast.LENGTH_SHORT).show();
-                    getActivity().finish();
-                });
-            });*//*
-
-            });*/
         }
         return rootView;
 
@@ -160,21 +137,144 @@ public class OrderDetailFragment extends Fragment {
     @OnClick(R.id.image_view_prescripiton)
     void onPrescriptionClick(View view) {
         Timber.e("Prescription click");
-        OrderManager.deleteOrder(mOrder).subscribe(aVoid -> {
 
-        }, throwable -> {
-            Toast.makeText(getActivity(), "Order delete failed", Toast.LENGTH_SHORT).show();
-        }, () -> {
-            Toast.makeText(getActivity(), "Order deleted", Toast.LENGTH_SHORT).show();
-            getActivity().finish();
-        });
+        startActivity(ImageViewActivity.getInstance(getActivity(),Utils.getImageLowerUrl(mOrder.getPrescriptionUrl())));
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mOrderRef.removeEventListener(mOrderListener);
+        mOrderRef.removeEventListener(this);
         compositeSubscription.unsubscribe();
 
+    }
+
+    @Override
+    public void onDataChange(DataSnapshot dataSnapshot) {
+        try {
+            Order order = dataSnapshot.getValue(Order.class);
+            mOrder = order;
+
+            if (order != null) {
+                orderIdTextView.setText(order.getOrderId());
+
+                String orderPrice = getResources().getString(R.string.price, order.getPrice());
+                String shippingCharge = getResources().getString(R.string.price, order.getShippingCharge());
+                String totalPrice = getResources().getString(R.string.price,
+                        order.getPrice() + order.getShippingCharge()
+                        );
+
+                orderPriceTextView.setText(orderPrice);
+                shippingChargeTextView.setText(shippingCharge);
+                totalPriceTextView.setText(totalPrice);
+
+                // seller note
+                sellerNoteTextView.setText(order.getSellerNote());
+
+                String url = Utils.getThumbUrl(order.getPrescriptionUrl());
+
+                Glide.with(getActivity())
+                        .load(url)
+                        .placeholder(R.drawable.pill)
+                        .into(prescriptionImageView);
+
+
+                Order.Status status = order.getStatus();
+
+                if (status == Order.Status.OPEN) {
+                    enableButton(cancelButton);
+                    disableButton(confirmButton);
+                } else if (status == Order.Status.ACKNOWLEDGED) {
+                    enableButton(confirmButton);
+                    enableButton(cancelButton);
+                } else {
+                    disableButton(confirmButton);
+                    disableButton(cancelButton);
+                }
+
+
+                switch (status) {
+                    case ACKNOWLEDGED:
+                    case OPEN:
+                        statusImageView.setImageResource(R.drawable.status_open);
+                        break;
+                    case COMPLETED:
+                        statusImageView.setImageResource(R.drawable.ok_mark);
+                        break;
+                    case CONFIRMED:
+                        statusImageView.setImageResource(R.drawable.delivery_truck);
+                        break;
+                    case CANCELED:
+                        statusImageView.setImageResource(R.drawable.shopping_cart_cancel);
+                        break;
+                }
+
+
+            }
+        } catch (Exception e) {
+            Timber.e(e, "Order decode failed");
+            Toast.makeText(getActivity(), "Sorry, Unable to fetch order", Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
+    @Override
+    public void onCancelled(FirebaseError firebaseError) {
+        Timber.e(firebaseError.toException(), "Order fetch error");
+        Toast.makeText(getActivity(), "Sorry, Unable to fetch order", Toast.LENGTH_SHORT).show();
+    }
+
+    public void deleteOrder() {
+        if (mOrder != null) {
+
+            OrderManager.deleteOrder(mOrder).subscribe(aVoid -> {
+                Toast.makeText(getActivity(), "Order deleted onnext", Toast.LENGTH_SHORT).show();
+                getActivity().finish();
+            }, throwable -> {
+                Toast.makeText(getActivity(), "Order delete failed", Toast.LENGTH_SHORT).show();
+            }, () -> {
+                Toast.makeText(getActivity(), "Order deleted", Toast.LENGTH_SHORT).show();
+                getActivity().finish();
+            });
+        }
+    }
+
+    @OnClick(R.id.button_order_cancel)
+    void onCancel(View v) {
+
+        new AlertDialog.Builder(getActivity())
+                .setTitle("Cancel Order")
+                .setMessage("Do you want to cancel the order ? It will delete the order permanently.")
+                .setPositiveButton(android.R.string.yes, (dialog, which) -> {
+                    deleteOrder();
+                }).setNegativeButton(android.R.string.no, null).show();
+    }
+
+    @OnClick(R.id.button_order_confirm)
+     void onConfirm(View v) {
+        if (mOrder != null) {
+
+             OrderManager.setOrderStatus(mOrder, Order.Status.CONFIRMED).subscribe(aVoid -> {
+
+             }, throwable -> {
+                 Snackbar.make(v, "Sorry, Unable to confirm order", Snackbar.LENGTH_LONG)
+                         .setAction("Retry", this::onConfirm)
+                         .show();
+             }, () -> {
+                 Snackbar.make(v, "Order confirmed.", Snackbar.LENGTH_LONG)
+                         .show();
+             });
+        }
+    }
+
+
+    private void disableButton(Button button) {
+        button.setClickable(false);
+        button.setAlpha(0.5f);
+    }
+
+    private void enableButton(Button button) {
+        button.setClickable(true);
+        button.setAlpha(1f);
     }
 }

@@ -337,4 +337,26 @@ public class OrderManager {
             );
         });
     }
+
+    /**
+     * Confirms the order
+     * @return void
+     */
+
+    public static Observable<Void> setOrderStatus(Order order, Order.Status status) {
+
+        return Observable.create(subscriber -> {
+           App.getFirebase().child(Constants.Path.ORDERS).child(order.getOrderPath())
+                   .child(Constants.Order.STATUS).setValue(status, (firebaseError, firebase) -> {
+
+               if (firebaseError != null) {
+                   Timber.e(firebaseError.toException(), "Order status changed to %s failed", status.name());
+                   subscriber.onError(firebaseError.toException());
+               } else {
+                   subscriber.onCompleted();
+
+               }
+           });
+        });
+    }
 }

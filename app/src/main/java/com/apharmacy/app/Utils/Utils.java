@@ -4,14 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.apharmacy.app.App;
+import com.apharmacy.app.R;
+import com.apharmacy.app.activities.LoginActivity;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.Transformation;
 
 import java.util.UUID;
-
-import com.apharmacy.app.App;
-import com.apharmacy.app.R;
-import com.apharmacy.app.activities.LoginActivity;
 
 /**
  * Created by arka on 4/29/16.
@@ -76,7 +75,7 @@ public class Utils {
 
     public static Transformation getLowerTransformation() {
 
-        return new Transformation().quality(40).width(0.3).crop("scale").fetchFormat("jpg");
+        return new Transformation().quality(50).width(0.3).crop("scale").fetchFormat("jpg");
     }
 
     public static Transformation getThumbnailTransformation() {
