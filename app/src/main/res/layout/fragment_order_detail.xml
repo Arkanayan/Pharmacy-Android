@@ -74,6 +74,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/activity_horizontal_margin"
+                    android:textSize="14dp"
                     />
                 <TextView
                     android:text="83.00"
@@ -81,6 +82,8 @@
                     android:layout_height="wrap_content"
                     android:padding="@dimen/activity_horizontal_margin"
                     android:id="@+id/text_view_order_price"
+                    android:textSize="14dp"
+
                     />
 
                 <TextView
@@ -88,6 +91,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/activity_horizontal_margin"
+                    android:textSize="14dp"
 
                     />
                 <TextView
@@ -96,6 +100,7 @@
                     android:layout_height="wrap_content"
                     android:padding="@dimen/activity_horizontal_margin"
                     android:id="@+id/text_view_shipping_charge"
+                    android:textSize="14dp"
 
                     />
                 <View
@@ -113,6 +118,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/activity_horizontal_margin"
+                    android:textSize="14dp"
 
                     />
                 <TextView
