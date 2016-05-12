@@ -49,6 +49,9 @@ public class Prefs {
         public static final String IS_FIRST_TIME = "is_first_time";
         public static final String IS_USER_DETAILS_PRESENT = "is_user_details_present";
 
+        public static final String HAS_INTRO_SHOWN = "intro_shown";
+
+
 
     }
 

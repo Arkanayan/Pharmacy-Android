@@ -6,8 +6,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:name=".App"
@@ -59,10 +58,13 @@
         </activity>
         <activity
             android:name=".activities.ImageViewActivity"
-            android:theme="@style/AppTheme.ImageViewerTheme"></activity>
-        <activity android:name=".activities.AboutPage"
-            android:parentActivityName=".activities.OrderListActivity"
+            android:theme="@style/AppTheme.ImageViewerTheme" />
+        <activity
+            android:name=".activities.AboutPage"
             android:label="About"
+            android:parentActivityName=".activities.OrderListActivity" />
+        <activity android:name=".activities.MyIntro"
+            android:theme="@style/AppTheme.NoActionBar"
             ></activity>
     </application>
 
