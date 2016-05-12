@@ -2,6 +2,8 @@ package com.apharmacy.app.Utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 
 import com.apharmacy.app.App;
@@ -11,6 +13,8 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.Transformation;
 
 import java.util.UUID;
+
+import rx.Observable;
 
 /**
  * Created by arka on 4/29/16.
@@ -81,5 +85,18 @@ public class Utils {
     public static Transformation getThumbnailTransformation() {
 
        return new Transformation().quality(30).width(75).height(75).crop("limit").fetchFormat("jpg");
+    }
+
+    public static Observable<Void> isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) App.getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return Observable.create(subscriber -> {
+            if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
+                subscriber.onCompleted();
+            } else {
+                subscriber.onError(new Throwable("Network not connected"));
+            }
+        });
     }
 }

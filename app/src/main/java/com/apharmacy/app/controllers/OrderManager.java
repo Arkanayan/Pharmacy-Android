@@ -208,6 +208,7 @@ public class OrderManager {
                 subscriber.onCompleted();
 
             } catch (IOException e) {
+                Timber.e(e, "Image Upload failed");
                 e.printStackTrace();
                 subscriber.onError(new Throwable("Error uploading prescription. Make sure you're connected to internet"));
             }
@@ -276,8 +277,7 @@ public class OrderManager {
      */
     public static Observable<Void> deleteOrder(Order order) {
 
-        Observable<Void> deleteImageObservable = deleteImage(order.getPrescriptionUrl())
-                .subscribeOn(Schedulers.io());
+
 
         // deltes order image
 
@@ -297,6 +297,14 @@ public class OrderManager {
             });
 
         });
+
+        if (order.getPrescriptionUrl().isEmpty()) {
+
+            return deleteOrderObservable;
+        }
+
+        Observable<Void> deleteImageObservable = deleteImage(order.getPrescriptionUrl())
+                .subscribeOn(Schedulers.io());
 
        /* return Observable.zip(
                 deleteImageObservable,
