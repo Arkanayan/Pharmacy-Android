@@ -520,6 +520,7 @@ public class NewOrderFragment extends Fragment {
 
     }
 
+
     @Override
     public void onStop() {
         super.onStop();

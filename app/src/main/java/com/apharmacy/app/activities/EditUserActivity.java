@@ -262,6 +262,7 @@ public class EditUserActivity extends AppCompatActivity implements Validator.Val
             new Handler().postDelayed(() -> {
                 if (Prefs.getInstance().getBoolean(Prefs.Key.IS_FIRST_TIME, true)) {
                     startActivity(NewOrderActivity.getInstance(this));
+                    finish();
                 } else {
                     finish();
 

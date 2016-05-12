@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.apharmacy.app.R;
+import com.apharmacy.app.Utils.Prefs;
 
 public class NewOrderActivity extends AppCompatActivity {
 
@@ -33,4 +34,17 @@ public class NewOrderActivity extends AppCompatActivity {
         return new Intent(context, NewOrderActivity.class);
     }
 
+    @Override
+    public void onBackPressed() {
+
+        if (Prefs.getInstance(this).getBoolean(Prefs.Key.IS_FIRST_TIME, true)) {
+            // Go to list page if user pressed back without order for the first time
+            Prefs.getInstance().put(Prefs.Key.IS_FIRST_TIME, false);
+
+            startActivity(OrderListActivity.getInstance(this));
+            finish();
+            return;
+        }
+        super.onBackPressed();
+    }
 }
