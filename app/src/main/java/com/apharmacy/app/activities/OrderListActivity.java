@@ -11,11 +11,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
+import android.widget.TextView;
 
 import com.apharmacy.app.App;
 import com.apharmacy.app.R;
 import com.apharmacy.app.adapters.OrdersAdapter;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
 
@@ -37,6 +39,9 @@ public class OrderListActivity extends AppCompatActivity implements OrdersAdapte
     private boolean mTwoPane;
 
     private OrdersAdapter mOrdersAdapter;
+
+    @BindView(R.id.text_view_empty)
+    TextView emptyTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +84,7 @@ public class OrderListActivity extends AppCompatActivity implements OrdersAdapte
         mOrdersAdapter = new OrdersAdapter(recyclerView, this);
 
 
+
         // Set animator
         SlideInRightAnimator slideAnimator = new SlideInRightAnimator(new OvershootInterpolator(0.5f));
         slideAnimator.setAddDuration(300);
@@ -92,6 +98,14 @@ public class OrderListActivity extends AppCompatActivity implements OrdersAdapte
 //        animator.setChangeDuration(400);
         recyclerView.setItemAnimator(slideAnimator);
         recyclerView.setAdapter(mOrdersAdapter);
+
+/*        if (mOrdersAdapter.getItemCount() < 1) {
+            emptyTextView.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        } else {
+            emptyTextView.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }*/
 
         if (findViewById(R.id.order_detail_container) != null) {
             // The detail container view will be present only in the
