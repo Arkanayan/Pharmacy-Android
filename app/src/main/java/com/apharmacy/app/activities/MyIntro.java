@@ -61,13 +61,21 @@ public class MyIntro extends AppIntro {
 
         showStatusBar(false);
 
-        setSwipeLock(true);
+      //  setSwipeLock(true);
 
-      //  setCustomTransformer(new ZoomOutPageTransformer());
+        showSkipButton(false);
+
+        setFlowAnimation();
+
+     //   setNextPageSwipeLock(true);
+
+
+        //  setCustomTransformer(new ZoomOutPageTransformer());
     }
 
     @Override
     public void onSkipPressed() {
+
         Prefs.getInstance().put(Prefs.Key.HAS_INTRO_SHOWN, true);
         startActivity(InitialActivity.getInstance(this));
         finish();

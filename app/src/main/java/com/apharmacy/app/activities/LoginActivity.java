@@ -1,10 +1,10 @@
 package com.apharmacy.app.activities;
 
 import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -37,6 +37,7 @@ import com.twitter.sdk.android.core.TwitterCore;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private final String TAG = this.getClass().getSimpleName();
 
-   // @BindView(R.id.button_auth)
+    @BindView(R.id.button_auth)
     DigitsAuthButton authButton;
 
 
@@ -76,7 +77,7 @@ public class LoginActivity extends AppCompatActivity {
         });
 */
 
-        final DigitsAuthButton authButton = (DigitsAuthButton) findViewById(R.id.button_auth);
+       // final DigitsAuthButton authButton = (DigitsAuthButton) findViewById(R.id.button_auth);
         authButton.setAuthTheme(R.style.AppTheme);
         authButton.setText("Login");
         authButton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary));
@@ -100,15 +101,41 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void failure(DigitsException error) {
-
+                showLoginError();
             }
         });
     }
 
+    private void showLoggingIn() {
+        showIconAnimation();
+
+        authButton.setClickable(false);
+        authButton.setText("Logging in...");
+
+        Snackbar.make(authButton, "We are logging you in. Please wait a moment...", Snackbar.LENGTH_INDEFINITE).show();
+
+    }
+
+    private void showLoginError() {
+
+      //  stopIconAnimation();
+        runOnUiThread(() -> {
+            authButton.setClickable(true);
+
+            authButton.setText("Login");
+
+            Snackbar.make(authButton, "Sorry, We are unable to log you in.", Snackbar.LENGTH_INDEFINITE)
+                    .setAction("Retry", v -> {
+                        authButton.performClick();
+                    })
+                    .show();
+        });
+
+    }
 
     private void doLogin(Map<String, String> authHeaders) {
 
-        showIconAnimation();
+        showLoggingIn();
 
         OkHttpClient client = new OkHttpClient();
 
@@ -119,6 +146,7 @@ public class LoginActivity extends AppCompatActivity {
             builder.add(entry.getKey(), entry.getValue());
 
         }
+        client.setConnectTimeout(10, TimeUnit.SECONDS);
         RequestBody formBody = builder.build();
 
         Request request = new Request.Builder()
@@ -129,6 +157,7 @@ public class LoginActivity extends AppCompatActivity {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Request request, IOException e) {
+                showLoginError();
                 e.printStackTrace();
             }
 
@@ -156,7 +185,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onAuthenticationError(FirebaseError firebaseError) {
-
+                showLoginError();
             }
         });
     }
@@ -220,8 +249,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void showIconAnimation() {
-
-        mAnimator = ObjectAnimator.ofFloat(
+/*        mAnimator = ObjectAnimator.ofFloat(
                 appIconImageView,
                 "rotation",
                 0f,
@@ -231,12 +259,18 @@ public class LoginActivity extends AppCompatActivity {
         mAnimator.setRepeatCount(ValueAnimator.INFINITE);
         mAnimator.setRepeatMode(ValueAnimator.RESTART);
 
-        mAnimator.start();
+        new Handler().post(() -> {
+            mAnimator.start();
+        });*/
     }
 
     private void stopIconAnimation() {
-
-        mAnimator.cancel();
+   /*     Looper.prepare();
+        new Handler().post(() -> {
+                Looper.myLooper().loop();
+                mAnimator.end();
+            });
+        Looper.myLooper().quit();*/
     }
 
     @Override

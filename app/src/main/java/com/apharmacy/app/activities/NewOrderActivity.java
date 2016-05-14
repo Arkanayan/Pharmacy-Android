@@ -43,7 +43,6 @@ public class NewOrderActivity extends AppCompatActivity {
 
             startActivity(OrderListActivity.getInstance(this));
             finish();
-            return;
         }
         super.onBackPressed();
     }
