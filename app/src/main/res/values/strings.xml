@@ -14,4 +14,5 @@
     <string name="pharmacy_contact_number">9534324234</string>
     <string name="author_contact_no">9563777896</string>
     <string name="empty_text">It seems pretty lonely in here.\n\nClick on the plus sign to order.</string>
+    <string name="action_licenses">Open Source Licenses</string>
 </resources>

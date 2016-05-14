@@ -7,15 +7,22 @@
         android:title="@string/action_settings"
         app:showAsAction="never" />
     <item
-        android:id="@+id/action_logout"
-        android:title="Logout"
-        app:showAsAction="never"
-        android:orderInCategory="1200"
-        />
-    <item
         android:id="@+id/action_about"
         android:title="About"
         app:showAsAction="never"
         android:orderInCategory="1000"
+        />
+    <item
+        android:id="@+id/action_licenses"
+        android:title="Open Source"
+        app:showAsAction="never"
+        android:orderInCategory="1100"
+        />
+
+    <item
+        android:id="@+id/action_logout"
+        android:title="Logout"
+        app:showAsAction="never"
+        android:orderInCategory="1200"
         />
 </menu>

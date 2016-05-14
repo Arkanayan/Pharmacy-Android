@@ -4,13 +4,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
+import android.webkit.WebView;
 
 import com.apharmacy.app.App;
 import com.apharmacy.app.R;
@@ -30,6 +33,8 @@ import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
 public class OrderListActivity extends AppCompatActivity implements OrdersAdapter.OnOrderClickListener{
 
     public final String TAG = this.getClass().getSimpleName();
+
+    private AlertDialog mAlertDialog;
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
@@ -151,6 +156,9 @@ public class OrderListActivity extends AppCompatActivity implements OrdersAdapte
             case R.id.action_about:
                 startActivity(AboutPage.getInstance(this));
                 break;
+            case R.id.action_licenses:
+                displayLicensesAlertDialog();
+                break;
 
         }
         return super.onOptionsItemSelected(item);
@@ -165,5 +173,16 @@ public class OrderListActivity extends AppCompatActivity implements OrdersAdapte
         // Clean up child listener
         mOrdersAdapter.cleanUp();
         super.onDestroy();
+    }
+
+    // Displays licenses
+    private void displayLicensesAlertDialog() {
+        WebView view = (WebView) LayoutInflater.from(this).inflate(R.layout.dialog_licenses, null);
+        view.loadUrl("file:///android_asset/open_source_licenses.html");
+        mAlertDialog = new AlertDialog.Builder(this, R.style.Theme_AppCompat_Light_Dialog_Alert)
+                .setTitle(getString(R.string.action_licenses))
+                .setView(view)
+                .setPositiveButton(android.R.string.ok, null)
+                .show();
     }
 }
