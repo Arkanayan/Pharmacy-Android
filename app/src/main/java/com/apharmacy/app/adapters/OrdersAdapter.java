@@ -36,7 +36,7 @@ import timber.log.Timber;
 /**
  * Created by arka on 4/30/16.
  */
-public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder> {
+public class OrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public final String TAG = this.getClass().getSimpleName();
 
@@ -62,10 +62,18 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
                 try {
                     Log.d(TAG, "onChildAdded: key: " + dataSnapshot.getKey());
                     Order order = dataSnapshot.getValue(Order.class);
+                    int prevSize = mOrderList.size();
                     mOrderList.add(0, order);
-                   // notifyItemInserted(mOrderList.indexOf(order));
+
+                    // for removing empty view
+                    // if there was no data on the list empty view is shown
+                    // if data added then remove the empty view and add the new data at its position(0)
+                    if (prevSize == 0 ) {
+                        notifyItemRemoved(0);
+                    }
                     notifyItemInserted(0);
-                    // mRecyclerView.smoothScrollToPosition(0);
+
+                     mRecyclerView.smoothScrollToPosition(0);
                    //   ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(0, 20);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -99,11 +107,13 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
                 try {
                     Order order = dataSnapshot.getValue(Order.class);
                     if (order != null) {
-                        Log.d(TAG, "onChildRemoved: ID: " + order.getOrderId());
-                        Log.d(TAG, "onChildRemoved: position: " + mOrderList.indexOf(order));
+                        int position = mOrderList.indexOf(order);
+                        Timber.d("Child remoed key: %s", dataSnapshot.getKey());
+                        Timber.d("onChildRemoved: position: %d", position);
                         // the order of the next two lines are important don't change it
                         // otherwise recyclerview will remove different child each time
-                        notifyItemRemoved(mOrderList.indexOf(order));
+                       // notifyItemRemoved(mOrderList.indexOf(order));
+                        notifyItemRangeRemoved(position, 1);
                         mOrderList.remove(order);
                     }
                 } catch (Exception e) {
@@ -127,26 +137,46 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-       // Log.d(TAG, "onCreateViewHolder");
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.order_list_content, parent, false);
+    public int getItemViewType(int position) {
+        if (mOrderList.size() == 0) {
+            return R.layout.order_list_empty_view;
+        } else {
 
-        return new ViewHolder(view);
+            return R.layout.order_list_content;
+        }
+
+
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        try {
-            //Log.d(TAG, "onBindViewHolder: " + position);
-            Order order = mOrderList.get(holder.getAdapterPosition());
-            Order.Status status = order.getStatus();
-            String orderId = order.getOrderId();
-            double price = order.getPrice() + order.getShippingCharge();
-            //    holder.mContentView.setText(String.valueOf(mOrderList.get(position).getPrice()));
-            //test
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+       // Log.d(TAG, "onCreateViewHolder");
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(viewType, parent, false);
+
+        if (viewType == R.layout.order_list_empty_view) {
+            return new EmptyViewHolder(view);
+        } else {
+            return new ViewHolder(view);
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        // if layout is not empty view then only populate views
+
+        if (holder.getItemViewType() == R.layout.order_list_content) {
+            try {
+                ViewHolder viewHolder = (ViewHolder) holder;
+                //Log.d(TAG, "onBindViewHolder: " + position);
+                Order order = mOrderList.get(holder.getAdapterPosition());
+                Order.Status status = order.getStatus();
+                String orderId = order.getOrderId();
+                double price = order.getPrice() + order.getShippingCharge();
+                //    holder.mContentView.setText(String.valueOf(mOrderList.get(position).getPrice()));
+                //test
 //        holder.mContentView.setText(content);
-            //  holder.mIdView.setText(String.valueOf(mOrderList.get(position).getShippingCharge()));
+                //  holder.mIdView.setText(String.valueOf(mOrderList.get(position).getShippingCharge()));
 
        /* holder.mContentView.setText(App.getContext().getResources().getString(R.string.price, 15.0f));
 
@@ -155,44 +185,49 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
         DateFormat dateFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
         holder.mIdView.setText(dateFormat.format(epoch));*/
 
-            holder.mOrderIdTextView.setText(orderId);
-            holder.mPriceTextView.setText(App.getContext().getResources().getString(R.string.price, price));
-           // holder.mPriceTextView.setText(String.valueOf(holder.getAdapterPosition()));
+                viewHolder.mOrderIdTextView.setText(orderId);
+                viewHolder.mPriceTextView.setText(App.getContext().getResources().getString(R.string.price, price));
+                // holder.mPriceTextView.setText(String.valueOf(holder.getAdapterPosition()));
 
-            SimpleDateFormat monthFormat = new SimpleDateFormat("MMM", Locale.getDefault());
-            holder.mMonthTextView.setText(monthFormat.format(order.getCreatedAtLong()));
+                SimpleDateFormat monthFormat = new SimpleDateFormat("MMM", Locale.getDefault());
+                viewHolder.mMonthTextView.setText(monthFormat.format(order.getCreatedAtLong()));
 
-            SimpleDateFormat dateFormat = new SimpleDateFormat("d", Locale.getDefault());
-            holder.mDateTextView.setText(dateFormat.format(order.getCreatedAtLong()));
+                SimpleDateFormat dateFormat = new SimpleDateFormat("d", Locale.getDefault());
+                viewHolder.mDateTextView.setText(dateFormat.format(order.getCreatedAtLong()));
 
-            holder.mStatusTextView.setText(status.name());
+                viewHolder.mStatusTextView.setText(status.name());
 
 
-            holder.mStatusTextView.getBackground().setColorFilter(getColorFromStatus(status), PorterDuff.Mode.SRC_IN);
-           // Timber.d("Status: %s , Color: %d", status.name(), getColorFromStatus(status));
+                viewHolder.mStatusTextView.getBackground().setColorFilter(getColorFromStatus(status), PorterDuff.Mode.SRC_IN);
+                // Timber.d("Status: %s , Color: %d", status.name(), getColorFromStatus(status));
 
-            fadeOnAck(status, holder.mStatusTextView);
+                fadeOnAck(status, viewHolder.mStatusTextView);
 
                 // on tag image
-            setStatus(status, holder.mStatusImageView);
+                setStatus(status, viewHolder.mStatusImageView);
 
-            holder.mView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+                viewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (holder.getAdapterPosition() != RecyclerView.NO_POSITION) {
+                            mListener.onOrderClick(mOrderList.get(holder.getAdapterPosition()).getOrderPath());
+                        }
 
-                    mListener.onOrderClick(mOrderList.get(holder.getAdapterPosition()).getOrderPath());
-
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            // Empty view bind goes here
         }
 
     }
 
     @Override
     public int getItemCount() {
-        return mOrderList.size();
+        return mOrderList.size() > 0 ? mOrderList.size() : 1;
+     //  return mOrderList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -230,7 +265,17 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
         }
     }
 
+    public class EmptyViewHolder extends RecyclerView.ViewHolder {
 
+        public EmptyViewHolder(View itemView) {
+            super(itemView);
+        }
+
+        @Override
+        public String toString() {
+            return "size: " + mOrderList.size();
+        }
+    }
 
     private void setStatus(Order.Status status, ImageView imageView) {
         clearAnimation(imageView);
@@ -305,32 +350,6 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
         imageView.setAnimation(rotate);
         rotate.start();
 
-/*        ObjectAnimator rotation = ObjectAnimator.ofFloat(imageView,
-                "rotation", -10f, 50f);
-
-        rotation.setRepeatMode(ValueAnimator.REVERSE);
-        rotation.setRepeatCount(ValueAnimator.INFINITE);
-        ObjectAnimator rotationX = ObjectAnimator.ofFloat(imageView,
-                "rotationX", -20f, 5f);
-
-        rotationX.setRepeatMode(ValueAnimator.REVERSE);
-        rotationX.setRepeatCount(ValueAnimator.INFINITE);
-        imageView.setPivotX(25f);
-        imageView.setPivotY(0f);
-*//*        Log.d(TAG, "startHangingAnimation: pivotX: " + imageView.getPivotX());
-        Log.d(TAG, "startHangingAnimation: pivotY: " + imageView.getPivotY());*//*
-        ObjectAnimator pivotX = ObjectAnimator.ofFloat(imageView, "pivotX", imageView.getPivotX());
-        pivotX.setRepeatMode(ValueAnimator.REVERSE);
-        pivotX.setRepeatCount(ValueAnimator.INFINITE);
-        ObjectAnimator pivotY = ObjectAnimator.ofFloat(imageView, "pivotY", imageView.getPivotY());
-        pivotY.setRepeatMode(ValueAnimator.REVERSE);
-        pivotY.setRepeatCount(ValueAnimator.INFINITE);
-
-        AnimatorSet animation = new AnimatorSet();
-        animation.playTogether(rotation,rotationX, pivotX, pivotY);
-        animation.setDuration(1500);
-        animation.setInterpolator(new AccelerateDecelerateInterpolator());
-        animation.start();*/
     }
 
     private void fadeOnAck(Order.Status status, View view) {
