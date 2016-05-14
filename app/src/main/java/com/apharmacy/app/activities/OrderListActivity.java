@@ -11,13 +11,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
-import android.widget.TextView;
 
 import com.apharmacy.app.App;
 import com.apharmacy.app.R;
 import com.apharmacy.app.adapters.OrdersAdapter;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
 
@@ -40,8 +38,6 @@ public class OrderListActivity extends AppCompatActivity implements OrdersAdapte
 
     private OrdersAdapter mOrdersAdapter;
 
-    @BindView(R.id.text_view_empty)
-    TextView emptyTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -16,9 +16,6 @@
     master/detail flow.
     
     -->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
     <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/order_list"
@@ -31,18 +28,6 @@
         tools:context="com.apharmacy.app.activities.OrderListActivity"
         tools:listitem="@layout/order_list_content" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/text_view_empty"
-        android:text="@string/empty_text"
-        android:layout_centerInParent="true"
-        android:visibility="gone"
-        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-
-        />
-
-    </RelativeLayout>
 
     <FrameLayout
         android:id="@+id/order_detail_container"
