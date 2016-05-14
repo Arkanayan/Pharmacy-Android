@@ -430,8 +430,10 @@ public class NewOrderFragment extends Fragment {
 
                 }
             }, () -> {
+                // Order success
                 fabShowSuccess();
-                showSnackbar("Order created " + order.getOrderId());
+               // showSnackbar("Order created " + order.getOrderId());
+               showOrderSuccess(order);
                 firstTimeGoToList();
             });
 
@@ -451,6 +453,16 @@ public class NewOrderFragment extends Fragment {
 
         }
 
+    }
+
+    private void showOrderSuccess(Order order) {
+        Snackbar.make(landmarkTextView,
+                "Order created " + order.getOrderId(), Snackbar.LENGTH_LONG)
+                .setAction("View", v -> {
+                    startActivity(OrderDetailActivity.getInstance(getActivity(), order.getOrderPath()));
+                    getActivity().finish();
+                    return;
+                }).show();
     }
 
     public void showPrescriptionRequiredAndOrder() {
@@ -479,8 +491,10 @@ public class NewOrderFragment extends Fragment {
                                 showSnackbar("Order failed. Make sure your are connected to internet.");
                                 fabShowFailed();
                             }, () -> {
+                                // On order success
                                 fabShowSuccess();
-                                showSnackbar("Order created " + order.getOrderId());
+                              //  showSnackbar("Order created " + order.getOrderId());
+                                showOrderSuccess(order);
                                 firstTimeGoToList();
                             });
                     mCompositeSubscription.add(orderSubscription);
