@@ -12,6 +12,9 @@ buildscript {
         classpath 'me.tatarka:gradle-retrolambda:3.2.5'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
 
+        classpath 'com.google.gms:google-services:3.0.0'
+
+
     }
 }
 apply plugin: 'com.android.application'
@@ -94,7 +97,6 @@ dependencies {
     apt 'com.jakewharton:butterknife-compiler:8.0.1'
     retrolambdaConfig 'net.orfjackal.retrolambda:retrolambda:2.3.0'
     compile 'com.android.support:appcompat-v7:23.3.0'
-    compile 'com.firebase:firebase-client-android:2.3.1'
     compile 'com.squareup.okhttp:okhttp:2.7.3'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.7.3'
     compile 'com.jakewharton:butterknife:8.0.1'
@@ -116,5 +118,12 @@ dependencies {
     compile 'com.github.medyo:android-about-page:1.0.8'
     compile 'com.github.paolorotolo:appintro:3.4.0'
 
+    compile 'com.google.firebase:firebase-database:9.0.0'
+    compile 'com.google.firebase:firebase-auth:9.0.0'
+
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.4.0'
+
 
 }
+
+apply plugin: 'com.google.gms.google-services'

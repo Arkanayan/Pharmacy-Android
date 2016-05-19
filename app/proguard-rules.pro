@@ -19,6 +19,8 @@
 -keep class com.mobsandgeeks.saripaar.** {*;}
 -keep @com.mobsandgeeks.saripaar.annotation.ValidateUsing class * {*;}
 
+-keepattributes Signature
+
 -keep public class * implements com.bumptech.glide.module.GlideModule
 -keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
   **[] $VALUES;
@@ -93,23 +95,23 @@
     rx.internal.util.atomic.LinkedQueueNode consumerNode;
 }
 
--keepclassmembers class com.apharmacy.app.models.User {
+-keepclassmembers class com.ahanapharmacy.app.models.User {
     *;
 }
 
--keepclassmembers class com.apharmacy.app.models.Address {
+-keepclassmembers class com.ahanapharmacy.app.models.Address {
     *;
 }
 
--keepclassmembers class com.apharmacy.app.models.Order {
+-keepclassmembers class com.ahanapharmacy.app.models.Order {
     *;
 }
 
--keepclassmembers class com.apharmacy.app.models.Order$** {
+-keepclassmembers class com.ahanapharmacy.app.models.Order$** {
     *;
 }
 
--keep class com.firebase.client.core.** {
+-keep class com.google.firebase.database.core.** {
     *;
 }
 
