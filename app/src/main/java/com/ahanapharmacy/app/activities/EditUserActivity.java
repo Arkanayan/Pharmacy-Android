@@ -226,11 +226,19 @@ public class EditUserActivity extends AppCompatActivity implements Validator.Val
     @Override
     public void onValidationSucceeded() {
 
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
         Map<String, Object> userMap = new HashMap<String, Object>();
+
+        String userEmail = emailEditText.getText().toString().trim();
 
         userMap.put(Constants.User.FIRST_NAME, firstNameEditText.getText().toString().trim());
         userMap.put(Constants.User.LAST_NAME, lastNameEditText.getText().toString().trim());
-        userMap.put(Constants.User.EMAIL_ADDRESS, emailEditText.getText().toString().trim());
+        userMap.put(Constants.User.EMAIL_ADDRESS, userEmail);
+
+        if (!userEmail.equals("") && user != null) {
+            user.updateEmail(userEmail);
+        }
 
         Observable<Void> userUpdateObserver = UserManager.updateUser(userMap);
 
