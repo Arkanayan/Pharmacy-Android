@@ -60,9 +60,7 @@
 -keep public class * extends android.support.design.widget.CoordinatorLayout.Behavior { *; }
 -keep public class * extends android.support.design.widget.ViewOffsetBehavior { *; }
 
--keep class com.firebase.** { *; }
 -keep class org.apache.** { *; }
--keepnames class com.fasterxml.jackson.** { *; }
 -keepnames class javax.servlet.** { *; }
 -keepnames class org.ietf.jgss.** { *; }
 -dontwarn org.w3c.dom.**
@@ -112,6 +110,16 @@
 }
 
 -keep class com.google.firebase.database.core.** {
+    *;
+}
+
+-keepattributes *Annotation*
+
+-keep class com.google.firebase.quickstart.database.viewholder.** {
+    *;
+}
+
+-keepclassmembers class com.google.firebase.quickstart.database.models.** {
     *;
 }
 
