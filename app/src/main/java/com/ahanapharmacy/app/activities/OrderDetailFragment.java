@@ -31,6 +31,12 @@ import butterknife.OnClick;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
+import static com.ahanapharmacy.app.models.Order.Status.ACKNOWLEDGED;
+import static com.ahanapharmacy.app.models.Order.Status.CANCELED;
+import static com.ahanapharmacy.app.models.Order.Status.COMPLETED;
+import static com.ahanapharmacy.app.models.Order.Status.CONFIRMED;
+import static com.ahanapharmacy.app.models.Order.Status.OPEN;
+
 /**
  * A fragment representing a single Order detail screen.
  * This fragment is either contained in a {@link OrderListActivity}
@@ -182,12 +188,12 @@ public class OrderDetailFragment extends Fragment implements ValueEventListener 
                         .into(prescriptionImageView);
 
 
-                Order.Status status = order.getStatus();
+                @Order.Status String status = order.getStatus();
 
-                if (status == Order.Status.OPEN) {
+                if (status.equals(Order.Status.OPEN)) {
                     enableButton(cancelButton);
                     disableButton(confirmButton);
-                } else if (status == Order.Status.ACKNOWLEDGED) {
+                } else if (status.equals(Order.Status.ACKNOWLEDGED)) {
                     enableButton(confirmButton);
                     enableButton(cancelButton);
                 } else {
@@ -257,7 +263,7 @@ public class OrderDetailFragment extends Fragment implements ValueEventListener 
      void onConfirm(View v) {
         if (mOrder != null) {
 
-             OrderManager.setOrderStatus(mOrder, Order.Status.CONFIRMED).subscribe(aVoid -> {
+             OrderManager.setOrderStatus(mOrder, CONFIRMED).subscribe(aVoid -> {
 
              }, throwable -> {
                  Snackbar.make(v, "Sorry, Unable to confirm order", Snackbar.LENGTH_LONG)

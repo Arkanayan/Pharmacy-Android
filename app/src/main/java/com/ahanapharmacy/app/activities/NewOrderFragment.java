@@ -302,6 +302,7 @@ public class NewOrderFragment extends Fragment {
         if (user.isBanned()) {
             mScanButton.setClickable(false);
             mScanButton.setEnabled(false);
+            fabOrderButton.hide();
             Snackbar.make(mScanButton, "Sorry, You are not allowed to order", Snackbar.LENGTH_INDEFINITE)
                     .setAction("Contact Pharmacy", new View.OnClickListener() {
                         @Override
@@ -411,7 +412,6 @@ public class NewOrderFragment extends Fragment {
                 // set order address
                 String addressKey = map.get("address_key");
                 order.setAddress(addressKey);
-
 
                 return OrderManager.createOrder(order);
 

@@ -356,14 +356,14 @@ public class OrderManager {
      * @return void
      */
 
-    public static Observable<Void> setOrderStatus(Order order, Order.Status status) {
+    public static Observable<Void> setOrderStatus(Order order, @Order.Status String status) {
 
         return Observable.create(subscriber -> {
            FirebaseDatabase.getInstance().getReference(Constants.Path.ORDERS).child(order.getOrderPath())
                    .child(Constants.Order.STATUS).setValue(status, (databaseError, firebase) -> {
 
                if (databaseError != null) {
-                   Timber.e(databaseError.toException(), "Order status changed to %s failed", status.name());
+                   Timber.e(databaseError.toException(), "Order status changed to %s failed", status);
                    subscriber.onError(databaseError.toException());
                } else {
                    subscriber.onCompleted();

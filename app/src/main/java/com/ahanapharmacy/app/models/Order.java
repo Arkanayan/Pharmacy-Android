@@ -13,21 +13,22 @@ package com.ahanapharmacy.app.models;
  "created_at": 343434
  "is_completed": true,
  "is_canceled": true,
- "note": ""
+ "note": "",
+ "status": "OPEN" OR "CLOSED"
  }
  */
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonCreator;
+import android.support.annotation.StringDef;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.google.firebase.database.Exclude;
 import com.google.firebase.database.ServerValue;
 
-import java.util.HashMap;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -60,39 +61,24 @@ public class Order {
     @JsonProperty("order_id")
     private String orderId;
     @JsonProperty("status")
-    private Status status = Status.OPEN;
+    private String status = Status.OPEN;
     @JsonProperty("note")
     private String note = "";
     @JsonProperty("order_path")
     private String orderPath;
     @JsonProperty("seller_note")
     private String sellerNote = "";
-    @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-
-    public enum Status {
-
-        OPEN, ACKNOWLEDGED, CONFIRMED, CANCELED, COMPLETED;
 
 
-        // used for serializing Status to int , instead of "OPEN" or "COMPLETED"
-        @JsonValue
-        public int getValue() {
-            return this.ordinal();
-        }
+    @StringDef({Status.OPEN, Status.ACKNOWLEDGED, Status.CONFIRMED, Status.CANCELED, Status.COMPLETED})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface Status {
 
-
-        // used for reading data back from json (int) to Status type
-        @JsonCreator
-        public static Status fromValue(int typeCode) {
-            for (Status c : Status.values()) {
-                if (c.ordinal() == typeCode) {
-                    return c;
-                }
-            }
-            throw new IllegalArgumentException("Invalid Status type code: " + typeCode);
-        }
-
+         String OPEN = "OPEN";
+         String ACKNOWLEDGED = "ACKNOWLEDGED";
+         String CONFIRMED = "CONFIRMED";
+         String CANCELED = "CANCELED";
+         String COMPLETED = "COMPLETED";
     }
 
     public Order() {
@@ -211,6 +197,7 @@ public class Order {
     }
 
     @JsonIgnore
+    @Exclude
     public Long getCreatedAtLong() {
         return createdAt;
     }
@@ -236,12 +223,14 @@ public class Order {
     }
 
     @JsonProperty("status")
-    public Status getStatus() {
+    @Status
+    public String getStatus() {
         return status;
     }
 
     @JsonProperty("status")
-    public void setStatus(Status status) {
+    @Status
+    public void setStatus(@Status String status) {
         this.status = status;
     }
 
@@ -273,7 +262,7 @@ public class Order {
         this.sellerNote = sellerNote;
     }
 
-    @JsonAnyGetter
+/*    @JsonAnyGetter
     public Map<String, Object> getAdditionalProperties() {
         return this.additionalProperties;
     }
@@ -281,10 +270,11 @@ public class Order {
     @JsonAnySetter
     public void setAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
-    }
+    }*/
 
     @Override
     public boolean equals(Object o) {
         return (o instanceof Order) && this.getOrderId().equals(((Order) o).getOrderId());
     }
+
 }

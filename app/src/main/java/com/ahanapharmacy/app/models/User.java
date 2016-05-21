@@ -18,15 +18,13 @@ package com.ahanapharmacy.app.models;
  }
  */
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.google.firebase.database.Exclude;
 import com.google.firebase.database.ServerValue;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -63,9 +61,9 @@ public class User {
     @JsonProperty("total_orders")
     private int totalOrders = 0;
 
-
+/*
     @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private Map<String, Object> additionalProperties = new HashMap<String, Object>();*/
 
     public User() {
     }
@@ -170,6 +168,7 @@ public class User {
     }
 
     @JsonIgnore
+    @Exclude
     public Long getCreatedAtLong() {
         return createdAt;
     }
@@ -184,11 +183,19 @@ public class User {
         this.createdAt = createdAt;
     }
 
-/*
-    public java.util.Map<String, String> getCreatedAt() {
-        return ServerValue.TIMESTAMP;
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
     }
-*/
+
+    public void setBanned(boolean banned) {
+        isBanned = banned;
+    }
+
+    /*
+        public java.util.Map<String, String> getCreatedAt() {
+            return ServerValue.TIMESTAMP;
+        }
+    */
     @JsonProperty("is_admin")
     public boolean isAdmin() {
         return isAdmin;
@@ -209,7 +216,7 @@ public class User {
         this.totalOrders = totalOrders;
     }
 
-    @JsonAnyGetter
+/*    @JsonAnyGetter
     public Map<String, Object> getAdditionalProperties() {
         return this.additionalProperties;
     }
@@ -217,6 +224,6 @@ public class User {
     @JsonAnySetter
     public void setAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
-    }
+    }*/
 
 }

@@ -37,6 +37,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
+import static com.ahanapharmacy.app.models.Order.Status.ACKNOWLEDGED;
+import static com.ahanapharmacy.app.models.Order.Status.CANCELED;
+import static com.ahanapharmacy.app.models.Order.Status.COMPLETED;
+import static com.ahanapharmacy.app.models.Order.Status.CONFIRMED;
+import static com.ahanapharmacy.app.models.Order.Status.OPEN;
+
 /**
  * Created by arka on 4/30/16.
  */
@@ -61,19 +67,20 @@ public class OrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         DatabaseReference ordersRef = firebaseDatabase.getReference(Constants.Path.ORDERS);
         FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        mOrdersQuery = ordersRef.child("orders").orderByChild("uid").equalTo(mUser.getUid());
+        mOrdersQuery = ordersRef.orderByChild("uid").equalTo(mUser.getUid());
 
         mOrdersListener =  mOrdersQuery.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 try {
+
                     Log.d(TAG, "onChildAdded: key: " + dataSnapshot.getKey());
                     Order order = dataSnapshot.getValue(Order.class);
                     int prevSize = mOrderList.size();
                     mOrderList.add(0, order);
 
                     // for removing empty view
-                    // if there was no data on the list empty view is shown
+                    // if there was no data on the list, empty view is shown
                     // if data added then remove the empty view and add the new data at its position(0)
                     if (prevSize == 0 ) {
                         notifyItemRemoved(0);
@@ -177,7 +184,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 ViewHolder viewHolder = (ViewHolder) holder;
                 //Log.d(TAG, "onBindViewHolder: " + position);
                 Order order = mOrderList.get(holder.getAdapterPosition());
-                Order.Status status = order.getStatus();
+                @Order.Status String status = order.getStatus();
                 String orderId = order.getOrderId();
                 double price = order.getPrice() + order.getShippingCharge();
                 //    holder.mContentView.setText(String.valueOf(mOrderList.get(position).getPrice()));
@@ -202,7 +209,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 SimpleDateFormat dateFormat = new SimpleDateFormat("d", Locale.getDefault());
                 viewHolder.mDateTextView.setText(dateFormat.format(order.getCreatedAtLong()));
 
-                viewHolder.mStatusTextView.setText(status.name());
+                viewHolder.mStatusTextView.setText(status);
 
 
                 viewHolder.mStatusTextView.getBackground().setColorFilter(getColorFromStatus(status), PorterDuff.Mode.SRC_IN);
@@ -284,7 +291,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    private void setStatus(Order.Status status, ImageView imageView) {
+    private void setStatus(@Order.Status String status, ImageView imageView) {
         clearAnimation(imageView);
         switch (status) {
             case CONFIRMED:
@@ -315,7 +322,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     @ColorInt
-    private int getColorFromStatus(Order.Status status) {
+    private int getColorFromStatus(@Order.Status String status) {
 
         switch (status) {
             case CONFIRMED:
@@ -359,11 +366,11 @@ public class OrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     }
 
-    private void fadeOnAck(Order.Status status, View view) {
+    private void fadeOnAck(@Order.Status String status, View view) {
 
         clearAnimation(view);
 
-        if (status == Order.Status.ACKNOWLEDGED) {
+        if (status.equals(ACKNOWLEDGED)) {
 
             AlphaAnimation alphaAnimation = new AlphaAnimation(0.3f, 0.9f);
             alphaAnimation.setDuration(700);

@@ -7,10 +7,10 @@ public class Constants {
 
     public class User {
 
-        public static final String FIRST_NAME = "first_name";
-        public static final String LAST_NAME = "last_name";
-        public static final String PHONE_NUMBER = "phone_number";
-        public static final String EMAIL_ADDRESS = "email_address";
+        public static final String FIRST_NAME = "firstName";
+        public static final String LAST_NAME = "lastName";
+        public static final String PHONE_NUMBER = "phoneNumber";
+        public static final String EMAIL_ADDRESS = "emailAddress";
     }
 
     public class Address {
