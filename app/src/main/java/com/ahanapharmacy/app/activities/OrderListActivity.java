@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.OvershootInterpolator;
 import android.webkit.WebView;
 
 import com.ahanapharmacy.app.App;
@@ -21,7 +20,7 @@ import com.ahanapharmacy.app.adapters.OrdersAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 
 import butterknife.ButterKnife;
-import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
+import it.gmariotti.recyclerview.itemanimator.SlideInOutRightItemAnimator;
 
 /**
  * An activity representing a list of Orders. This activity
@@ -85,20 +84,14 @@ public class OrderListActivity extends AppCompatActivity implements OrdersAdapte
        // setupRecyclerView((RecyclerView) recyclerView);
         mOrdersAdapter = new OrdersAdapter(recyclerView, this);
 
+        // Set item animator
+        SlideInOutRightItemAnimator slideInOutRightItemAnimator = new SlideInOutRightItemAnimator(recyclerView);
+        slideInOutRightItemAnimator.setAddDuration(300);
+        slideInOutRightItemAnimator.setRemoveDuration(300);
+        slideInOutRightItemAnimator.setChangeDuration(300);
+        slideInOutRightItemAnimator.setMoveDuration(300);
+        recyclerView.setItemAnimator(slideInOutRightItemAnimator);
 
-
-        // Set animator
-        SlideInRightAnimator slideAnimator = new SlideInRightAnimator(new OvershootInterpolator(0.5f));
-        slideAnimator.setAddDuration(300);
-        slideAnimator.setRemoveDuration(300);
-        slideAnimator.setChangeDuration(300);
-        slideAnimator.setMoveDuration(300);
-
-       // recyclerView.setItemAnimator(slideAnimator);
-//        SlideInOutRightItemAnimator animator = new SlideInOutRightItemAnimator(recyclerView);
-//        animator.setAddDuration(400);
-//        animator.setChangeDuration(400);
-        recyclerView.setItemAnimator(slideAnimator);
         recyclerView.setAdapter(mOrdersAdapter);
 
 /*        if (mOrdersAdapter.getItemCount() < 1) {
