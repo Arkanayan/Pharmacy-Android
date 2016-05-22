@@ -20,10 +20,6 @@ package com.ahanapharmacy.app.models;
 
 import android.support.annotation.StringDef;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.ServerValue;
 
@@ -31,42 +27,19 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Map;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({
-        "uid",
-        "address",
-        "prescription_url",
-        "price",
-        "shipping_charge",
-        "created_at",
-        "status",
-        "note",
-        "order_path",
-        "sellerNote"
-})
+
 public class Order {
 
-    @JsonProperty("uid")
     private String uid;
-    @JsonProperty("address")
     private String address;
-    @JsonProperty("prescription_url")
     private String prescriptionUrl;
-    @JsonProperty("price")
     private Double price = 0.0;
-    @JsonProperty("shipping_charge")
     private Double shippingCharge = 0.0;
-    @JsonProperty("created_at")
     private Long createdAt;
-    @JsonProperty("order_id")
     private String orderId;
-    @JsonProperty("status")
     private String status = Status.OPEN;
-    @JsonProperty("note")
     private String note = "";
-    @JsonProperty("order_path")
     private String orderPath;
-    @JsonProperty("seller_note")
     private String sellerNote = "";
 
 
@@ -89,7 +62,6 @@ public class Order {
      * @return
      * The uid
      */
-    @JsonProperty("uid")
     public String getUid() {
         return uid;
     }
@@ -99,7 +71,6 @@ public class Order {
      * @param uid
      * The uid
      */
-    @JsonProperty("uid")
     public void setUid(String uid) {
         this.uid = uid;
     }
@@ -109,7 +80,6 @@ public class Order {
      * @return
      * The address
      */
-    @JsonProperty("address")
     public String getAddress() {
         return address;
     }
@@ -119,7 +89,6 @@ public class Order {
      * @param address
      * The address
      */
-    @JsonProperty("address")
     public void setAddress(String address) {
         this.address = address;
     }
@@ -129,7 +98,6 @@ public class Order {
      * @return
      * The prescriptionUrl
      */
-    @JsonProperty("prescription_url")
     public String getPrescriptionUrl() {
         return prescriptionUrl;
     }
@@ -139,7 +107,6 @@ public class Order {
      * @param prescriptionUrl
      * The prescription_url
      */
-    @JsonProperty("prescription_url")
     public void setPrescriptionUrl(String prescriptionUrl) {
         this.prescriptionUrl = prescriptionUrl;
     }
@@ -149,7 +116,6 @@ public class Order {
      * @return
      * The price
      */
-    @JsonProperty("price")
     public Double getPrice() {
         return price;
     }
@@ -159,7 +125,6 @@ public class Order {
      * @param price
      * The price
      */
-    @JsonProperty("price")
     public void setPrice(Double price) {
         this.price = price;
     }
@@ -169,7 +134,6 @@ public class Order {
      * @return
      * The shippingCharge
      */
-    @JsonProperty("shipping_charge")
     public Double getShippingCharge() {
         return shippingCharge;
     }
@@ -179,7 +143,6 @@ public class Order {
      * @param shippingCharge
      * The shipping_charge
      */
-    @JsonProperty("shipping_charge")
     public void setShippingCharge(Double shippingCharge) {
         this.shippingCharge = shippingCharge;
     }
@@ -191,12 +154,10 @@ public class Order {
      * @return Firebase ServerValue.TIMESTAMP
      * The createdAt
      */
-    @JsonProperty("created_at")
     public Map<String, String> getCreatedAt() {
         return ServerValue.TIMESTAMP;
     }
 
-    @JsonIgnore
     @Exclude
     public Long getCreatedAtLong() {
         return createdAt;
@@ -207,49 +168,40 @@ public class Order {
      * @param createdAt
      * The created_at
      */
-    @JsonProperty("created_at")
     public void setCreatedAt(Long createdAt) {
         this.createdAt = createdAt;
     }
 
-    @JsonProperty("order_id")
     public String getOrderId() {
         return orderId;
     }
 
-    @JsonProperty("order_id")
     public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
 
-    @JsonProperty("status")
     @Status
     public String getStatus() {
         return status;
     }
 
-    @JsonProperty("status")
     @Status
     public void setStatus(@Status String status) {
         this.status = status;
     }
 
-    @JsonProperty("note")
     public String getNote() {
         return note;
     }
 
-    @JsonProperty("note")
     public void setNote(String note) {
         this.note = note;
     }
 
-    @JsonProperty("order_path")
     public String getOrderPath() {
         return orderPath;
     }
 
-    @JsonProperty("order_path")
     public void setOrderPath(String orderPath) {
         this.orderPath = orderPath;
     }
