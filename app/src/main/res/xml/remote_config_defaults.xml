@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- START xml_defaults -->
+<defaultsMap>
+    <entry>
+        <key>free_shipping_min_price</key>
+        <value>300</value>
+    </entry>
+    <entry>
+        <key>delivery_areas</key>
+        <value>Lalbazar, Rajagram</value>
+    </entry>
+
+</defaultsMap>
+    <!-- END xml_defaults -->

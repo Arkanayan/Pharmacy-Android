@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -23,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ahanapharmacy.app.App;
+import com.ahanapharmacy.app.BuildConfig;
 import com.ahanapharmacy.app.R;
 import com.ahanapharmacy.app.Utils.Constants;
 import com.ahanapharmacy.app.Utils.Prefs;
@@ -36,6 +38,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -43,6 +47,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 import java.io.File;
 import java.util.HashMap;
@@ -67,6 +73,12 @@ public class NewOrderFragment extends Fragment {
 
     public static final String KEY_PRESCRIPTION_URI = "prescription_uri";
     private final String TAG = this.getClass().getSimpleName();
+
+    public static final String FREE_SHIPPING_MIN_PRICE = "free_shipping_min_price";
+    public static final String DELIVERY_AREAS = "delivery_areas";
+
+    public int FETCH_CONFIG_INTERVAL = 3600;
+
     private FirebaseDatabase mRef;
     FirebaseUser mFirebaseUser;
 
@@ -94,6 +106,12 @@ public class NewOrderFragment extends Fragment {
     @BindView(R.id.button_edit_address)
     TextView editAddressButton;
 
+    @BindView(R.id.text_view_min_price)
+    TextView shippingChargeTextView;
+
+    @BindView(R.id.text_view_delivery_areas)
+    TextView deliveryAreasTextView;
+
 
     @BindView(R.id.button_scan)
     Button mScanButton;
@@ -118,6 +136,8 @@ public class NewOrderFragment extends Fragment {
 
     String mRxPath = "";
 
+    private FirebaseRemoteConfig mRemoteConfig;
+
     public NewOrderFragment() {
 
     }
@@ -127,6 +147,15 @@ public class NewOrderFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         mRef = FirebaseDatabase.getInstance();
+
+        mRemoteConfig = FirebaseRemoteConfig.getInstance();
+
+        FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
+                .setDeveloperModeEnabled(BuildConfig.DEBUG)
+                .build();
+        mRemoteConfig.setConfigSettings(configSettings);
+
+        mRemoteConfig.setDefaults(R.xml.remote_config_defaults);
 
        mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -154,6 +183,22 @@ public class NewOrderFragment extends Fragment {
 /*
         disableSubmitButton();
 */
+        displayConfigs();
+        // Fetch and display remote configs e.g. free shipping price, delivery areas
+        mRemoteConfig.fetch(0)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Timber.i("Config fetched from server");
+                            mRemoteConfig.activateFetched();
+                        } else {
+                            Timber.e("Remote config fetch failed");
+                        }
+
+                        displayConfigs();
+                    }
+                });
 
         if (savedInstanceState != null) {
             if (savedInstanceState.getString(KEY_PRESCRIPTION_URI) != null) {
@@ -555,6 +600,15 @@ public class NewOrderFragment extends Fragment {
         }
     }
 
+
+    private void displayConfigs() {
+        String deliveryAreas = mRemoteConfig.getString(DELIVERY_AREAS);
+        long freeShippingMinPrice = mRemoteConfig.getLong(FREE_SHIPPING_MIN_PRICE);
+
+        deliveryAreasTextView.setText(getString(R.string.info_delivery_areas, deliveryAreas));
+        shippingChargeTextView.setText(getString(R.string.info_shipping_charge, freeShippingMinPrice));
+
+    }
     private void showSnackbar(String message) {
 
         Snackbar.make(editAddressButton, message , Snackbar.LENGTH_LONG).show();

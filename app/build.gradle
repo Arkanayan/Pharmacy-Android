@@ -122,6 +122,8 @@ dependencies {
 
     compile 'com.github.gabrielemariotti.recyclerview:recyclerview-animators:0.3.0-SNAPSHOT@aar'
 
+    compile 'com.google.firebase:firebase-config:9.0.0'
+
 }
 
 apply plugin: 'com.google.gms.google-services'

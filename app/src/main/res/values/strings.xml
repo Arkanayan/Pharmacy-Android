@@ -6,8 +6,8 @@
     <string name="action_settings">Settings</string>
     <string name="action_edit"><u>Edit</u></string>
 
-    <string name="info_shipping_charge">Orders above Rs.300 will be delivered for free.</string>
-    <string name="info_delivery_areas">Delivery Areas: Lalbazar, Rajagram</string>
+    <string name="info_shipping_charge">Orders above \u20B9 %1$d will be delivered for free.</string>
+    <string name="info_delivery_areas">Delivery Areas: %1$s</string>
 
     <string name="price" formatted="false">\u20B9 %1$.2f</string>
 

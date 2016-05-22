@@ -37,7 +37,7 @@
             android:textColor="@color/colorSecondaryText"
             android:padding="@dimen/activity_horizontal_margin"
             android:layout_marginBottom="@dimen/item_margin"
-            />
+            android:id="@+id/text_view_min_price" />
 
         <TextView
             android:layout_width="match_parent"
@@ -47,7 +47,7 @@
             android:textColor="@color/colorSecondaryText"
             android:padding="@dimen/activity_horizontal_margin"
             android:layout_marginBottom="@dimen/item_margin"
-            />
+            android:id="@+id/text_view_delivery_areas" />
         </LinearLayout>
 <!--<LinearLayout
     android:layout_width="match_parent"
