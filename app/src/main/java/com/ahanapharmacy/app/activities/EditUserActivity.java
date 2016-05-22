@@ -20,8 +20,11 @@ import com.ahanapharmacy.app.Utils.Constants;
 import com.ahanapharmacy.app.Utils.Prefs;
 import com.ahanapharmacy.app.Utils.Utils;
 import com.ahanapharmacy.app.controllers.UserManager;
+import com.ahanapharmacy.app.messaging.MyInstanceIdService;
 import com.ahanapharmacy.app.models.Address;
 import com.ahanapharmacy.app.models.User;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mobsandgeeks.saripaar.ValidationError;
@@ -43,7 +46,8 @@ import timber.log.Timber;
 
 public class EditUserActivity extends AppCompatActivity implements Validator.ValidationListener {
 
-    public final String TAG = this.getClass().getSimpleName();
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9002;
+    private final String TAG = this.getClass().getSimpleName();
 
     CompositeSubscription compositeSubscription;
 
@@ -160,6 +164,12 @@ public class EditUserActivity extends AppCompatActivity implements Validator.Val
         compositeSubscription.add(fetchUserSubscription);
 
 
+        if (checkPlayServices()) {
+            // Start IntentService to  register this application with GCM
+            Intent intent = new Intent(this, MyInstanceIdService.class);
+            startService(intent);
+        }
+
 
     }
 
@@ -240,6 +250,11 @@ public class EditUserActivity extends AppCompatActivity implements Validator.Val
             user.updateEmail(userEmail);
         }
 
+        String fcmToken = Prefs.getInstance(this).getString(Prefs.Key.FCM_REG_ID);
+        if (fcmToken != null) {
+            userMap.put(Constants.User.FCM_REG_ID, fcmToken);
+        }
+
         Observable<Void> userUpdateObserver = UserManager.updateUser(userMap);
 
         Address address = new Address();
@@ -260,7 +275,7 @@ public class EditUserActivity extends AppCompatActivity implements Validator.Val
 
         }, () -> {
             // Set has details preferences to true
-            Prefs.getInstance(this).put(Prefs.Key.IS_USER_DETAILS_PRESENT, true);
+            Prefs.getInstance().put(Prefs.Key.IS_USER_DETAILS_PRESENT, true);
             // Update success and completed
             Timber.i("User info updated");
             Toast.makeText(this, "Info updated", Toast.LENGTH_SHORT).show();
@@ -311,4 +326,26 @@ public class EditUserActivity extends AppCompatActivity implements Validator.Val
             }
         }
     }
+
+    /**
+     * Check the device to make sure it has the Google Play Services APK. If
+     * it doesn't, display a dialog that allows users to download the APK from
+     * the Google Play Store or enable it in the device's system settings.
+     */
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
+                        .show();
+            } else {
+                Log.i(TAG, "This device is not supported.");
+                finish();
+            }
+            return false;
+        }
+        return true;
+    }
+
 }

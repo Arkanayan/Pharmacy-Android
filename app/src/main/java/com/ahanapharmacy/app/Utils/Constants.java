@@ -11,6 +11,7 @@ public class Constants {
         public static final String LAST_NAME = "lastName";
         public static final String PHONE_NUMBER = "phoneNumber";
         public static final String EMAIL_ADDRESS = "emailAddress";
+        public static final String FCM_REG_ID = "fcmRegId";
     }
 
     public class Address {

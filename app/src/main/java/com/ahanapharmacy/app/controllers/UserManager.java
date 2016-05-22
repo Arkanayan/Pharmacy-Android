@@ -178,7 +178,7 @@ public class UserManager {
 
         String uid = getUserRef().getUid();
 
-        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(uid);
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference(Constants.Path.USERS).child(uid);
         return Observable.create(subscriber -> {
             userRef.updateChildren(userMap, (firebaseError, firebase) -> {
                 if (firebaseError != null) {

@@ -61,6 +61,8 @@ public class User {
     @JsonProperty("total_orders")
     private int totalOrders = 0;
 
+    private String fcmRegId = "";
+
 /*
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();*/
@@ -216,7 +218,15 @@ public class User {
         this.totalOrders = totalOrders;
     }
 
-/*    @JsonAnyGetter
+    public String getFcmRegId() {
+        return fcmRegId;
+    }
+
+    public void setFcmRegId(String fcmRegId) {
+        this.fcmRegId = fcmRegId;
+    }
+
+    /*    @JsonAnyGetter
     public Map<String, Object> getAdditionalProperties() {
         return this.additionalProperties;
     }

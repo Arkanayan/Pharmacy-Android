@@ -6,20 +6,19 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-
     <application
-        android:name="com.ahanapharmacy.app.App"
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.ahanapharmacy.app.activities.InitialActivity"
-            android:theme="@style/SplashTheme"
-            >
+        <activity
+            android:name=".activities.InitialActivity"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -31,47 +30,61 @@
             android:name="io.fabric.ApiKey"
             android:value="bb160c850d73a3d1d80fc1de490e2bb9b672f015" />
 
-        <activity android:name="com.ahanapharmacy.app.activities.LoginActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            />
         <activity
-            android:name="com.ahanapharmacy.app.activities.EditUserActivity"
+            android:name=".activities.LoginActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.EditUserActivity"
             android:label="Edit"
-            android:parentActivityName="com.ahanapharmacy.app.activities.OrderListActivity"
+            android:parentActivityName=".activities.OrderListActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.ahanapharmacy.app.activities.OrderListActivity"
+            android:name=".activities.OrderListActivity"
             android:label="@string/title_order_list"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.ahanapharmacy.app.activities.OrderDetailActivity"
+            android:name=".activities.OrderDetailActivity"
             android:label="@string/title_order_detail"
-            android:parentActivityName="com.ahanapharmacy.app.activities.OrderListActivity"
+            android:parentActivityName=".activities.OrderListActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ahanapharmacy.app.activities.OrderListActivity" />
         </activity>
         <activity
-            android:name="com.ahanapharmacy.app.activities.NewOrderActivity"
+            android:name=".activities.NewOrderActivity"
             android:label="@string/title_activity_new_order"
-            android:parentActivityName="com.ahanapharmacy.app.activities.OrderListActivity"
+            android:parentActivityName=".activities.OrderListActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ahanapharmacy.app.activities.OrderDetailActivity" />
         </activity>
         <activity
-            android:name="com.ahanapharmacy.app.activities.ImageViewActivity"
+            android:name=".activities.ImageViewActivity"
             android:theme="@style/AppTheme.ImageViewerTheme" />
         <activity
-            android:name="com.ahanapharmacy.app.activities.AboutPage"
+            android:name=".activities.AboutPage"
             android:label="About"
-            android:parentActivityName="com.ahanapharmacy.app.activities.OrderListActivity" />
-        <activity android:name="com.ahanapharmacy.app.activities.MyIntro"
-            android:theme="@style/AppTheme.NoActionBar"
-            ></activity>
+            android:parentActivityName=".activities.OrderListActivity" />
+        <activity
+            android:name=".activities.MyIntro"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <service
+            android:name=".messaging.MyMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+            </service>
+        <service
+            android:name=".messaging.MyInstanceIdService">
+
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

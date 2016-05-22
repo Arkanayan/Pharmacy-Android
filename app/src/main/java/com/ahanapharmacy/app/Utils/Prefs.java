@@ -55,7 +55,7 @@ public class Prefs {
 
         public static final String HAS_SHOWN_NEW_ORDER_TUTORIAL = "has_shown_new_order_tutorial";
 
-
+        public static final String FCM_REG_ID = "fcm_registration_id";
 
     }
 
