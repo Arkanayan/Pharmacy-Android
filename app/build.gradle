@@ -120,7 +120,7 @@ dependencies {
 
     compile 'com.google.firebase:firebase-messaging:9.0.0'
 
-    compile 'com.github.gabrielemariotti.recyclerview:recyclerview-animators:0.3.0-SNAPSHOT@aar'
+    compile 'jp.wasabeef:recyclerview-animators:2.2.3'
 
     compile 'com.google.firebase:firebase-config:9.0.0'
 
