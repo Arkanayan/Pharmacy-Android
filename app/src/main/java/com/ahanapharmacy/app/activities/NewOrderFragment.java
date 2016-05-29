@@ -24,7 +24,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ahanapharmacy.app.App;
-import com.ahanapharmacy.app.BuildConfig;
 import com.ahanapharmacy.app.R;
 import com.ahanapharmacy.app.Utils.Constants;
 import com.ahanapharmacy.app.Utils.Prefs;
@@ -48,7 +47,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 import java.io.File;
 import java.util.HashMap;
@@ -150,11 +148,6 @@ public class NewOrderFragment extends Fragment {
 
         mRemoteConfig = FirebaseRemoteConfig.getInstance();
 
-        FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
-                .setDeveloperModeEnabled(BuildConfig.DEBUG)
-                .build();
-        mRemoteConfig.setConfigSettings(configSettings);
-
         mRemoteConfig.setDefaults(R.xml.remote_config_defaults);
 
        mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -185,7 +178,7 @@ public class NewOrderFragment extends Fragment {
 */
         displayConfigs();
         // Fetch and display remote configs e.g. free shipping price, delivery areas
-        mRemoteConfig.fetch(0)
+        mRemoteConfig.fetch(900)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -195,8 +188,6 @@ public class NewOrderFragment extends Fragment {
                         } else {
                             Timber.e("Remote config fetch failed");
                         }
-
-                        displayConfigs();
                     }
                 });
 

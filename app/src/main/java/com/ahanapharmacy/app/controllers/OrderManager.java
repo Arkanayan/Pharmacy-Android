@@ -299,6 +299,7 @@ public class OrderManager {
 
         });
 
+        // If there is no prescription provided, then delete only the order from database
         if (order.getPrescriptionUrl().isEmpty()) {
 
             return deleteOrderObservable;
@@ -314,10 +315,10 @@ public class OrderManager {
                 }
         );*/
 
-       // return deleteImageObservable.concatWith(deleteOrderObservable);
+        return deleteImageObservable.concatWith(deleteOrderObservable);
 
       //  return deleteImageObservable.zipWith(deleteOrderObservable, (aVoid, aVoid2) -> aVoid);
-        return deleteImageObservable.mergeWith(deleteOrderObservable);
+//        return deleteImageObservable.mergeWith(deleteOrderObservable);
     }
 
     /**
