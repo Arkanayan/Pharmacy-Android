@@ -195,6 +195,7 @@ public class NewOrderFragment extends Fragment {
             if (savedInstanceState.getString(KEY_PRESCRIPTION_URI) != null) {
                 String prescriptionUri = savedInstanceState.getString(KEY_PRESCRIPTION_URI);
                 setmPrescriptionFile(new File(prescriptionUri));
+                showPrescriptionImageView();
             }
         }
 
@@ -293,9 +294,7 @@ public class NewOrderFragment extends Fragment {
                 setmPrescriptionFile(file);
                 attachImage(file);
 
-                //enable prescription viewer after setting prescription
-                prescriptionImageview.setVisibility(View.VISIBLE);
-
+               showPrescriptionImageView();
 
             }
 
@@ -313,6 +312,15 @@ public class NewOrderFragment extends Fragment {
                 }
             }
         });
+    }
+
+    private void showPrescriptionImageView() {
+
+        if (mPrescriptionFile != null) {
+            //enable prescription viewer after setting prescription
+            prescriptionImageview.setVisibility(View.VISIBLE);
+
+        }
     }
 
     private void setmPrescriptionFile(File file) {
