@@ -10,10 +10,10 @@ import android.view.View;
 
 import com.ahanapharmacy.app.R;
 import com.ahanapharmacy.app.Utils.Prefs;
-import com.github.paolorotolo.appintro.AppIntro;
+import com.github.paolorotolo.appintro.AppIntro2;
 import com.github.paolorotolo.appintro.AppIntroFragment;
 
-public class MyIntro extends AppIntro {
+public class MyIntro extends AppIntro2 {
 
 
     @Override
@@ -28,7 +28,7 @@ public class MyIntro extends AppIntro {
 
 
         addSlide(AppIntroFragment.newInstance("From your bed ", "You get it. :-)\n\n From Everywhere",
-                R.drawable.bed,
+                R.drawable.ic_bed,
                 Color.parseColor("#00BCD4")));
 
         addSlide(AppIntroFragment.newInstance("Just scan and order", "As easy as that  \n\n" +
@@ -63,7 +63,7 @@ public class MyIntro extends AppIntro {
 
       //  setSwipeLock(true);
 
-        showSkipButton(false);
+//        showSkipButton(false);
 
         setFlowAnimation();
 
@@ -73,7 +73,9 @@ public class MyIntro extends AppIntro {
         //  setCustomTransformer(new ZoomOutPageTransformer());
     }
 
+/*
     @Override
+*/
     public void onSkipPressed() {
 
         Prefs.getInstance().put(Prefs.Key.HAS_INTRO_SHOWN, true);

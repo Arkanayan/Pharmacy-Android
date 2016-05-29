@@ -35,7 +35,7 @@ import static com.ahanapharmacy.app.models.Order.Status.ACKNOWLEDGED;
 import static com.ahanapharmacy.app.models.Order.Status.CANCELED;
 import static com.ahanapharmacy.app.models.Order.Status.COMPLETED;
 import static com.ahanapharmacy.app.models.Order.Status.CONFIRMED;
-import static com.ahanapharmacy.app.models.Order.Status.OPEN;
+import static com.ahanapharmacy.app.models.Order.Status.PENDING;
 
 /**
  * A fragment representing a single Order detail screen.
@@ -190,7 +190,7 @@ public class OrderDetailFragment extends Fragment implements ValueEventListener 
 
                 @Order.Status String status = order.getStatus();
 
-                if (status.equals(Order.Status.OPEN)) {
+                if (status.equals(Order.Status.PENDING)) {
                     enableButton(cancelButton);
                     disableButton(confirmButton);
                 } else if (status.equals(Order.Status.ACKNOWLEDGED)) {
@@ -204,8 +204,8 @@ public class OrderDetailFragment extends Fragment implements ValueEventListener 
 
                 switch (status) {
                     case ACKNOWLEDGED:
-                    case OPEN:
-                        statusImageView.setImageResource(R.drawable.status_open);
+                    case PENDING:
+                        statusImageView.setImageResource(R.drawable.status_pending);
                         break;
                     case COMPLETED:
                         statusImageView.setImageResource(R.drawable.ok_mark);

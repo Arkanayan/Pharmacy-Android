@@ -14,7 +14,7 @@ package com.ahanapharmacy.app.models;
  "is_completed": true,
  "is_canceled": true,
  "note": "",
- "status": "OPEN" OR "CLOSED"
+ "status": "PENDING" OR "CLOSED"
  }
  */
 
@@ -37,17 +37,17 @@ public class Order {
     private Double shippingCharge = 0.0;
     private Long createdAt;
     private String orderId;
-    private String status = Status.OPEN;
+    private String status = Status.PENDING;
     private String note = "";
     private String orderPath;
     private String sellerNote = "";
 
 
-    @StringDef({Status.OPEN, Status.ACKNOWLEDGED, Status.CONFIRMED, Status.CANCELED, Status.COMPLETED})
+    @StringDef({Status.PENDING, Status.ACKNOWLEDGED, Status.CONFIRMED, Status.CANCELED, Status.COMPLETED})
     @Retention(RetentionPolicy.SOURCE)
     public @interface Status {
 
-         String OPEN = "OPEN";
+         String PENDING = "PENDING";
          String ACKNOWLEDGED = "ACKNOWLEDGED";
          String CONFIRMED = "CONFIRMED";
          String CANCELED = "CANCELED";

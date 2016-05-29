@@ -20,7 +20,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -189,14 +188,11 @@ public class OrderManager {
             Map context = new HashMap();
             context.put("uid", uid);
             context.put("order_id", orderId);
-            context.put("status", "OPEN");
+            context.put("status", "PENDING");
 
-            String tags = "prescription, " + uid + "," + orderId + "," + "OPEN";
+            String tags = "prescription, " + uid + "," + orderId + "," + "PENDING";
 
             Map options = ObjectUtils.asMap(
-              "eager", Arrays.asList(
-                            Utils.getLowerTransformation(),
-                            Utils.getThumbnailTransformation()),
               "tags", tags,
             "context", context,
             "folder", folderName,

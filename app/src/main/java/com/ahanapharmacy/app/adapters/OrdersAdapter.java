@@ -41,7 +41,7 @@ import static com.ahanapharmacy.app.models.Order.Status.ACKNOWLEDGED;
 import static com.ahanapharmacy.app.models.Order.Status.CANCELED;
 import static com.ahanapharmacy.app.models.Order.Status.COMPLETED;
 import static com.ahanapharmacy.app.models.Order.Status.CONFIRMED;
-import static com.ahanapharmacy.app.models.Order.Status.OPEN;
+import static com.ahanapharmacy.app.models.Order.Status.PENDING;
 
 /**
  * Created by arka on 4/30/16.
@@ -314,7 +314,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 imageView.setColorFilter(ContextCompat.getColor(App.getContext(), R.color.md_grey_400),
                         PorterDuff.Mode.SRC_IN);
                 break;
-            case OPEN:
+            case PENDING:
                 imageView.setColorFilter(ContextCompat.getColor(App.getContext(), R.color.md_cyan_500),
                         PorterDuff.Mode.SRC_IN);
                 break;
@@ -333,7 +333,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 return ContextCompat.getColor(App.getContext(), R.color.md_red_500);
             case COMPLETED:
                 return ContextCompat.getColor(App.getContext(), R.color.md_grey_400);
-            case OPEN:
+            case PENDING:
                 return ContextCompat.getColor(App.getContext(), R.color.md_cyan_500);
 
         }
