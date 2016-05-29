@@ -74,6 +74,7 @@ public class NewOrderFragment extends Fragment {
 
     public static final String FREE_SHIPPING_MIN_PRICE = "free_shipping_min_price";
     public static final String DELIVERY_AREAS = "delivery_areas";
+    public static final String MAP_URL = "map_url";
 
     public int FETCH_CONFIG_INTERVAL = 3600;
 
@@ -119,6 +120,9 @@ public class NewOrderFragment extends Fragment {
 
     @BindView(R.id.input_note)
     EditText noteEditText;
+
+    @BindView(R.id.map_imagebutton)
+    ImageView mapImageButton;
 
 /*    @BindView(R.id.button_submit_order)
     ActionProcessButton mSubmitButton;*/
@@ -249,6 +253,10 @@ public class NewOrderFragment extends Fragment {
             }
         });
 
+        mapImageButton.setOnClickListener(v -> {
+            String mapUrl = mRemoteConfig.getString(MAP_URL);
+            startActivity(ImageViewActivity.getInstance(getActivity(), mapUrl));
+        });
 
        // return super.onCreateView(inflater, container, savedInstanceState);
         return rootView;

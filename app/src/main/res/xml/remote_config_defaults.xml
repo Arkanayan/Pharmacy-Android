@@ -13,6 +13,10 @@
         <key>pharmacy_contact_number</key>
         <value>9563777896</value>
     </entry>
+    <entry>
+        <key>map_url</key>
+        <value>http://res.cloudinary.com/dvlr2z7ge/image/upload/v1464547997/bankura_vqev03.jpg</value>
+    </entry>
 
 </defaultsMap>
     <!-- END xml_defaults -->

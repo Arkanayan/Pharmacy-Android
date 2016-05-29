@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             >
-        [<TextView
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/info_shipping_charge"
@@ -39,15 +39,38 @@
             android:layout_marginBottom="@dimen/item_margin"
             android:id="@+id/text_view_min_price" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/info_delivery_areas"
-            android:background="@color/md_amber_100"
-            android:textColor="@color/colorSecondaryText"
-            android:padding="@dimen/activity_horizontal_margin"
-            android:layout_marginBottom="@dimen/item_margin"
-            android:id="@+id/text_view_delivery_areas" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/md_amber_100"
+                android:layout_marginBottom="@dimen/item_margin"
+
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/info_delivery_areas"
+                    android:textColor="@color/colorSecondaryText"
+                    android:padding="@dimen/activity_horizontal_margin"
+                    android:id="@+id/text_view_delivery_areas" />
+
+                <ImageView
+                    android:src="@drawable/ic_map"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:id="@+id/map_imagebutton"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+
+                    />
+
+            </RelativeLayout>
+
+
+
         </LinearLayout>
 <!--<LinearLayout
     android:layout_width="match_parent"

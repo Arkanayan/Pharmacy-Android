@@ -1,5 +1,7 @@
 package com.ahanapharmacy.app.activities;
 
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
@@ -64,6 +66,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private ObjectAnimator mAnimator;
 
+    private Animator mIconAnimation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,19 +76,9 @@ public class LoginActivity extends AppCompatActivity {
 
         mAnimator = new ObjectAnimator();
 
-/*
-        logoutButton = (Button) findViewById(R.id.button_logout);
-        logoutButton.setOnClickListener(new android.view.View.OnClickListener() {
-            @Override
-            public void onClick(android.view.View v) {
-                Log.d(TAG, "Logout clicked");
-                if (Digits.getSessionManager() != null) {
-                    Digits.getSessionManager().clearActiveSession();
-                    Log.d(TAG, "Logged out ");
-                }
-            }
-        });
-*/
+        mIconAnimation =(Animator) AnimatorInflater.loadAnimator(this, R.animator.icon_loading_rotate);
+        mIconAnimation.setTarget(appIconImageView);
+
 
        // final DigitsAuthButton authButton = (DigitsAuthButton) findViewById(R.id.button_auth);
         authButton.setAuthTheme(R.style.AppTheme);
@@ -130,6 +124,7 @@ public class LoginActivity extends AppCompatActivity {
 
       //  stopIconAnimation();
         runOnUiThread(() -> {
+            stopIconAnimation();
             authButton.setClickable(true);
 
             authButton.setText("Login");
@@ -284,6 +279,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void showIconAnimation() {
+
+        mIconAnimation.start();
 /*        mAnimator = ObjectAnimator.ofFloat(
                 appIconImageView,
                 "rotation",
@@ -300,6 +297,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void stopIconAnimation() {
+        if (mIconAnimation.isRunning()) {
+
+            mIconAnimation.end();
+        }
    /*     Looper.prepare();
         new Handler().post(() -> {
                 Looper.myLooper().loop();

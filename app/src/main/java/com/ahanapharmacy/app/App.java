@@ -61,9 +61,11 @@ public class App extends Application {
     //Logs out user and redirects to login activity
     public static void logout() {
         String TAG = BuildConfig.APPLICATION_ID + ".App";
-        if (Digits.getSessionManager() != null) {
-            Digits.getSessionManager().clearActiveSession();
-            Log.d(TAG, "Logged out from digits");
+        if (!BuildConfig.DEBUG) {
+            if (Digits.getSessionManager() != null) {
+                Digits.getSessionManager().clearActiveSession();
+                Log.d(TAG, "Logged out from digits");
+            }
         }
         FirebaseAuth.getInstance().signOut();
     }
