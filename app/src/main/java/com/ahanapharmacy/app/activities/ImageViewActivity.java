@@ -5,18 +5,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.ahanapharmacy.app.BuildConfig;
+import com.ahanapharmacy.app.R;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
-import com.ahanapharmacy.app.BuildConfig;
-import com.ahanapharmacy.app.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class ImageViewActivity extends Activity {
@@ -24,7 +24,7 @@ public class ImageViewActivity extends Activity {
     public static final String RX_URI = BuildConfig.APPLICATION_ID + "rx_uri";
 
     @BindView(R.id.rx_image_viewer)
-    ImageView rxImageViewer;
+    PhotoView rxImageViewer;
 
     @BindView(R.id.imageviewer_layout)
     RelativeLayout imageViewerLayout;
