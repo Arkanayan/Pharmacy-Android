@@ -21,6 +21,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ahanapharmacy.app.App;
@@ -123,6 +124,9 @@ public class NewOrderFragment extends Fragment {
 
     @BindView(R.id.map_imagebutton)
     ImageView mapImageButton;
+
+    @BindView(R.id.delivery_areas_layout)
+    RelativeLayout deliveryAreasLayout;
 
 /*    @BindView(R.id.button_submit_order)
     ActionProcessButton mSubmitButton;*/
@@ -253,14 +257,28 @@ public class NewOrderFragment extends Fragment {
             }
         });
 
-        mapImageButton.setOnClickListener(v -> {
-            String mapUrl = mRemoteConfig.getString(MAP_URL);
-            startActivity(ImageViewActivity.getInstance(getActivity(), mapUrl));
-        });
 
        // return super.onCreateView(inflater, container, savedInstanceState);
         return rootView;
 
+    }
+
+    @OnClick(R.id.delivery_areas_layout)
+     void onDeliveryAreasClick(View view) {
+        showMap();
+    }
+
+    @OnClick(R.id.map_imagebutton)
+     void onMapImageButtonClick(View view) {
+        showMap();
+
+    }
+
+
+    private void showMap() {
+        String mapUrl = mRemoteConfig.getString(MAP_URL);
+        Timber.i("Map url: %s", mapUrl);
+        startActivity(ImageViewActivity.getInstance(getActivity(), mapUrl));
     }
 
 
