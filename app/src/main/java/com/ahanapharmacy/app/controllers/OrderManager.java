@@ -77,7 +77,7 @@ public class OrderManager {
 
             String uid = firebaseUser.getUid();
 
-            DatabaseReference newOrderRef =  ref.getReference("orders").push();
+            DatabaseReference newOrderRef =  ref.getReference("orders").child(order.getOrderId());
 
             String newOrderKey = newOrderRef.getKey();
 
