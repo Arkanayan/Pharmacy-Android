@@ -3,6 +3,7 @@ package com.ahanapharmacy.app.activities;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -92,6 +93,7 @@ public class OrderDetailFragment extends Fragment implements ValueEventListener 
     ImageView statusImageView;
 
     private Order mOrder;
+
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -184,37 +186,45 @@ public class OrderDetailFragment extends Fragment implements ValueEventListener 
 
                 Glide.with(getActivity())
                         .load(url)
-                        .placeholder(R.drawable.pill)
+                        .placeholder(ContextCompat.getDrawable(getContext(), R.drawable.pill))
                         .into(prescriptionImageView);
 
 
                 @Order.Status String status = order.getStatus();
 
-                if (status.equals(Order.Status.PENDING)) {
-                    enableButton(cancelButton);
-                    disableButton(confirmButton);
-                } else if (status.equals(Order.Status.ACKNOWLEDGED)) {
-                    enableButton(confirmButton);
-                    enableButton(cancelButton);
-                } else {
-                    disableButton(confirmButton);
-                    disableButton(cancelButton);
+                switch (status) {
+                    case Order.Status.PENDING:
+                        enableButton(cancelButton);
+                        disableButton(confirmButton);
+                        break;
+                    case Order.Status.ACKNOWLEDGED:
+                        enableButton(confirmButton);
+                        enableButton(cancelButton);
+                        break;
+                    default:
+                        disableButton(confirmButton);
+                        disableButton(cancelButton);
+                        break;
                 }
 
 
                 switch (status) {
                     case ACKNOWLEDGED:
                     case PENDING:
-                        statusImageView.setImageResource(R.drawable.status_pending);
+//                        statusImageView.setImageResource(R.drawable.status_pending);
+                        statusImageView.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.status_pending));
                         break;
                     case COMPLETED:
-                        statusImageView.setImageResource(R.drawable.ok_mark);
+//                        statusImageView.setImageResource(R.drawable.ok_mark);
+                        statusImageView.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ok_mark));
                         break;
                     case CONFIRMED:
-                        statusImageView.setImageResource(R.drawable.delivery_truck);
+//                        statusImageView.setImageResource(R.drawable.delivery_truck);
+                        statusImageView.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.delivery_truck));
                         break;
                     case CANCELED:
-                        statusImageView.setImageResource(R.drawable.shopping_cart_cancel);
+//                        statusImageView.setImageResource(R.drawable.shopping_cart_cancel);
+                        statusImageView.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.shopping_cart_cancel));
                         break;
                 }
 

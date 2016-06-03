@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/transparentBackground"
     android:id="@+id/imageviewer_layout"
     tools:context="com.ahanapharmacy.app.activities.ImageViewActivity">
@@ -35,7 +36,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:src="@drawable/ic_close"
+        app:srcCompat="@drawable/ic_close"
         android:tint="@color/md_black_1000"
         />
 

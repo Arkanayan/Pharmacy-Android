@@ -39,7 +39,7 @@
             <ImageView
                 android:layout_width="50dp"
                 android:layout_height="30dp"
-                android:src="@drawable/avatar"
+                app:srcCompat="@drawable/avatar"
                 android:layout_columnSpan="1"
                 android:layout_gravity="left|top"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
@@ -137,7 +137,7 @@
             <ImageView
                 android:layout_width="50dp"
                 android:layout_height="30dp"
-                android:src="@drawable/house"
+                app:srcCompat="@drawable/house"
                 android:layout_columnSpan="1"
                 android:layout_gravity="left|top"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
@@ -167,7 +167,7 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <android.support.design.widget.TextInputEditText
+        <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Address Line 2"
@@ -215,7 +215,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:id="@+id/fab_button_save"
-        android:src="@drawable/ic_save"
+        app:srcCompat="@drawable/ic_save"
         android:layout_margin="@dimen/fab_margin"
         app:rippleColor="@color/tw__medium_gray"
         />

@@ -8,10 +8,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,6 +71,10 @@ import timber.log.Timber;
  * A placeholder fragment containing a simple view.
  */
 public class NewOrderFragment extends Fragment {
+
+    static {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
 
     public static final String KEY_PRESCRIPTION_URI = "prescription_uri";
     private final String TAG = this.getClass().getSimpleName();
@@ -152,6 +158,8 @@ public class NewOrderFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        VectorDrawableCompat.create(getResources(), R.drawable.ic_camera, null);
+
         mRef = FirebaseDatabase.getInstance();
 
         mRemoteConfig = FirebaseRemoteConfig.getInstance();
@@ -178,6 +186,7 @@ public class NewOrderFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_new_order, container, false);
         ButterKnife.bind(this, rootView);
 
+//        mScanButton.setCompoundDrawables(ContextCompat.getDrawable(getContext(), R.drawable.ic_camera),null, null, null);
 
         mCompositeSubscription = new CompositeSubscription();
 

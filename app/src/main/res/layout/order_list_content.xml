@@ -128,7 +128,7 @@
                 android:layout_height="40dp"
                 android:id="@+id/image_view_status"
                 android:layout_gravity="center_horizontal"
-                android:src="@drawable/tag_open"
+                app:srcCompat="@drawable/tag_open"
                 android:adjustViewBounds="true"
                 />
 

@@ -55,7 +55,7 @@
                     android:id="@+id/text_view_delivery_areas" />
 
                 <ImageView
-                    android:src="@drawable/ic_map"
+                    app:srcCompat="@drawable/ic_map"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:id="@+id/map_imagebutton"
@@ -156,7 +156,7 @@
             <ImageView
                 android:layout_width="50dp"
                 android:layout_height="30dp"
-                android:src="@drawable/avatar"
+                app:srcCompat="@drawable/avatar"
                 android:layout_columnSpan="1"
                 android:layout_gravity="left|top"
                 android:layout_row="0"
@@ -175,7 +175,7 @@
             <ImageView
                 android:layout_width="50dp"
                 android:layout_height="30dp"
-                android:src="@drawable/house"
+                app:srcCompat="@drawable/house"
                 android:layout_columnSpan="1"
                 android:layout_gravity="left|top"
                 android:layout_row="1"
@@ -228,7 +228,7 @@
             <ImageView
                 android:layout_width="50dp"
                 android:layout_height="30dp"
-                android:src="@drawable/note"
+                app:srcCompat="@drawable/note"
                 android:layout_columnSpan="1"
                 android:layout_gravity="left|center"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
@@ -264,7 +264,6 @@
         android:layout_height="wrap_content"
         android:text="Scan"
         android:id="@+id/button_scan"
-        android:drawableLeft="@drawable/ic_camera"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -275,7 +274,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:id="@+id/imageview_prescription"
-                android:src="@drawable/ic_image"
+                app:srcCompat="@drawable/ic_image"
                 android:clickable="true"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
@@ -313,7 +312,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/send"
+        app:srcCompat="@drawable/send"
         app:pressedTranslationZ="36dp"
         app:fabSize="normal"
         app:rippleColor="@color/md_red_900"
