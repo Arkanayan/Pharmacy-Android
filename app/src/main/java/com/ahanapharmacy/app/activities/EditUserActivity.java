@@ -10,7 +10,6 @@ import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -48,10 +47,6 @@ import timber.log.Timber;
 
 public class EditUserActivity extends AppCompatActivity implements Validator.ValidationListener {
 
-    static {
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
-    }
-
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9002;
     private final String TAG = this.getClass().getSimpleName();
 
@@ -78,11 +73,9 @@ public class EditUserActivity extends AppCompatActivity implements Validator.Val
     @BindView(R.id.input_address_line_1)
     TextInputEditText addressLine1EditText;
 
-    @NotEmpty
     @BindView(R.id.input_address_line_2)
     EditText addressLine2EditText;
 
-    @NotEmpty
     @BindView(R.id.input_address_landmark)
     TextInputEditText addressLandmarkEditText;
 

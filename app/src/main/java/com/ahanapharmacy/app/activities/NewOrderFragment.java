@@ -8,20 +8,18 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -72,9 +70,6 @@ import timber.log.Timber;
  */
 public class NewOrderFragment extends Fragment {
 
-    static {
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
-    }
 
     public static final String KEY_PRESCRIPTION_URI = "prescription_uri";
     private final String TAG = this.getClass().getSimpleName();
@@ -120,7 +115,7 @@ public class NewOrderFragment extends Fragment {
 
 
     @BindView(R.id.button_scan)
-    Button mScanButton;
+    ImageButton mScanButton;
 
     @BindView(R.id.imageview_prescription)
     ImageView prescriptionImageview;
@@ -150,6 +145,7 @@ public class NewOrderFragment extends Fragment {
 
     private FirebaseRemoteConfig mRemoteConfig;
 
+
     public NewOrderFragment() {
 
     }
@@ -158,7 +154,10 @@ public class NewOrderFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        VectorDrawableCompat.create(getResources(), R.drawable.ic_camera, null);
+    /*    mScanButton.setCompoundDrawablesWithIntrinsicBounds(
+                VectorDrawableCompat.create(getResources(),R.drawable.ic_camera,null),
+                null,null,null
+        );*/
 
         mRef = FirebaseDatabase.getInstance();
 
