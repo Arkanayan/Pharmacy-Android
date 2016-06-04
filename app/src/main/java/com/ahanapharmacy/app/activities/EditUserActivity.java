@@ -47,7 +47,6 @@ import timber.log.Timber;
 
 public class EditUserActivity extends AppCompatActivity implements Validator.ValidationListener {
 
-    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9002;
     private final String TAG = this.getClass().getSimpleName();
 
     CompositeSubscription compositeSubscription;
@@ -332,6 +331,8 @@ public class EditUserActivity extends AppCompatActivity implements Validator.Val
      * the Google Play Store or enable it in the device's system settings.
      */
     private boolean checkPlayServices() {
+        final int PLAY_SERVICES_RESOLUTION_REQUEST = 9002;
+
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
         if (resultCode != ConnectionResult.SUCCESS) {
@@ -339,7 +340,7 @@ public class EditUserActivity extends AppCompatActivity implements Validator.Val
                 apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
                         .show();
             } else {
-                Log.i(TAG, "This device is not supported.");
+                Timber.i("Play services: This device is not supported.");
                 finish();
             }
             return false;

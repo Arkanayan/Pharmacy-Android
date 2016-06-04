@@ -82,7 +82,7 @@ public class AboutPage extends AppCompatActivity {
 
     Element iconCreditElement() {
         Element iconsCreditElement = new Element();
-        iconsCreditElement.setIcon(R.drawable.pill);
+        iconsCreditElement.setIcon(R.drawable.ic_pill);
         iconsCreditElement.setTitle("Icons provided by flaticon.com");
         iconsCreditElement.setValue("flaticon.com");
         iconsCreditElement.setGravity(Gravity.LEFT);

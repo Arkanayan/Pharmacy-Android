@@ -22,8 +22,8 @@ import com.ahanapharmacy.app.models.Order;
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import butterknife.BindView;
@@ -49,7 +49,7 @@ public class OrderDetailFragment extends Fragment implements ValueEventListener 
     private final String TAG = this.getClass().getSimpleName();
 
 
-    private DatabaseReference mOrderRef;
+    private Query mOrderRef;
 
     /**
      * The fragment argument representing the item ID that this fragment
@@ -136,6 +136,11 @@ public class OrderDetailFragment extends Fragment implements ValueEventListener 
                     .getReference(Constants.Path.ORDERS)
                     .child(mOrderPath);
 
+        /*    mOrderRef =  FirebaseDatabase.getInstance()
+                    .getReference(Constants.Path.ORDERS)
+                    .orderByChild(Constants.Order.ORDER_ID)
+                    .equalTo(mOrderPath);*/
+
 
             mOrderRef.addValueEventListener(this);
 
@@ -186,7 +191,7 @@ public class OrderDetailFragment extends Fragment implements ValueEventListener 
 
                 Glide.with(getActivity())
                         .load(url)
-                        .placeholder(ContextCompat.getDrawable(getContext(), R.drawable.pill))
+                        .placeholder(ContextCompat.getDrawable(getContext(), R.drawable.ic_pill))
                         .into(prescriptionImageView);
 
 

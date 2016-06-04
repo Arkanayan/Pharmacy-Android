@@ -18,10 +18,14 @@ import android.webkit.WebView;
 import com.ahanapharmacy.app.App;
 import com.ahanapharmacy.app.R;
 import com.ahanapharmacy.app.adapters.OrdersAdapter;
+import com.ahanapharmacy.app.messaging.MyInstanceIdService;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.firebase.auth.FirebaseAuth;
 
 import butterknife.ButterKnife;
 import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
+import timber.log.Timber;
 
 /**
  * An activity representing a list of Orders. This activity
@@ -58,6 +62,12 @@ public class OrderListActivity extends AppCompatActivity implements OrdersAdapte
 
         setContentView(R.layout.activity_order_list);
         ButterKnife.bind(this);
+
+        if (checkPlayServices()) {
+            // Start IntentService to  register this application with GCM
+            Intent intent = new Intent(this, MyInstanceIdService.class);
+            startService(intent);
+        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -181,4 +191,30 @@ public class OrderListActivity extends AppCompatActivity implements OrdersAdapte
                 .setPositiveButton(android.R.string.ok, null)
                 .show();
     }
+
+
+    /**
+     * Check the device to make sure it has the Google Play Services APK. If
+     * it doesn't, display a dialog that allows users to download the APK from
+     * the Google Play Store or enable it in the device's system settings.
+     */
+    private boolean checkPlayServices() {
+        final int PLAY_SERVICES_RESOLUTION_REQUEST = 9002;
+
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
+                        .show();
+            } else {
+                Timber.i("Play services: This device is not supported.");
+                finish();
+            }
+            return false;
+        }
+        return true;
+    }
+
 }
+

@@ -19,10 +19,10 @@ public class InitialActivity extends AppCompatActivity {
         // Show intro if it has not been shown
         Prefs.getInstance(this);
         if (!Prefs.getInstance().getBoolean(Prefs.Key.HAS_INTRO_SHOWN, false)) {
-           /* Intent intro = new Intent(this, MyIntro.class);
+            Intent intro = new Intent(this, MyIntro.class);
             startActivity(intro);
             finish();
-            return;*/
+            return;
         }
 
 

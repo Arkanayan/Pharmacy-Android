@@ -37,6 +37,7 @@
                 android:layout_alignParentRight="true"
                 android:id="@+id/image_view_prescripiton"
                 tools:src="@drawable/avatar"
+                app:srcCompat="@drawable/ic_pill"
                  />
 
 

@@ -21,19 +21,19 @@ public class MyIntro extends AppIntro2 {
         Prefs.getInstance(this);
 
         addSlide(AppIntroFragment.newInstance("Order medicines", "From your home",
-                R.drawable.home,
+                R.drawable.house,
                 Color.parseColor("#222222")));
 
        // askForPermissions(new String[]{Manifest.permission.CAMERA}, 1); // OR
 
 
         addSlide(AppIntroFragment.newInstance("From your bed ", "You get it. :-)\n\n From Everywhere",
-                R.drawable.ic_bed,
+                R.drawable.bed,
                 Color.parseColor("#00BCD4")));
 
         addSlide(AppIntroFragment.newInstance("Just scan and order", "As easy as that  \n\n" +
                 "For this, we need your permission to take pictures and storage ",
-                R.drawable.camera,
+                R.drawable.photo_camera,
                 ContextCompat.getColor(this, R.color.md_teal_500)));
 
         askForPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 3);
@@ -41,7 +41,7 @@ public class MyIntro extends AppIntro2 {
 
         addSlide(AppIntroFragment.newInstance("We just need", "Your phone number \n\n To verify you \n\n " +
                 "P.S. This app is not compatible with your landphone",
-                R.drawable.telephone,
+                R.drawable.tel,
                 Color.parseColor("#5C6BC0")));
 
         askForPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, 4);
@@ -49,13 +49,13 @@ public class MyIntro extends AppIntro2 {
         addSlide(AppIntroFragment.newInstance("We just need", "Your permission to read the OTP \n\n " +
                 "This app works fine even without this permission \n\n " +
                         "P.S. Did I tell you this app is not compatible with your landphone.",
-                R.drawable.sms,
+                R.drawable.chat,
                 ContextCompat.getColor(this, R.color.md_cyan_500)));
 
         askForPermissions(new String[]{Manifest.permission.RECEIVE_SMS}, 5);
 
         addSlide(AppIntroFragment.newInstance("We are nearly done", "In the next page click login",
-                R.drawable.pill_icon,
+                R.drawable.pill,
                 ContextCompat.getColor(this, R.color.md_purple_500)));
 
 
