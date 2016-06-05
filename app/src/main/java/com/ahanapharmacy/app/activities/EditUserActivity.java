@@ -13,7 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.ahanapharmacy.app.R;
@@ -73,7 +72,7 @@ public class EditUserActivity extends AppCompatActivity implements Validator.Val
     TextInputEditText addressLine1EditText;
 
     @BindView(R.id.input_address_line_2)
-    EditText addressLine2EditText;
+    TextInputEditText addressLine2EditText;
 
     @BindView(R.id.input_address_landmark)
     TextInputEditText addressLandmarkEditText;

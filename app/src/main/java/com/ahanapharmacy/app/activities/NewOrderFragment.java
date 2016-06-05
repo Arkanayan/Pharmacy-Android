@@ -549,7 +549,7 @@ public class NewOrderFragment extends Fragment {
                 }).show();
     }
 
-    public void showPrescriptionRequiredAndOrder() {
+    private void showPrescriptionRequiredAndOrder() {
 
         new AlertDialog.Builder(getActivity())
                 .setTitle("Prescription required")
@@ -656,8 +656,18 @@ public class NewOrderFragment extends Fragment {
     private void populateAddress(Address address) {
 
         addressLine1TextView.setText(address.getAddressLine1());
-        addressLine2TextView.setText(address.getAddressLine2());
-        landmarkTextView.setText(address.getLandmark());
+        if (!address.getAddressLine2().equals("")) {
+            addressLine2TextView.setVisibility(View.VISIBLE);
+            addressLine2TextView.setText(address.getAddressLine2());
+        } else {
+            addressLine2TextView.setVisibility(View.GONE);
+        }
+        if (!address.getLandmark().equals("")) {
+            landmarkTextView.setText(address.getLandmark());
+            landmarkTextView.setVisibility(View.VISIBLE);
+        } else {
+            landmarkTextView.setVisibility(View.GONE);
+        }
         pinTextView.setText(String.valueOf(address.getPin()));
     }
     /*    @Override

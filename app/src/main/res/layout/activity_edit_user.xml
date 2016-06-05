@@ -156,7 +156,7 @@
         <android.support.design.widget.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Address Line 1"
+            android:hint="Address Line 1 (Required)"
             android:id="@+id/input_address_line_1"
             android:inputType="textPostalAddress"
             />
@@ -167,10 +167,10 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <EditText
+        <android.support.design.widget.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Address Line 2"
+            android:hint="Address Line 2 (Optional)"
             android:id="@+id/input_address_line_2"
             android:inputType="textPostalAddress"
             />
@@ -185,7 +185,7 @@
         <android.support.design.widget.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Landmark"
+            android:hint="Landmark (Optional)"
             android:id="@+id/input_address_landmark"
             android:inputType="textPostalAddress"
             />
@@ -200,7 +200,7 @@
         <android.support.design.widget.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Pin"
+            android:hint="Pin (Required)"
             android:id="@+id/input_address_pin"
             android:inputType="numberSigned"
             />
