@@ -279,6 +279,8 @@ public class OrderManager {
     public static Observable<Void> deleteOrder(Order order) {
 
 
+        Observable<Void> isConnectedToInternet = Utils.isNetworkAvailable();
+
 
         // deltes order image
 
@@ -302,7 +304,7 @@ public class OrderManager {
         // If there is no prescription provided, then delete only the order from database
         if (order.getPrescriptionUrl().isEmpty()) {
 
-            return deleteOrderObservable;
+            return isConnectedToInternet.concatWith(deleteOrderObservable);
         }
 
         Observable<Void> deleteImageObservable = deleteImage(order.getPrescriptionUrl())
@@ -315,7 +317,8 @@ public class OrderManager {
                 }
         );*/
 
-        return deleteImageObservable.concatWith(deleteOrderObservable);
+//        return deleteImageObservable.concatWith(deleteOrderObservable);
+        return Observable.concat(isConnectedToInternet, deleteImageObservable, deleteOrderObservable);
 
       //  return deleteImageObservable.zipWith(deleteOrderObservable, (aVoid, aVoid2) -> aVoid);
 //        return deleteImageObservable.mergeWith(deleteOrderObservable);
