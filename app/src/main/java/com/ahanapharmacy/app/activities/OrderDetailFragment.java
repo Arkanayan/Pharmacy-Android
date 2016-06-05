@@ -256,6 +256,7 @@ public class OrderDetailFragment extends Fragment implements ValueEventListener 
             orderCancelIndicator.setTitle("Deleting Order...");
             orderCancelIndicator.setMessage("Please wait a moment...");
             orderCancelIndicator.setIndeterminate(true);
+            orderCancelIndicator.setCancelable(false);
             orderCancelIndicator.show();
 
             OrderManager.deleteOrder(mOrder).subscribe(aVoid -> {
