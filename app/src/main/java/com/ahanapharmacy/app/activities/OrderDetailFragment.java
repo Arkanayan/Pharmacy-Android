@@ -1,5 +1,6 @@
 package com.ahanapharmacy.app.activities;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -251,12 +252,20 @@ public class OrderDetailFragment extends Fragment implements ValueEventListener 
     public void deleteOrder() {
         if (mOrder != null) {
 
+            ProgressDialog orderCancelIndicator = new ProgressDialog(getContext());
+            orderCancelIndicator.setTitle("Deleting Order...");
+            orderCancelIndicator.setMessage("Please wait a moment...");
+            orderCancelIndicator.setIndeterminate(true);
+            orderCancelIndicator.show();
+
             OrderManager.deleteOrder(mOrder).subscribe(aVoid -> {
                 Toast.makeText(getActivity(), "Order deleted onnext", Toast.LENGTH_SHORT).show();
                 getActivity().finish();
             }, throwable -> {
+                orderCancelIndicator.dismiss();
                 Toast.makeText(getActivity(), "Order delete failed", Toast.LENGTH_SHORT).show();
             }, () -> {
+                orderCancelIndicator.dismiss();
                 Toast.makeText(getActivity(), "Order deleted", Toast.LENGTH_SHORT).show();
                 getActivity().finish();
             });
