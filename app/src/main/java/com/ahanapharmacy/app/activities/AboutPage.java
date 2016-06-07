@@ -4,33 +4,56 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
 
 import com.ahanapharmacy.app.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import mehdi.sakout.aboutpage.Element;
 
 public class AboutPage extends AppCompatActivity {
 
+    public static final String CONFIG_PHARMACY_CONTACT = "pharmacy_contact_number";
+    public static final String CONFIG_DEVELOPER_CONTACT = "developer_contact";
+    public static final String CONFIG_CONTACT_VIA_EMAIL = "contact_via_email";
+
+    private FirebaseRemoteConfig mRemoteConfig;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mRemoteConfig = FirebaseRemoteConfig.getInstance();
+        mRemoteConfig.setDefaults(R.xml.remote_config_defaults);
+
+        mRemoteConfig.fetch(2000)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        mRemoteConfig.activateFetched();
+                    }
+                });
+
 //        setContentView(R.layout.activity_about_page);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+
         View aboutPage = new mehdi.sakout.aboutpage.AboutPage(this)
                 .isRTL(false)
                 .setImage(R.drawable.pill_icon)
-                .setDescription("Order medicines from anywhere" + getString(R.string.pharmacy_address))
+                .setDescription(getString(R.string.pharmacy_address))
                 .addGroup("Connect with us")
 //                .addEmail(getString(R.string.pharmacy_email_address))
                 .addItem(pharmacyContactElement())
                 .addGroup("Developed By")
                 .addItem(authorElement())
+                .addItem(appIconCreditElement())
                 .addItem(iconCreditElement())
                 .create();
 
@@ -38,13 +61,16 @@ public class AboutPage extends AppCompatActivity {
     }
 
     Element pharmacyContactElement() {
+
+        String pharmacy_contact_number = mRemoteConfig.getString(CONFIG_PHARMACY_CONTACT);
+
         Element pharmacyElement = new Element();
 
         pharmacyElement.setIcon(R.drawable.ic_call);
         pharmacyElement.setTitle("Contact us");
 
         pharmacyElement.setOnClickListener(v -> {
-            String contactNumber = "tel:" + getString(R.string.pharmacy_contact_number);
+            String contactNumber = "tel:" + pharmacy_contact_number;
 
             Intent intent = new Intent(Intent.ACTION_DIAL);
             intent.setData(Uri.parse(contactNumber));
@@ -54,30 +80,58 @@ public class AboutPage extends AppCompatActivity {
     }
 
     Element authorElement() {
+
+        String developer_contact = mRemoteConfig.getString(CONFIG_DEVELOPER_CONTACT);
+        boolean contact_via_email = mRemoteConfig.getBoolean(CONFIG_CONTACT_VIA_EMAIL);
+
         Element authorElement = new Element();
         authorElement.setIcon(R.drawable.softtware_engineer);
         authorElement.setTitle("Arkanayan Shet");
         authorElement.setValue("Arkanayan Shet");
         authorElement.setGravity(Gravity.LEFT);
         authorElement.setOnClickListener(v -> {
-            String authorEmail = "itsarkanayan@gmail.com";
 
-/*            Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + authorEmail));
+            if (!contact_via_email || developer_contact.equals("")) {
 
-                    //new Intent(Intent.ACTION_SEND);
-            emailIntent.setType("text/plain");
-            emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {authorEmail}); // recipients
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(developer_contact));
+                startActivity(browserIntent);
 
-            startActivity(Intent.createChooser(emailIntent, "Contact me"));*/
+            } else {
 
-            ShareCompat.IntentBuilder.from(this)
-                    .setType("message/rfc822")
-                    .addEmailTo(authorEmail)
-                    .setChooserTitle("Contact developer")
-                    .startChooser();
+                String authorEmail = "itsarkanayan@gmail.com";
+                Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + authorEmail));
+
+                //new Intent(Intent.ACTION_SEND);
+                emailIntent.setType("text/plain");
+                emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {authorEmail}); // recipients
+
+                startActivity(Intent.createChooser(emailIntent, "Contact me"));
+                ShareCompat.IntentBuilder.from(this)
+                        .setType("message/rfc822")
+                        .addEmailTo(authorEmail)
+                        .setChooserTitle("Contact developer")
+                        .startChooser();
+            }
         });
 
     return authorElement;
+    }
+
+    Element appIconCreditElement() {
+        Element iconsCreditElement = new Element();
+        // TODO: 7/6/16 Change icon to icon provided by dibya
+        iconsCreditElement.setIcon(R.drawable.ic_pill);
+        iconsCreditElement.setTitle("App icon provided by Dibyajyoti Pandey");
+        iconsCreditElement.setValue("http://www.zedsofts.net");
+        iconsCreditElement.setGravity(Gravity.LEFT);
+        iconsCreditElement.setOnClickListener(v -> {
+            String flaticonUrl = "http://www.zedsofts.net";
+
+            Intent callingIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(flaticonUrl));
+            startActivity(callingIntent);
+        });
+
+        return iconsCreditElement;
     }
 
     Element iconCreditElement() {

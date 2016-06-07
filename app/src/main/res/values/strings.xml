@@ -11,11 +11,12 @@
 
     <string name="price" formatted="false">\u20B9 %1$.2f</string>
 
-    <string name="pharmacy_contact_number">9534324234</string>
+    <string name="pharmacy_contact_number">9434314415</string>
     <string name="pharmacy_email_address">hello@gmail.com</string>
-    <string name="pharmacy_address">\nAhana Pharmacy \n Kenduadihi, Bankura \n  722101</string>
+    <string name="pharmacy_address">Ahana Pharmacy \n S K Sahana Road\n Kenduadihi, Bankura \n  722103</string>
 
     <string name="author_contact_no">9563777896</string>
+    <string name="developer_contact">http://arkanayan.me</string>
     <string name="empty_text">It seems pretty lonely in here.\n\nClick on the plus sign to order.</string>
     <string name="action_licenses">Open Source Licenses</string>
 </resources>

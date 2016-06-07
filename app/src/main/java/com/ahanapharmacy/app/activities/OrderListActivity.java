@@ -3,6 +3,7 @@ package com.ahanapharmacy.app.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -21,7 +22,10 @@ import com.ahanapharmacy.app.adapters.OrdersAdapter;
 import com.ahanapharmacy.app.messaging.MyInstanceIdService;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import butterknife.ButterKnife;
 import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
@@ -38,6 +42,7 @@ import timber.log.Timber;
 public class OrderListActivity extends AppCompatActivity implements OrdersAdapter.OnOrderClickListener{
 
     public final String TAG = this.getClass().getSimpleName();
+    private FirebaseRemoteConfig mRemoteConfig;
 
     private AlertDialog mAlertDialog;
     /**
@@ -52,6 +57,17 @@ public class OrderListActivity extends AppCompatActivity implements OrdersAdapte
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mRemoteConfig = FirebaseRemoteConfig.getInstance();
+        mRemoteConfig.setDefaults(R.xml.remote_config_defaults);
+
+        mRemoteConfig.fetch(2000)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        mRemoteConfig.activateFetched();
+                    }
+                });
 
         // Check if user logged in else go back to login activity
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
