@@ -49,7 +49,7 @@ public class MyMessagingService extends FirebaseMessagingService {
         String orderId = data.get("order_id");
         String type = data.get("type");
 
-        Intent orderDetailIntent = OrderDetailActivity.getInstance(context, orderId);
+        Intent orderDetailIntent = OrderDetailActivity.getInstanceByOrderId(context, orderId);
         int requestID = (int) System.currentTimeMillis(); //unique requestID to differentiate between various notification with same NotifId
         int flags = PendingIntent.FLAG_CANCEL_CURRENT; // cancel old intent and create new one
         PendingIntent pIntent = PendingIntent.getActivity(this, requestID, orderDetailIntent, flags);
@@ -57,7 +57,7 @@ public class MyMessagingService extends FirebaseMessagingService {
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.ic_notification)
                 .setContentTitle(notification.getTitle())
                 .setContentText(notification.getBody())
                 .setSound(alarmSound)

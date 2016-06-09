@@ -6,7 +6,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,11 +56,12 @@ public class OrderDetailFragment extends Fragment implements ValueEventListener 
      * represents.
      */
     public static final String ORDER_PATH = "order_path";
-
+    public static final String ORDER_ID = "order_id";
     /**
      * The dummy content this fragment is presenting.
      */
     private String mOrderPath;
+    private String mOrderId;
 
     private CompositeSubscription compositeSubscription;
 
@@ -120,6 +120,8 @@ public class OrderDetailFragment extends Fragment implements ValueEventListener 
             if (appBarLayout != null) {
                 appBarLayout.setTitle(mItem.content);
             }*/
+        } else if (getArguments().containsKey(ORDER_ID)) {
+            mOrderId = getArguments().getString(ORDER_ID);
         }
     }
 
@@ -131,7 +133,7 @@ public class OrderDetailFragment extends Fragment implements ValueEventListener 
 
         // Show the dummy content as text in a TextView.
         if (mOrderPath != null) {
-            Log.d(TAG, "onCreateView: order path: " + mOrderPath);
+            Timber.d("onCreateView: order path: %s", mOrderPath);
           //  mOrderRef = App.getFirebase().child(Constants.Path.ORDERS).child(mOrderPath);
             mOrderRef = FirebaseDatabase.getInstance()
                     .getReference(Constants.Path.ORDERS)
@@ -146,6 +148,21 @@ public class OrderDetailFragment extends Fragment implements ValueEventListener 
             mOrderRef.addValueEventListener(this);
 
 
+        } else if (mOrderId != null) {
+            Timber.d("onCreateView: order path: %s", mOrderId);
+            //  mOrderRef = App.getFirebase().child(Constants.Path.ORDERS).child(mOrderPath);
+            mOrderRef = FirebaseDatabase.getInstance()
+                    .getReference(Constants.Path.ORDERS)
+                    .orderByChild(Constants.Order.ORDER_ID)
+                    .equalTo(mOrderId);
+
+        /*    mOrderRef =  FirebaseDatabase.getInstance()
+                    .getReference(Constants.Path.ORDERS)
+                    .orderByChild(Constants.Order.ORDER_ID)
+                    .equalTo(mOrderPath);*/
+
+
+            mOrderRef.addValueEventListener(this);
         }
         return rootView;
 
@@ -169,7 +186,13 @@ public class OrderDetailFragment extends Fragment implements ValueEventListener 
     @Override
     public void onDataChange(DataSnapshot dataSnapshot) {
         try {
-            Order order = dataSnapshot.getValue(Order.class);
+            Order order;
+            if (mOrderId != null) {
+                order = dataSnapshot.getChildren().iterator().next().getValue(Order.class);
+
+            } else {
+                order = dataSnapshot.getValue(Order.class);
+            }
             mOrder = order;
 
             if (order != null) {

@@ -46,7 +46,7 @@ public class AboutPage extends AppCompatActivity {
 
         View aboutPage = new mehdi.sakout.aboutpage.AboutPage(this)
                 .isRTL(false)
-                .setImage(R.drawable.pill_icon)
+                .setImage(R.drawable.app_about_logo)
                 .setDescription(getString(R.string.pharmacy_address))
                 .addGroup("Connect with us")
 //                .addEmail(getString(R.string.pharmacy_email_address))
@@ -120,7 +120,7 @@ public class AboutPage extends AppCompatActivity {
     Element appIconCreditElement() {
         Element iconsCreditElement = new Element();
         // TODO: 7/6/16 Change icon to icon provided by dibya
-        iconsCreditElement.setIcon(R.drawable.ic_pill);
+        iconsCreditElement.setIcon(R.drawable.app_logo);
         iconsCreditElement.setTitle("App icon provided by Dibyajyoti Pandey");
         iconsCreditElement.setValue("http://www.zedsofts.net");
         iconsCreditElement.setGravity(Gravity.LEFT);

@@ -51,8 +51,16 @@ public class OrderDetailActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putString(OrderDetailFragment.ORDER_PATH,
-                    getIntent().getStringExtra(OrderDetailFragment.ORDER_PATH));
+
+            // If order id is provided
+            if (getIntent().hasExtra(OrderDetailFragment.ORDER_ID)) {
+                arguments.putString(OrderDetailFragment.ORDER_ID,
+                        getIntent().getStringExtra(OrderDetailFragment.ORDER_ID));
+            } else if (getIntent().hasExtra(OrderDetailFragment.ORDER_PATH)) {
+                // if order path is provided
+                arguments.putString(OrderDetailFragment.ORDER_PATH,
+                        getIntent().getStringExtra(OrderDetailFragment.ORDER_PATH));
+            }
             OrderDetailFragment fragment = new OrderDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
@@ -82,6 +90,13 @@ public class OrderDetailActivity extends AppCompatActivity {
 
         Intent detailOrder = new Intent(context, OrderDetailActivity.class);
         detailOrder.putExtra(OrderDetailFragment.ORDER_PATH, orderPath);
+        return detailOrder;
+    }
+
+    public static Intent getInstanceByOrderId(Context context, String orderId) {
+
+        Intent detailOrder = new Intent(context, OrderDetailActivity.class);
+        detailOrder.putExtra(OrderDetailFragment.ORDER_ID, orderId);
         return detailOrder;
     }
 }

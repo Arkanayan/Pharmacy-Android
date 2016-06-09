@@ -77,7 +77,7 @@
             android:minWidth="120dp"
             android:minHeight="120dp"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/pill_icon"
+            app:srcCompat="@drawable/app_logo"
             android:id="@+id/app_icon"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="-65dp"
