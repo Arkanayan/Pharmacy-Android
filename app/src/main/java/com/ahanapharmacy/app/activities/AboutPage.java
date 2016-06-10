@@ -11,8 +11,12 @@ import android.view.Gravity;
 import android.view.View;
 
 import com.ahanapharmacy.app.R;
+import com.ahanapharmacy.app.Utils.Analytics;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import mehdi.sakout.aboutpage.Element;
@@ -23,13 +27,20 @@ public class AboutPage extends AppCompatActivity {
     public static final String CONFIG_DEVELOPER_CONTACT = "developer_contact";
     public static final String CONFIG_CONTACT_VIA_EMAIL = "contact_via_email";
 
+    FirebaseAnalytics mAnalytics;
+
+
     private FirebaseRemoteConfig mRemoteConfig;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mRemoteConfig = FirebaseRemoteConfig.getInstance();
         mRemoteConfig.setDefaults(R.xml.remote_config_defaults);
+
+        mAnalytics = FirebaseAnalytics.getInstance(this);
 
         mRemoteConfig.fetch(2000)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -112,6 +123,16 @@ public class AboutPage extends AppCompatActivity {
                         .setChooserTitle("Contact developer")
                         .startChooser();
             }
+
+            Bundle params = new Bundle();
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            if (user != null) {
+
+                params.putString(Analytics.Param.USER_ID, user.getUid());
+                params.putString(Analytics.Param.USER_NAME, user.getDisplayName());
+            }
+
+            mAnalytics.logEvent(Analytics.Event.CONTACT_DEVELOPER, params);
         });
 
     return authorElement;

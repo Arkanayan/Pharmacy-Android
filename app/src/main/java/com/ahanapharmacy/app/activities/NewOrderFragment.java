@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import com.ahanapharmacy.app.App;
 import com.ahanapharmacy.app.R;
+import com.ahanapharmacy.app.Utils.Analytics;
 import com.ahanapharmacy.app.Utils.Constants;
 import com.ahanapharmacy.app.Utils.Prefs;
 import com.ahanapharmacy.app.Utils.Utils;
@@ -40,6 +41,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -77,6 +79,9 @@ public class NewOrderFragment extends Fragment {
     public static final String FREE_SHIPPING_MIN_PRICE = "free_shipping_min_price";
     public static final String DELIVERY_AREAS = "delivery_areas";
     public static final String MAP_URL = "map_url";
+
+    private FirebaseAnalytics mAnalytics;
+    private Bundle params;
 
     public int FETCH_CONFIG_INTERVAL = 3600;
 
@@ -158,6 +163,9 @@ public class NewOrderFragment extends Fragment {
                 VectorDrawableCompat.create(getResources(),R.drawable.ic_camera,null),
                 null,null,null
         );*/
+
+        params = new Bundle();
+        mAnalytics = FirebaseAnalytics.getInstance(getContext());
 
         mRef = FirebaseDatabase.getInstance();
 
@@ -287,6 +295,12 @@ public class NewOrderFragment extends Fragment {
         String mapUrl = mRemoteConfig.getString(MAP_URL);
         Timber.i("Map url: %s", mapUrl);
         startActivity(ImageViewActivity.getInstance(getActivity(), mapUrl));
+
+        Bundle params = new Bundle();
+        params.putString(Analytics.Param.USER_ID, mFirebaseUser.getUid());
+        params.putString(Analytics.Param.USER_NAME, mFirebaseUser.getDisplayName());
+
+        mAnalytics.logEvent(Analytics.Event.VIEW_MAP, params);
     }
 
 
@@ -459,6 +473,7 @@ public class NewOrderFragment extends Fragment {
         order.setOrderId(Utils.generateOrderId());
 
 
+
         if (mPrescriptionFile != null) {
             // enable indeterminate mode
 /*            mSubmitButton.setMode(ActionProcessButton.Mode.ENDLESS);
@@ -519,6 +534,13 @@ public class NewOrderFragment extends Fragment {
                // showSnackbar("Order created " + order.getOrderId());
                showOrderSuccess(order);
                 firstTimeGoToList();
+
+                // analytics
+                params.putString(Analytics.Param.ORDER_ID, order.getOrderId());
+                params.putString(FirebaseAnalytics.Param.ITEM_ID, order.getOrderId());
+                params.putBoolean(Analytics.Param.ORDER_PRESCRIPTION_PROVIDED, true);
+                params.putBoolean(Analytics.Param.ORDER_NOTE_PROVIDED, order.getNote().isEmpty());
+                mAnalytics.logEvent(Analytics.Event.ORDER_NEW, params);
             });
 
 
@@ -580,6 +602,13 @@ public class NewOrderFragment extends Fragment {
                               //  showSnackbar("Order created " + order.getOrderId());
                                 showOrderSuccess(order);
                                 firstTimeGoToList();
+
+                                // analytics
+                                params.putString(Analytics.Param.ORDER_ID, order.getOrderId());
+                                params.putString(FirebaseAnalytics.Param.ITEM_ID, order.getOrderId());
+                                params.putBoolean(Analytics.Param.ORDER_PRESCRIPTION_PROVIDED, false);
+                                params.putBoolean(Analytics.Param.ORDER_NOTE_PROVIDED, order.getNote().isEmpty());
+                                mAnalytics.logEvent(Analytics.Event.ORDER_NEW, params);
                             });
                     mCompositeSubscription.add(orderSubscription);
 

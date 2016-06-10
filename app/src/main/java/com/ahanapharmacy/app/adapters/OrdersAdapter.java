@@ -225,6 +225,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     public void onClick(View v) {
                         if (holder.getAdapterPosition() != RecyclerView.NO_POSITION) {
                             mListener.onOrderClick(mOrderList.get(holder.getAdapterPosition()).getOrderPath());
+
                         }
 
                     }

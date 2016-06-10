@@ -15,11 +15,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ahanapharmacy.app.R;
+import com.ahanapharmacy.app.Utils.Analytics;
 import com.ahanapharmacy.app.Utils.Constants;
 import com.ahanapharmacy.app.Utils.Utils;
 import com.ahanapharmacy.app.controllers.OrderManager;
 import com.ahanapharmacy.app.models.Order;
 import com.bumptech.glide.Glide;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -64,7 +66,7 @@ public class OrderDetailFragment extends Fragment implements ValueEventListener 
     private String mOrderId;
 
     private CompositeSubscription compositeSubscription;
-
+    private FirebaseAnalytics mAnalytics;
 
     @BindView(R.id.text_view_order_id)
     TextView orderIdTextView;
@@ -108,6 +110,7 @@ public class OrderDetailFragment extends Fragment implements ValueEventListener 
         super.onCreate(savedInstanceState);
         compositeSubscription = new CompositeSubscription();
 
+        mAnalytics = FirebaseAnalytics.getInstance(getContext());
 
         if (getArguments().containsKey(ORDER_PATH)) {
             // Load the dummy content specified by the fragment
@@ -186,6 +189,8 @@ public class OrderDetailFragment extends Fragment implements ValueEventListener 
     @Override
     public void onDataChange(DataSnapshot dataSnapshot) {
         try {
+
+            Bundle params = new Bundle();
             Order order;
             if (mOrderId != null) {
                 order = dataSnapshot.getChildren().iterator().next().getValue(Order.class);
@@ -195,7 +200,19 @@ public class OrderDetailFragment extends Fragment implements ValueEventListener 
             }
             mOrder = order;
 
+
+
             if (order != null) {
+
+                // analytics
+                params.putString(FirebaseAnalytics.Param.ITEM_ID, mOrder.getUid());
+                params.putString(FirebaseAnalytics.Param.CONTENT_TYPE, Analytics.Param.ORDER_TYPE);
+                params.putString(Analytics.Param.ORDER_STATUS, mOrder.getStatus());
+                params.putString(FirebaseAnalytics.Param.PRICE, mOrder.getPrice().toString());
+                params.putString(FirebaseAnalytics.Param.SHIPPING, mOrder.getShippingCharge().toString());
+                mAnalytics.logEvent(FirebaseAnalytics.Event.VIEW_ITEM, params);
+
+
                 orderIdTextView.setText(order.getOrderId());
 
                 String orderPrice = getResources().getString(R.string.price, order.getPrice());
@@ -274,6 +291,12 @@ public class OrderDetailFragment extends Fragment implements ValueEventListener 
 
     public void deleteOrder() {
         if (mOrder != null) {
+            // analytics
+            Bundle params = new Bundle();
+            params.putString(FirebaseAnalytics.Param.ITEM_ID, mOrder.getOrderId());
+            params.putString(Analytics.Param.ORDER_STATUS, mOrder.getStatus());
+            params.putString(FirebaseAnalytics.Param.PRICE, mOrder.getPrice().toString());
+            params.putString(FirebaseAnalytics.Param.SHIPPING, mOrder.getShippingCharge().toString());
 
             ProgressDialog orderCancelIndicator = new ProgressDialog(getContext());
             orderCancelIndicator.setTitle("Deleting Order...");
@@ -289,9 +312,15 @@ public class OrderDetailFragment extends Fragment implements ValueEventListener 
                 orderCancelIndicator.dismiss();
                 Toast.makeText(getActivity(), "Order delete failed", Toast.LENGTH_SHORT).show();
             }, () -> {
+
+                // log event
+                mAnalytics.logEvent(Analytics.Event.ORDER_CANCEL, params);
+
                 orderCancelIndicator.dismiss();
                 Toast.makeText(getActivity(), "Order deleted", Toast.LENGTH_SHORT).show();
                 getActivity().finish();
+
+
             });
         }
     }

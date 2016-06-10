@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.ahanapharmacy.app.R;
+import com.ahanapharmacy.app.Utils.Analytics;
 import com.ahanapharmacy.app.Utils.Constants;
 import com.ahanapharmacy.app.Utils.Prefs;
 import com.ahanapharmacy.app.Utils.Utils;
@@ -25,6 +26,7 @@ import com.ahanapharmacy.app.models.Address;
 import com.ahanapharmacy.app.models.User;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mobsandgeeks.saripaar.ValidationError;
@@ -52,6 +54,8 @@ public class EditUserActivity extends AppCompatActivity implements Validator.Val
 
     private FirebaseAuth mAuth;
     private FirebaseUser mFirebaseUser;
+    private FirebaseAnalytics mAnalytics;
+
     @NotEmpty
     @BindView(R.id.input_first_name)
     TextInputEditText firstNameEditText;
@@ -96,6 +100,8 @@ public class EditUserActivity extends AppCompatActivity implements Validator.Val
         mAuth = FirebaseAuth.getInstance();
 
         mFirebaseUser = mAuth.getCurrentUser();
+
+        mAnalytics = FirebaseAnalytics.getInstance(this);
 
         // Check if user logged in else go back to login activity
         if (mFirebaseUser == null) {
@@ -262,6 +268,8 @@ public class EditUserActivity extends AppCompatActivity implements Validator.Val
 
         Observable<Void> addressUpdateObserver = UserManager.updateAddress(address);
 
+
+        // user details update subscription
         Subscription infoUpdateSubscription = Observable.zip(userUpdateObserver, addressUpdateObserver, (t1, t2) -> {
             // return null because "Void" observable
             return null;
@@ -276,6 +284,15 @@ public class EditUserActivity extends AppCompatActivity implements Validator.Val
             // Update success and completed
             Timber.i("User info updated");
             Toast.makeText(this, "Info updated", Toast.LENGTH_SHORT).show();
+
+            //analytics
+            Bundle params = new Bundle();
+            params.putString(Analytics.Param.USER_NAME, (String) userMap.get(Constants.User.FIRST_NAME) + userMap.get(Constants.User.LAST_NAME));
+            params.putString(Analytics.Param.USER_ID, user != null ? user.getUid() : null);
+            params.putBoolean(Analytics.Param.USER_EMAIL_PROVIDED, userEmail.isEmpty());
+            mAnalytics.logEvent(Analytics.Event.EDIT_USER, params);
+
+            mAnalytics.setUserProperty(Analytics.Param.USER_PIN_CODE, address.getPin().toString());
 
             // TODO: 11/5/16 if first time edit redirect to new order page
 

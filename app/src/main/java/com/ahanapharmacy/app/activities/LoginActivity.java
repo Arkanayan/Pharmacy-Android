@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.ahanapharmacy.app.R;
+import com.ahanapharmacy.app.Utils.Analytics;
 import com.ahanapharmacy.app.Utils.Constants;
 import com.ahanapharmacy.app.models.Address;
 import com.ahanapharmacy.app.models.User;
@@ -26,6 +27,7 @@ import com.digits.sdk.android.DigitsSession;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -55,6 +57,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private final String TAG = this.getClass().getSimpleName();
 
+    private FirebaseAnalytics mAnalytics;
+
     @BindView(R.id.button_auth)
     DigitsAuthButton authButton;
 
@@ -73,6 +77,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+
+        mAnalytics = FirebaseAnalytics.getInstance(this);
 
         mAnimator = new ObjectAnimator();
 
@@ -216,6 +222,10 @@ public class LoginActivity extends AppCompatActivity {
         final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference usersRef = firebaseDatabase.getReference(Constants.Path.USERS);
 
+        Bundle params = new Bundle();
+
+        mAnalytics.setUserId(firebaseUser.getUid());
+
         usersRef.child(firebaseUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -228,10 +238,14 @@ public class LoginActivity extends AppCompatActivity {
                         //todo start activity user edit or order details
                         startActivity(EditUserActivity.getInstance(LoginActivity.this));
                         finish();
+
+                        params.putString(Analytics.Param.USER_ID, user.getUid());
+                        mAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, params);
                     } catch (Exception e) {
                         e.printStackTrace();
                         startActivity(EditUserActivity.getInstance(LoginActivity.this));
                         finish();
+
                     }
                 } else {
 /*                    final Map<String, String> map = new HashMap<>();
@@ -267,6 +281,9 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(EditUserActivity.getInstance(LoginActivity.this));
                     finish();
                     //finish
+                    params.putString(FirebaseAnalytics.UserProperty.SIGN_UP_METHOD, "digits");
+                    params.putString(Analytics.Param.USER_ID,firebaseUser.getUid());
+                    mAnalytics.logEvent(FirebaseAnalytics.Event.SIGN_UP, params);
                 }
             }
 

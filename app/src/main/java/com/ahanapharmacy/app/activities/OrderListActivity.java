@@ -18,13 +18,16 @@ import android.webkit.WebView;
 
 import com.ahanapharmacy.app.App;
 import com.ahanapharmacy.app.R;
+import com.ahanapharmacy.app.Utils.Analytics;
 import com.ahanapharmacy.app.adapters.OrdersAdapter;
 import com.ahanapharmacy.app.messaging.MyInstanceIdService;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import butterknife.ButterKnife;
@@ -43,6 +46,7 @@ public class OrderListActivity extends AppCompatActivity implements OrdersAdapte
 
     public final String TAG = this.getClass().getSimpleName();
     private FirebaseRemoteConfig mRemoteConfig;
+    private FirebaseAnalytics mAnalytics;
 
     private AlertDialog mAlertDialog;
     /**
@@ -59,6 +63,8 @@ public class OrderListActivity extends AppCompatActivity implements OrdersAdapte
         super.onCreate(savedInstanceState);
 
         mRemoteConfig = FirebaseRemoteConfig.getInstance();
+        mAnalytics = FirebaseAnalytics.getInstance(this);
+
         mRemoteConfig.setDefaults(R.xml.remote_config_defaults);
 
         mRemoteConfig.fetch(2000)
@@ -173,6 +179,14 @@ public class OrderListActivity extends AppCompatActivity implements OrdersAdapte
             case R.id.action_logout:
                 App.logout();
                 startActivity(LoginActivity.getInstance(this));
+                Bundle params = new Bundle();
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if (user != null) {
+
+                    params.putString(Analytics.Param.USER_ID, user.getUid());
+                    params.putString(Analytics.Param.USER_NAME, user.getDisplayName());
+                }
+                mAnalytics.logEvent(Analytics.Event.LOGOUT, params);
                 finish();
                 return false;
             case R.id.action_about:
