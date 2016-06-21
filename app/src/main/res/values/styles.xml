@@ -50,6 +50,6 @@
     </style>
     
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
-        <item name="android:windowBackground">@drawable/splash_screen</item>
+        <item name="android:windowBackground">@color/md_grey_100</item>
     </style>
 </resources>

@@ -38,13 +38,16 @@
                 android:id="@+id/image_view_prescripiton"
                 tools:src="@drawable/avatar"
                 app:srcCompat="@drawable/ic_pill"
-                 />
+                android:padding="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+
+                />
 
 
         </RelativeLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_gravity="center_horizontal"
@@ -53,13 +56,13 @@
             <ImageView
                 android:layout_width="88dp"
                 android:layout_height="88dp"
-                android:maxWidth="100dp"
-                android:maxHeight="100dp"
                 android:id="@+id/image_view_status"
                 android:layout_centerVertical="true"
                 tools:src="@drawable/delivery_truck"
                 android:tint="@color/md_grey_600"
-                android:padding="@dimen/activity_horizontal_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_horizontal_margin"
+                android:paddingBottom="@dimen/activity_horizontal_margin"
                 android:layout_gravity="center"
                 android:layout_marginLeft="16dp"
                 />
@@ -72,6 +75,7 @@
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingBottom="@dimen/activity_horizontal_margin"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginRight="16dp"
                 >
                 <TextView
                     android:text="Price"
@@ -81,7 +85,7 @@
                     android:textSize="14dp"
                     />
                 <TextView
-                    android:text="83.00"
+                    android:text="00.00"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/activity_horizontal_margin"
@@ -99,7 +103,7 @@
 
                     />
                 <TextView
-                    android:text="38.00"
+                    android:text="00.00"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/activity_horizontal_margin"
@@ -128,7 +132,7 @@
                 <TextView
                     android:layout_row="2"
                     android:layout_column="1"
-                    android:text="38.00"
+                    android:text="00.00"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/activity_horizontal_margin"
