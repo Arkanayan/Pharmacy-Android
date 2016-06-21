@@ -292,9 +292,12 @@ public class EditUserActivity extends AppCompatActivity implements Validator.Val
             params.putString(Analytics.Param.USER_NAME, (String) userMap.get(Constants.User.FIRST_NAME) + userMap.get(Constants.User.LAST_NAME));
             params.putString(Analytics.Param.USER_ID, user != null ? user.getUid() : null);
             params.putBoolean(Analytics.Param.USER_EMAIL_PROVIDED, userEmail.isEmpty());
+            params.putString(FirebaseAnalytics.Param.VALUE, user.getUid());
+
             mAnalytics.logEvent(Analytics.Event.EDIT_USER, params);
 
             mAnalytics.setUserProperty(Analytics.Param.USER_PIN_CODE, address.getPin().toString());
+            mAnalytics.setUserProperty(Analytics.Param.USER_NAME, (String) userMap.get(Constants.User.FIRST_NAME) + userMap.get(Constants.User.LAST_NAME));
 
             // TODO: 11/5/16 if first time edit redirect to new order page
 

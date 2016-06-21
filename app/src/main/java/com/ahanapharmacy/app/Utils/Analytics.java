@@ -26,6 +26,8 @@ public class Analytics {
     public class Event {
         public static final String ORDER_CANCEL = "cancel_order";
         public static final String ORDER_NEW = "new_order";
+        public static final String ORDER_CONFIRM = "confirm_order";
+        public static final String ORDER_FAILED = "order_failed";
         public static final String EDIT_USER = "edit_user";
         public static final String LOGIN = "login";
         public static final String LOGOUT = "logout";

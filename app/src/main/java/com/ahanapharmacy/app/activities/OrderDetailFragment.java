@@ -207,6 +207,7 @@ public class OrderDetailFragment extends Fragment implements ValueEventListener 
                 // analytics
                 params.putString(FirebaseAnalytics.Param.ITEM_ID, mOrder.getUid());
                 params.putString(FirebaseAnalytics.Param.CONTENT_TYPE, Analytics.Param.ORDER_TYPE);
+                params.putString(FirebaseAnalytics.Param.VALUE, mOrder.getOrderId());
                 params.putString(Analytics.Param.ORDER_STATUS, mOrder.getStatus());
                 params.putString(FirebaseAnalytics.Param.PRICE, mOrder.getPrice().toString());
                 params.putString(FirebaseAnalytics.Param.SHIPPING, mOrder.getShippingCharge().toString());
@@ -297,6 +298,8 @@ public class OrderDetailFragment extends Fragment implements ValueEventListener 
             params.putString(Analytics.Param.ORDER_STATUS, mOrder.getStatus());
             params.putString(FirebaseAnalytics.Param.PRICE, mOrder.getPrice().toString());
             params.putString(FirebaseAnalytics.Param.SHIPPING, mOrder.getShippingCharge().toString());
+            params.putString(FirebaseAnalytics.Param.VALUE, mOrder.getOrderId());
+
 
             ProgressDialog orderCancelIndicator = new ProgressDialog(getContext());
             orderCancelIndicator.setTitle("Deleting Order...");
@@ -349,6 +352,17 @@ public class OrderDetailFragment extends Fragment implements ValueEventListener 
              }, () -> {
                  Snackbar.make(v, "Order confirmed.", Snackbar.LENGTH_LONG)
                          .show();
+
+                 // analytics
+                 Bundle params = new Bundle();
+                 params.putString(FirebaseAnalytics.Param.ITEM_ID, mOrder.getOrderId());
+                 params.putString(Analytics.Param.ORDER_STATUS, mOrder.getStatus());
+                 params.putString(FirebaseAnalytics.Param.PRICE, mOrder.getPrice().toString());
+                 params.putString(FirebaseAnalytics.Param.SHIPPING, mOrder.getShippingCharge().toString());
+                 params.putString(FirebaseAnalytics.Param.VALUE, mOrder.getOrderId());
+
+
+                 mAnalytics.logEvent(Analytics.Event.ORDER_CONFIRM, params);
              });
         }
     }

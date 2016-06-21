@@ -240,6 +240,8 @@ public class LoginActivity extends AppCompatActivity {
                         finish();
 
                         params.putString(Analytics.Param.USER_ID, user.getUid());
+                        params.putString(FirebaseAnalytics.Param.VALUE, firebaseUser.getUid());
+
                         mAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, params);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -283,6 +285,7 @@ public class LoginActivity extends AppCompatActivity {
                     //finish
                     params.putString(FirebaseAnalytics.UserProperty.SIGN_UP_METHOD, "digits");
                     params.putString(Analytics.Param.USER_ID,firebaseUser.getUid());
+                    params.putString(FirebaseAnalytics.Param.VALUE, firebaseUser.getUid());
                     mAnalytics.logEvent(FirebaseAnalytics.Event.SIGN_UP, params);
                 }
             }

@@ -185,6 +185,8 @@ public class OrderListActivity extends AppCompatActivity implements OrdersAdapte
 
                     params.putString(Analytics.Param.USER_ID, user.getUid());
                     params.putString(Analytics.Param.USER_NAME, user.getDisplayName());
+                    params.putString(FirebaseAnalytics.Param.VALUE, user.getUid());
+
                 }
                 mAnalytics.logEvent(Analytics.Event.LOGOUT, params);
                 finish();

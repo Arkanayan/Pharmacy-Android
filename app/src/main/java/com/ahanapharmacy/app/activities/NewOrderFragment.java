@@ -527,6 +527,14 @@ public class NewOrderFragment extends Fragment {
                                 // image deleted completed
                             });
 
+                    // analytics
+                    params.putString(Analytics.Param.ORDER_ID, order.getOrderId());
+                    params.putString(FirebaseAnalytics.Param.ITEM_ID, order.getOrderId());
+                    params.putString(FirebaseAnalytics.Param.VALUE, throwable.toString());
+                    params.putBoolean(Analytics.Param.ORDER_NOTE_PROVIDED, order.getNote().isEmpty());
+
+                    mAnalytics.logEvent(Analytics.Event.ORDER_FAILED, params);
+
                 }
             }, () -> {
                 // Order success
@@ -538,6 +546,7 @@ public class NewOrderFragment extends Fragment {
                 // analytics
                 params.putString(Analytics.Param.ORDER_ID, order.getOrderId());
                 params.putString(FirebaseAnalytics.Param.ITEM_ID, order.getOrderId());
+                params.putString(FirebaseAnalytics.Param.VALUE, order.getOrderId());
                 params.putBoolean(Analytics.Param.ORDER_PRESCRIPTION_PROVIDED, true);
                 params.putBoolean(Analytics.Param.ORDER_NOTE_PROVIDED, order.getNote().isEmpty());
                 mAnalytics.logEvent(Analytics.Event.ORDER_NEW, params);
@@ -606,6 +615,7 @@ public class NewOrderFragment extends Fragment {
                                 // analytics
                                 params.putString(Analytics.Param.ORDER_ID, order.getOrderId());
                                 params.putString(FirebaseAnalytics.Param.ITEM_ID, order.getOrderId());
+                                params.putString(FirebaseAnalytics.Param.VALUE, order.getOrderId());
                                 params.putBoolean(Analytics.Param.ORDER_PRESCRIPTION_PROVIDED, false);
                                 params.putBoolean(Analytics.Param.ORDER_NOTE_PROVIDED, order.getNote().isEmpty());
                                 mAnalytics.logEvent(Analytics.Event.ORDER_NEW, params);
