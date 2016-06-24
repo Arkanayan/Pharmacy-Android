@@ -47,15 +47,14 @@ public class MyIntro extends AppIntro2 {
         askForPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, 4);
 
         addSlide(AppIntroFragment.newInstance("We just need", "Your permission to read the OTP \n\n " +
-                "This app works fine even without this permission \n\n " +
-                        "P.S. Did I tell you this app is not compatible with your landphone.",
+                "This app works fine even without this permission \n\n ",
                 R.drawable.chat,
                 ContextCompat.getColor(this, R.color.md_cyan_500)));
 
         askForPermissions(new String[]{Manifest.permission.RECEIVE_SMS}, 5);
 
         addSlide(AppIntroFragment.newInstance("We are nearly done", "In the next page click login",
-                R.drawable.pill,
+                R.drawable.app_logo,
                 ContextCompat.getColor(this, R.color.md_purple_500)));
 
 
