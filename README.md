@@ -50,6 +50,17 @@ On Android versions prior to Android 6.0, pharmrmacy android requires the follow
 - Camera access - To capture image of prescription
 - Receive sms - To access OTP code and verify automatically
 
+## Contributing
+You are free to use and modify the app.
+Just specify appropriate properties in 
+```
+app/gradle.properties.sample
+```
+ and rename it to 
+ ```
+ app/gradle.properties
+ ```
+
 ## License
 
 This application is released under GNU GPLv3 (see [LICENSE](LICENSE)).
