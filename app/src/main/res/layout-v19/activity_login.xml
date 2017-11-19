@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/md_grey_100"
+    android:orientation="vertical"
+    tools:context=".activities.LoginActivity"
+    android:clipChildren="false">
+
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:id="@+id/cardView_layout"
+        android:minHeight="250dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        >
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="300dp"
+            android:id="@+id/cardView"
+            android:layout_centerInParent="true"
+            >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                >
+
+                <com.digits.sdk.android.DigitsAuthButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Login"
+                    tools:text="Login"
+                    android:id="@+id/button_auth"
+                    android:layout_centerInParent="true"
+
+                    />
+
+                <TextView
+                    android:text="/ Register"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView"
+                    android:layout_below="@id/button_auth"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="36dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_alignLeft="@id/button_auth"
+                    style="@style/TextAppearance.AppCompat.Title"
+                    android:textColor="@color/colorPrimaryDark"
+                    />
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/cardView_layout"
+        android:layout_centerHorizontal="true"
+        >
+        <ImageView
+            android:layout_width="wrap_content"
+            android:minWidth="120dp"
+            android:minHeight="120dp"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/app_logo"
+            android:id="@+id/app_icon"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="-65dp"
+            />
+    </RelativeLayout>
+
+
+    <!--    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Launch edit"
+            android:id="@+id/button_edit_user"
+            android:layout_below="@+id/button_logout"
+            android:layout_centerHorizontal="true" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit Address"
+            android:id="@+id/button_edit_address"
+            android:layout_below="@+id/button_edit_user"
+            android:layout_centerHorizontal="true" />-->
+
+</RelativeLayout>

@@ -9,7 +9,7 @@
     android:divider="?android:attr/dividerHorizontal"
     android:orientation="horizontal"
     android:showDividers="middle"
-    tools:context="com.apharmacy.app.activities.OrderListActivity">
+    tools:context="com.ahanapharmacy.app.activities.OrderListActivity">
 
     <!--
     This layout is a two-pane layout for the Orders
@@ -25,7 +25,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         app:layoutManager="LinearLayoutManager"
-        tools:context="com.apharmacy.app.activities.OrderListActivity"
+        tools:context="com.ahanapharmacy.app.activities.OrderListActivity"
         tools:listitem="@layout/order_list_content" />
 
 

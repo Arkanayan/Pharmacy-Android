@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- START xml_defaults -->
+<defaultsMap>
+    <entry>
+        <key>free_shipping_min_price</key>
+        <value>300</value>
+    </entry>
+    <entry>
+        <key>delivery_areas</key>
+        <value>Bankura Municipality Area</value>
+    </entry>
+    <entry>
+        <key>pharmacy_contact_number</key>
+        <value>9434314415</value>
+    </entry>
+    <entry>
+        <key>map_url</key>
+        <value><![CDATA[https://firebasestorage.googleapis.com/v0/b/ahana-pharmacy-ffe04.appspot.com/o/public%2Fbankura.jpg?alt=media&token=88f8da85-8b64-49a3-b6db-2e935674a7ca]]></value>
+    </entry>
+    <entry>
+        <key>developer_contact</key>
+        <value>http://arkanayan.me</value>
+    </entry>
+    <entry>
+        <key>contact_via_email</key>
+        <value>false</value>
+    </entry>
+
+
+</defaultsMap>
+    <!-- END xml_defaults -->

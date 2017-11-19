@@ -5,16 +5,16 @@
         android:drawable="@color/md_grey_50"/>
 
     <item
-        android:drawable="@drawable/pill_icon"
+        android:drawable="@drawable/app_about_logo"
         android:gravity="center"
         android:width="200px"
         android:height="200px"
         >
 
-      <!--  <bitmap
-            android:gravity="center"
-            android:src="@mipmap/ic_launcher"
-            />-->
+        <!--  <bitmap
+              android:gravity="center"
+              android:src="@mipmap/ic_launcher"
+              />-->
     </item>
 
 </layer-list>

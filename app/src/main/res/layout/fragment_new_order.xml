@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             >
-        [<TextView
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/info_shipping_charge"
@@ -37,17 +37,39 @@
             android:textColor="@color/colorSecondaryText"
             android:padding="@dimen/activity_horizontal_margin"
             android:layout_marginBottom="@dimen/item_margin"
-            />
+            android:id="@+id/text_view_min_price" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/info_delivery_areas"
-            android:background="@color/md_amber_100"
-            android:textColor="@color/colorSecondaryText"
-            android:padding="@dimen/activity_horizontal_margin"
-            android:layout_marginBottom="@dimen/item_margin"
-            />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/md_amber_100"
+                android:layout_marginBottom="@dimen/item_margin"
+                android:id="@+id/delivery_areas_layout"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/info_delivery_areas"
+                    android:textColor="@color/colorSecondaryText"
+                    android:padding="@dimen/activity_horizontal_margin"
+                    android:id="@+id/text_view_delivery_areas" />
+
+                <ImageView
+                    app:srcCompat="@drawable/ic_map"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:id="@+id/map_imagebutton"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    />
+
+            </RelativeLayout>
+
+
+
         </LinearLayout>
 <!--<LinearLayout
     android:layout_width="match_parent"
@@ -134,7 +156,7 @@
             <ImageView
                 android:layout_width="50dp"
                 android:layout_height="30dp"
-                android:src="@drawable/avatar"
+                app:srcCompat="@drawable/avatar"
                 android:layout_columnSpan="1"
                 android:layout_gravity="left|top"
                 android:layout_row="0"
@@ -153,7 +175,7 @@
             <ImageView
                 android:layout_width="50dp"
                 android:layout_height="30dp"
-                android:src="@drawable/house"
+                app:srcCompat="@drawable/ic_house"
                 android:layout_columnSpan="1"
                 android:layout_gravity="left|top"
                 android:layout_row="1"
@@ -183,6 +205,7 @@
                     android:id="@+id/textview_address_line_2"
                     android:text="Address line 2"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:visibility="gone"
                     />
 
                 <TextView
@@ -191,6 +214,7 @@
                     android:id="@+id/textview_landmark"
                     android:text="Landmark"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:visibility="gone"
                     />
 
                 <TextView
@@ -201,12 +225,14 @@
 
                     />
 
+
+
             </LinearLayout>
 
             <ImageView
                 android:layout_width="50dp"
                 android:layout_height="30dp"
-                android:src="@drawable/note"
+                app:srcCompat="@drawable/note"
                 android:layout_columnSpan="1"
                 android:layout_gravity="left|center"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
@@ -237,23 +263,33 @@
             android:paddingTop="@dimen/activity_vertical_margin"
             android:gravity="center_horizontal"
             >
-    <Button
+<!--    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Scan"
         android:id="@+id/button_scan"
+        app:srcCompat="@drawable/ic_camera"
         android:drawableLeft="@drawable/ic_camera"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:theme="@style/AppTheme.ColorButton.Amber"
-        />
+        />-->
+            <ImageButton
+                app:srcCompat="@drawable/ic_camera"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/button_scan"
+                android:theme="@style/AppTheme.ColorButton.Amber"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:contentDescription="Scan Prescription" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:id="@+id/imageview_prescription"
-                android:src="@drawable/ic_image"
+                app:srcCompat="@drawable/ic_image"
                 android:clickable="true"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
@@ -291,7 +327,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/send"
+        app:srcCompat="@drawable/send"
         app:pressedTranslationZ="36dp"
         app:fabSize="normal"
         app:rippleColor="@color/md_red_900"
